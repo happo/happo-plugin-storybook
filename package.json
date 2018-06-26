@@ -1,0 +1,41 @@
+{
+  "name": "happo-plugin-storybook",
+  "version": "1.0.0-rc.1",
+  "description": "A happo.io plugin for projects using Storybook",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enduire/happo-plugin-storybook.git"
+  },
+  "keywords": [
+    "screenshot",
+    "testing",
+    "storybook",
+    "happo",
+    "visual",
+    "regression",
+    "testing"
+  ],
+  "author": "Henric Trotzig <henric.trotzig@happo.io>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/enduire/happo-plugin-storybook/issues"
+  },
+  "homepage": "https://github.com/enduire/happo-plugin-storybook#readme",
+  "devDependencies": {
+    "@storybook/react": "^3.4.8",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "webpack": "^4.0.0"
+  },
+  "peerDependencies": {
+    "@storybook/react": "^3.4.0",
+    "webpack": "^3.0.0 || ^4.0.0"
+  },
+  "optionalDependencies": {
+    "@storybook/addons": "^3.4.0"
+  }
+}
