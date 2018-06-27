@@ -3,12 +3,19 @@ const path = require('path');
 const defaultStorybookConfig = require('@storybook/core/dist/server/config/defaults/webpack.config.js');
 const webpack = require('webpack');
 
-module.exports = function happoStorybookPlugin() {
+module.exports = function happoPluginStorybook({ configDir = '.storybook' } = {}) {
   return {
     customizeWebpackConfig: config => {
+      config.plugins = [
+        new webpack.DefinePlugin({
+          HAPPO_STORYBOOK_CONFIG_FILE: JSON.stringify(
+            path.resolve(process.cwd(), configDir, 'config.js'),
+          ),
+        }),
+      ];
       const storybookWebpackConfig = require(path.resolve(
         process.cwd(),
-        '.storybook',
+        configDir,
         'webpack.config.js',
       ));
       if (typeof storybookWebpackConfig === 'function') {
@@ -21,4 +28,4 @@ module.exports = function happoStorybookPlugin() {
 
     pathToExamplesFile: path.resolve(__dirname, 'happoExamples.js'),
   };
-}
+};

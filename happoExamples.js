@@ -11,7 +11,7 @@ try {
   // ignore - there's a chance the user doesn't have any addons
 }
 
-require('.storybook/config.js');
+require(HAPPO_STORYBOOK_CONFIG_FILE);
 
 const examples = getStorybook().map(story => {
   const variants = {};
