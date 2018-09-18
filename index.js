@@ -19,7 +19,7 @@ module.exports = function happoPluginStorybook({ configDir = '.storybook' } = {}
       ));
       if (typeof storybookWebpackConfig === 'function') {
         // full control mode
-        return storybookWebpackConfig(config, 'DEVELOPMENT', defaultStorybookConfig);
+        return storybookWebpackConfig(config, 'DEVELOPMENT', defaultStorybookConfig(config));
       }
       config.module.rules.push(...storybookWebpackConfig.module.rules);
       return config;
