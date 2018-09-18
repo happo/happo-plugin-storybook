@@ -8,6 +8,7 @@ module.exports = function happoPluginStorybook({ configDir = '.storybook', ignor
     customizeWebpackConfig: config => {
       config.plugins.push(
         new webpack.DefinePlugin({
+          HAPPO: true,
           HAPPO_STORYBOOK_CONFIG_FILE: JSON.stringify(
             path.resolve(process.cwd(), configDir, 'config.js'),
           ),
