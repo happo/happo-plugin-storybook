@@ -18,7 +18,11 @@ const examples = getStorybook().map(story => {
     return;
   }
   const variants = {};
-  story.stories.forEach(({ name, render }) => (variants[name] = render));
+  story.stories.forEach(({ name, render }) => (variants[name] = (renderInDom) => {
+    renderInDom(render());
+    return new Promise((resolve) => setTimeout(resolve, 0));
+  }));
+
   return {
     component: story.kind,
     variants,
