@@ -1,3 +1,13 @@
+// Storybook needs a root element on startup
+const root = document.createElement('div');
+root.setAttribute('id', 'root');
+document.body.appendChild(root);
+
+// Without these history overrides, happo runs that use happo-plugin-puppeteer
+// fail.
+window.history.replaceState = () => {};
+window.history.pushState = () => {};
+
 const { getStorybook } = require('@storybook/react');
 
 try {
