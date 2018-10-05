@@ -1,9 +1,12 @@
 const path = require('path');
 const fs = require('fs');
-const defaultStorybookConfig = require('@storybook/core/dist/server/config/defaults/webpack.config.js');
+const storybookWebpack = require('@storybook/core/dist/server/config/defaults/webpack.config.js');
 const webpack = require('webpack');
 
-module.exports = function happoPluginStorybook({ configDir = '.storybook', ignoredStories = [] } = {}) {
+module.exports = function happoPluginStorybook({
+  configDir = '.storybook',
+  ignoredStories = [],
+} = {}) {
   return {
     customizeWebpackConfig: config => {
       config.plugins.push(
@@ -15,11 +18,7 @@ module.exports = function happoPluginStorybook({ configDir = '.storybook', ignor
           HAPPO_STORYBOOK_IGNORED_STORIES: JSON.stringify(ignoredStories),
         }),
       );
-      const pathToStorybookConfig = path.resolve(
-        process.cwd(),
-        configDir,
-        'webpack.config.js',
-      );
+      const pathToStorybookConfig = path.resolve(process.cwd(), configDir, 'webpack.config.js');
 
       if (!fs.existsSync(pathToStorybookConfig)) {
         return config;
@@ -28,7 +27,11 @@ module.exports = function happoPluginStorybook({ configDir = '.storybook', ignor
       const storybookWebpackConfig = require(pathToStorybookConfig);
       if (typeof storybookWebpackConfig === 'function') {
         // full control mode
-        return storybookWebpackConfig(config, 'DEVELOPMENT', defaultStorybookConfig(config));
+        return storybookWebpackConfig(
+          config,
+          'DEVELOPMENT',
+          storybookWebpack.createDefaultWebpackConfig(config),
+        );
       }
       config.module.rules.push(...storybookWebpackConfig.module.rules);
       return config;
