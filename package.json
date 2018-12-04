@@ -34,8 +34,5 @@
   "peerDependencies": {
     "@storybook/react": "^3.4.0",
     "webpack": "^3.0.0 || ^4.0.0"
-  },
-  "optionalDependencies": {
-    "@storybook/addons": "^3.4.0"
   }
 }
