@@ -16,6 +16,17 @@ try {
   addons.setChannel({
     emit: () => null,
     on: () => null,
+    once: () => null,
+    removeListener: () => null,
+    removeAllListeners: () => null,
+    prependOnceListener: () => null,
+    prependListener: () => null,
+    addListener: () => null,
+    addPeerListener: () => null,
+    addPeerListener: () => null,
+    eventNames: () => [],
+    listenerCount: () => 0,
+    listeners: () => [],
   });
 } catch (e) {
   // ignore - there's a chance the user doesn't have any addons
