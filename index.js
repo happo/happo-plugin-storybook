@@ -1,7 +1,16 @@
 const path = require('path');
 const fs = require('fs');
-const storybookWebpack = require('@storybook/core/dist/server/config/defaults/webpack.config.js');
 const webpack = require('webpack');
+
+function getDefaultStorybookWebpackConfig() {
+  try {
+    // storybook@3
+    return require('@storybook/core/dist/server/config/defaults/webpack.config.js');
+  } catch (e) {
+    // storybook@4
+    return require('@storybook/core/dist/server/config/webpack.config.default');
+  }
+}
 
 module.exports = function happoPluginStorybook({
   configDir = '.storybook',
@@ -30,7 +39,7 @@ module.exports = function happoPluginStorybook({
         return storybookWebpackConfig(
           config,
           'DEVELOPMENT',
-          storybookWebpack.createDefaultWebpackConfig(config),
+          getDefaultStorybookWebpackConfig().createDefaultWebpackConfig(config),
         );
       }
       config.module.rules.push(...storybookWebpackConfig.module.rules);
