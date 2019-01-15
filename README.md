@@ -1,6 +1,6 @@
 # happo-plugin-storybook
 
-A [happo.io](https://github.com/enduire/happo.io) plugin for Storybook.
+A [happo.io](https://github.com/enduire/happo.io) plugin for Storybook. See https://medium.com/happo-io/cross-browser-screenshot-testing-with-happo-io-and-storybook-bfb0b848a97a for a lengthier introduction to this plugin. 
 
 ## Usage
 
