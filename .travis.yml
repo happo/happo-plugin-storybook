@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - "6"
+  - "8"
+env:
+  - STORYBOOK_VERSION=next
+  - STORYBOOK_VERSION=4
+  - STORYBOOK_VERSION=3
+install: yarn install && yarn add @storybook/react@$STORYBOOK_VERSION
+script: yarn test
+
