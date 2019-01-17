@@ -42,5 +42,5 @@ webpackConfig = subject().customizeWebpackConfig({
   },
 });
 assert.strictEqual(webpackConfig.b, 'c');
-assert.strictEqual(webpackConfig.module.rules.length, 1);
-assert.strictEqual(webpackConfig.module.rules[0], 'rule2');
+assert.strictEqual(webpackConfig.module.rules.length, 4);
+assert.strictEqual(webpackConfig.module.rules[3], 'rule2');
