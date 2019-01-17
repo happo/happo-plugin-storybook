@@ -38,13 +38,14 @@ module.exports = function happoPluginStorybook({
         return config;
       }
 
-      const storybookWebpackConfig = require(pathToStorybookConfig);
+      let storybookWebpackConfig = require(pathToStorybookConfig);
       if (typeof storybookWebpackConfig === 'function') {
         // full control mode
-        return storybookWebpackConfig(
-          config,
+        const baseConfig = getDefaultStorybookWebpackConfig().createDefaultWebpackConfig(config);
+        storybookWebpackConfig = storybookWebpackConfig(
+          baseConfig,
           'DEVELOPMENT',
-          getDefaultStorybookWebpackConfig().createDefaultWebpackConfig(config),
+          baseConfig,
         );
       }
       config.module.rules.push(...storybookWebpackConfig.module.rules);
