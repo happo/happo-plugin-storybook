@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/enduire/happo-plugin-storybook#readme",
   "devDependencies": {
-    "@storybook/react": "^4.0.12",
+    "@storybook/react": "^4.1.6",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "webpack": "^4.0.0"

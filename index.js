@@ -7,8 +7,13 @@ function getDefaultStorybookWebpackConfig() {
     // storybook@3
     return require('@storybook/core/dist/server/config/defaults/webpack.config.js');
   } catch (e) {
-    // storybook@4
-    return require('@storybook/core/dist/server/config/webpack.config.default');
+    // storybook@<4.1.0
+    try {
+      return require('@storybook/core/dist/server/config/webpack.config.default');
+    } catch (err) {
+      // storybook@>4.1.0, storybook@5
+      return require('@storybook/core/dist/server/preview/base-webpack.config.js')
+    }
   }
 }
 
