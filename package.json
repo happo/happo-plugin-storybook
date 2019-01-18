@@ -4,7 +4,10 @@
   "description": "A happo.io plugin for projects using Storybook",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "jest"
+  },
+  "jest": {
+    "testMatch": ["**/*-test.js"]
   },
   "repository": {
     "type": "git",
@@ -27,6 +30,8 @@
   "homepage": "https://github.com/enduire/happo-plugin-storybook#readme",
   "devDependencies": {
     "@storybook/react": "^4.1.6",
+    "happo.io": "^3.6.2",
+    "jest": "^23.6.0",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "webpack": "^4.0.0"
