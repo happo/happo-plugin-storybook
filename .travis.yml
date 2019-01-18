@@ -6,6 +6,5 @@ env:
   - STORYBOOK_VERSION=latest
   - STORYBOOK_VERSION=4.0.12
   - STORYBOOK_VERSION=3
-install: npm install && npm install @storybook/react@$STORYBOOK_VERSION
-script: npm test
-
+install: yarn install && yarn install @storybook/react@$STORYBOOK_VERSION
+script: yarn happo run
