@@ -51,8 +51,12 @@ window.happo.nextExample = async () => {
   }
   ReactDOM.unmountComponentAtNode(rootElement);
   const { component, variant, render } = examples[currentIndex];
-  ReactDOM.render(render(), rootElement);
-  await waitForContent(rootElement);
-  currentIndex++;
-  return { component, variant };
+  try {
+    ReactDOM.render(render(), rootElement);
+    await waitForContent(rootElement);
+    currentIndex++;
+    return { component, variant };
+  } catch (e) {
+    throw new Error(`Failed to render ${component} - ${variant}: ${e.message}`);
+  }
 };
