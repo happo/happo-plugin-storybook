@@ -1,56 +1,67 @@
-const path = require('path');
+const { Writable } = require('stream');
+const { spawn } = require('child_process');
 const fs = require('fs');
-const webpack = require('webpack');
+const path = require('path');
 
-function getDefaultStorybookWebpackConfig() {
-  try {
-    // storybook@3
-    return require('@storybook/core/dist/server/config/defaults/webpack.config.js');
-  } catch (e) {
-    // storybook@<4.1.0
-    try {
-      return require('@storybook/core/dist/server/config/webpack.config.default');
-    } catch (err) {
-      // storybook@>4.1.0, storybook@5
-      return require('@storybook/core/dist/server/preview/base-webpack.config.js')
-    }
-  }
+const Archiver = require('archiver');
+const rimraf = require('rimraf');
+
+function zipFolderToBuffer(outputDir) {
+  return new Promise((resolve, reject) => {
+    const archive = new Archiver('zip');
+    const stream = new Writable();
+    const data = [];
+    stream._write = (chunk, enc, done) => {
+      data.push(...chunk);
+      done();
+    };
+    stream.on('finish', () => {
+      const buffer = Buffer.from(data);
+      resolve(buffer);
+    });
+    archive.pipe(stream);
+    archive.directory(outputDir, '');
+    archive.on('error', reject);
+    archive.finalize();
+  });
 }
 
-module.exports = function happoPluginStorybook({
+module.exports = function happoStorybookPlugin({
   configDir = '.storybook',
-  ignoredStories = [],
+  staticDir,
+  outputDir = '.out',
 } = {}) {
   return {
-    customizeWebpackConfig: config => {
-      config.plugins.push(
-        new webpack.DefinePlugin({
-          HAPPO: true,
-          HAPPO_STORYBOOK_CONFIG_FILE: JSON.stringify(
-            path.resolve(process.cwd(), configDir, 'config.js'),
-          ),
-          HAPPO_STORYBOOK_IGNORED_STORIES: JSON.stringify(ignoredStories),
-        }),
-      );
-      const pathToStorybookConfig = path.resolve(process.cwd(), configDir, 'webpack.config.js');
+    generateStaticPackage: async () => {
+      await new Promise((resolve, reject) => {
+        rimraf.sync(outputDir);
+        const params = ['--output-dir', outputDir, '--config-dir', configDir];
+        if (staticDir) {
+          params.push('--static-dir');
+          params.push(staticDir);
+        }
+        const spawned = spawn('node_modules/.bin/build-storybook', params, {
+          stdio: 'inherit',
+        });
 
-      if (!fs.existsSync(pathToStorybookConfig)) {
-        return config;
+        spawned.on('exit', code => {
+          if (code === 0) {
+            resolve();
+          } else {
+            reject(new Error('Failed to build static storybook package'));
+          }
+        });
+      });
+      if (!fs.existsSync(path.join(outputDir, 'iframe.html'))) {
+        throw new Error('Failed to build static storybook package (missing iframe.html)');
       }
-
-      const storybookWebpackConfig = require(pathToStorybookConfig);
-      if (typeof storybookWebpackConfig === 'function') {
-        // full control mode
-        return storybookWebpackConfig(
-          config,
-          'DEVELOPMENT',
-          getDefaultStorybookWebpackConfig().createDefaultWebpackConfig(config),
-        );
+      try {
+        const buffer = await zipFolderToBuffer(outputDir);
+        return buffer.toString('base64');
+      } catch (e) {
+        console.error(e);
+        throw e;
       }
-      config.module.rules.push(...storybookWebpackConfig.module.rules);
-      return config;
     },
-
-    pathToExamplesFile: path.resolve(__dirname, 'happoExamples.js'),
   };
 };
