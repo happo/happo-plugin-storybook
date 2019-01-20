@@ -31,7 +31,6 @@ function getExamples() {
       if (storyStore.getStoryAndParameters) {
         const { parameters: { happo = {} } } =
           storyStore.getStoryAndParameters(story.kind, variant);
-        if (happo.disable) continue;
         delay = happo.delay || defaultDelay;
       }
 

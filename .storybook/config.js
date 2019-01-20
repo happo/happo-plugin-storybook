@@ -5,13 +5,13 @@ import { storiesOf } from '@storybook/react';
 
 import testImage from './testImage.png';
 
-import '../register';
+import { setDefaultDelay, isHappoRun } from '../register';
 
 import Button from './src/Button';
 
 class AsyncComponent extends React.Component {
   componentDidMount() {
-    setTimeout(() => this.setState({ ready: true }), 200);
+    setTimeout(() => this.setState({ ready: true }), 80);
   }
   render() {
     if (!this.state) {
@@ -21,12 +21,21 @@ class AsyncComponent extends React.Component {
   }
 }
 
+setDefaultDelay(1);
+
 function loadStories() {
+  if (!isHappoRun()) {
+    storiesOf('NOT PART OF HAPPO', module).add('default', () => <AsyncComponent />);
+  }
   storiesOf('Lazy', module).add('default', () => <AsyncComponent />);
 
   storiesOf('Button', module)
-    .add('with text', () => <Button>Hello Button</Button>)
-    .add('with image', () => <Button><img src={testImage} /></Button>)
+    .add('with text', () => <Button>Hello Button</Button>, { happo: { delay: 2000 } })
+    .add('with image', () => (
+      <Button>
+        <img src={testImage} />
+      </Button>
+    ))
     .add('with some emoji', () => (
       <Button>
         <span role="img" aria-label="so cool">
