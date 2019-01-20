@@ -1,6 +1,7 @@
-const { exec } = require('child_process');
-const fs = require('fs');
 const { Writable } = require('stream');
+const { spawn } = require('child_process');
+const fs = require('fs');
+const path = require('path');
 
 const Archiver = require('archiver');
 
@@ -32,26 +33,26 @@ module.exports = function happoStorybookPlugin({
   return {
     generateStaticPackage: async () => {
       await new Promise((resolve, reject) => {
-        const commandParts = [
-          '$(npm bin)/build-storybook',
-          '--output-dir',
-          outputDir,
-          '--config-dir',
-          configDir,
-        ];
+        const params = ['--output-dir', outputDir, '--config-dir', configDir];
         if (staticDir) {
-          commandParts.push('--static-dir');
-          commandParts.push(staticDir);
+          params.push('--static-dir');
+          params.push(staticDir);
         }
-        const cmd = commandParts.join(' ');
-        exec(cmd, err => {
-          if (err) {
-            reject(err);
-          } else {
+        const spawned = spawn('node_modules/.bin/build-storybook', params, {
+          stdio: 'inherit',
+        });
+
+        spawned.on('exit', code => {
+          if (code === 0) {
             resolve();
+          } else {
+            reject();
           }
         });
       });
+      if (!fs.existsSync(path.join(outputDir, 'iframe.html'))) {
+        throw new Error('Failed to build static storybook package');
+      }
       try {
         const buffer = await zipFolderToBuffer(outputDir);
         return buffer.toString('base64');
