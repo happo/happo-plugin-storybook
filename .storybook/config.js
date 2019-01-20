@@ -5,7 +5,7 @@ import { storiesOf } from '@storybook/react';
 
 import testImage from './testImage.png';
 
-import '../addon';
+import '../register';
 
 import Button from './src/Button';
 
