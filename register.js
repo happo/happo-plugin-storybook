@@ -39,6 +39,7 @@ function init() {
   examples = getExamples();
   document.body.innerHTML = '';
   rootElement = document.createElement('div');
+  rootElement.setAttribute('data-happo-ignore', 'true');
   document.body.appendChild(rootElement);
 }
 
