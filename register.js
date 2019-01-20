@@ -45,22 +45,29 @@ function getExamples() {
   return result;
 };
 
-function init() {
-  examples = getExamples();
+function cleanup() {
+  let rootElement = document.getElementById('happo-plugin-storybook-root');
+  if (rootElement) {
+    ReactDOM.unmountComponentAtNode(rootElement);
+  }
   document.body.innerHTML = '';
   rootElement = document.createElement('div');
   rootElement.setAttribute('data-happo-ignore', 'true');
+  rootElement.setAttribute('id', 'happo-plugin-storybook-root');
   document.body.appendChild(rootElement);
+  return rootElement;
 }
 
 window.happo = {};
 
 window.happo.nextExample = async () => {
-  if (!examples) init();
+  if (!examples) {
+    examples = getExamples();
+  }
   if (currentIndex >= examples.length) {
     return;
   }
-  ReactDOM.unmountComponentAtNode(rootElement);
+  const rootElement = cleanup();
   const { component, variant, render, delay } = examples[currentIndex];
   try {
     ReactDOM.render(render(), rootElement);
