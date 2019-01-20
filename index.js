@@ -52,10 +52,18 @@ module.exports = function happoStorybookPlugin({
           }
         });
       });
-      if (!fs.existsSync(path.join(outputDir, 'iframe.html'))) {
-        throw new Error('Failed to build static storybook package (missing iframe.html)');
+      const iframePath = path.join(outputDir, 'iframe.html');
+      if (!fs.existsSync(iframePath)) {
+        throw new Error(
+          'Failed to build static storybook package (missing iframe.html)',
+        );
       }
       try {
+        const iframeContent = fs.readFileSync(iframePath, 'utf-8');
+        fs.writeFileSync(iframePath, iframeContent.replace(
+          '<head>',
+          '<head><meta name="viewport" content="width=device-width, initial-scale=1">',
+        ));
         const buffer = await zipFolderToBuffer(outputDir);
         return buffer.toString('base64');
       } catch (e) {
