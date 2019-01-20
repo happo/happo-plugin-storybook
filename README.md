@@ -75,5 +75,22 @@ storiesOf('FooComponent', module)
   .add('delayed', () => <FooComponent />, { happo: { delay: 200 } });
 ```
 
+## Caveats
+
+When you're using this plugin, some of the regular Happo commands and
+configuration options aren't available. These include:
+
+- [`include`](https://github.com/happo/happo.io#include)
+- [`type`](https://github.com/happo/happo.io#type)
+- [`customizeWebpackConfig`](https://github.com/happo/happo.io#customizewebpackconfig)
+- [`publicFolders`](https://github.com/happo/happo.io#publicfolders)
+- [`setupScript`](https://github.com/happo/happo.io#setupscript)
+- [`renderWrapperModule`](https://github.com/happo/happo.io#renderwrappermodule)
+- [`rootElementSelector`](https://github.com/happo/happo.io#rootelementselector)
+- [`jsdomOptions`](https://github.com/happo/happo.io#jsdomoptions)
+- [The `happo dev` command](https://github.com/happo/happo.io#command-line-interface-cli)
+
+
+
 
 
