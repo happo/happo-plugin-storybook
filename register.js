@@ -7,6 +7,7 @@ const ASYNC_TIMEOUT = 100;
 let examples;
 let currentIndex = 0;
 let rootElement;
+let defaultDelay;
 
 async function waitForContent(elem, start = new Date().getTime(), attempt = 0) {
   const html = elem.innerHTML.trim();
@@ -20,15 +21,25 @@ async function waitForContent(elem, start = new Date().getTime(), attempt = 0) {
 }
 
 function getExamples() {
+  const storyStore = __STORYBOOK_CLIENT_API__._storyStore;
   const result = [];
   for (let story of getStorybook()) {
     const component = story.kind;
     for (let example of story.stories) {
       const { name: variant, render } = example;
+      let delay = defaultDelay;
+      if (storyStore.getStoryAndParameters) {
+        const { parameters: { happo = {} } } =
+          storyStore.getStoryAndParameters(story.kind, variant);
+        if (happo.disable) continue;
+        delay = happo.delay || defaultDelay;
+      }
+
       result.push({
         component,
         variant,
         render,
+        delay,
       });
     }
   }
@@ -51,13 +62,17 @@ window.happo.nextExample = async () => {
     return;
   }
   ReactDOM.unmountComponentAtNode(rootElement);
-  const { component, variant, render } = examples[currentIndex];
+  const { component, variant, render, delay } = examples[currentIndex];
   try {
     ReactDOM.render(render(), rootElement);
     await waitForContent(rootElement);
+    await new Promise((resolve) => setTimeout(resolve, delay));
     currentIndex++;
     return { component, variant };
   } catch (e) {
     throw new Error(`Failed to render ${component} - ${variant}: ${e.message}`);
   }
 };
+
+export const setDefaultDelay = (delay) => { defaultDelay = delay };
+export const isHappoRun = () => window.top === window.self;
