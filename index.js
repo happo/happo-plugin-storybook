@@ -46,12 +46,12 @@ module.exports = function happoStorybookPlugin({
           if (code === 0) {
             resolve();
           } else {
-            reject();
+            reject(new Error('Failed to build static storybook package'));
           }
         });
       });
       if (!fs.existsSync(path.join(outputDir, 'iframe.html'))) {
-        throw new Error('Failed to build static storybook package');
+        throw new Error('Failed to build static storybook package (missing iframe.html)');
       }
       try {
         const buffer = await zipFolderToBuffer(outputDir);
