@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const Archiver = require('archiver');
+const rimraf = require('rimraf');
 
 function zipFolderToBuffer(outputDir) {
   return new Promise((resolve, reject) => {
@@ -33,6 +34,7 @@ module.exports = function happoStorybookPlugin({
   return {
     generateStaticPackage: async () => {
       await new Promise((resolve, reject) => {
+        rimraf.sync(outputDir);
         const params = ['--output-dir', outputDir, '--config-dir', configDir];
         if (staticDir) {
           params.push('--static-dir');
