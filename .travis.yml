@@ -7,4 +7,4 @@ env:
   - STORYBOOK_VERSION=4.0.12
   - STORYBOOK_VERSION=3 BABEL=babel-core
 install: yarn install && yarn add @storybook/react@$STORYBOOK_VERSION $BABEL
-script: yarn happo run
+script: yarn build && yarn happo run
