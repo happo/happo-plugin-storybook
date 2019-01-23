@@ -1,11 +1,13 @@
 {
   "name": "happo-plugin-storybook",
-  "version": "2.0.0",
+  "version": "2.0.1-rc.2",
   "description": "A happo.io plugin for projects using Storybook",
   "main": "index.js",
   "scripts": {
     "test": "jest",
     "happo": "happo",
+    "build": "babel register.es6.js --out-file register.js",
+    "prepublish": "yarn build",
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "jest": {
@@ -39,8 +41,10 @@
     "singleQuote": true
   },
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.2.2",
     "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.3.1",
     "@storybook/addons": "^4.1.7",
     "@storybook/react": "^4.1.7",
     "babel-loader": "^8.0.5",
