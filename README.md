@@ -63,7 +63,7 @@ set delays: one global and one per story. Here's an example of setting a global
 delay:
 
 ```js
-import { setDefaultDelay } from 'happo-plugin-storybook';
+import { setDefaultDelay } from 'happo-plugin-storybook/register';
 
 setDefaultDelay(100); // in milliseconds
 ```
