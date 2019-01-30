@@ -23,19 +23,35 @@ class AsyncComponent extends React.Component {
 
 setDefaultDelay(1);
 
+window.onbeforeunload = function(e) {
+  throw 'Failed to render because a page load event was fired';
+};
+
 function loadStories() {
   if (!isHappoRun()) {
-    storiesOf('NOT PART OF HAPPO', module).add('default', () => <AsyncComponent />);
+    storiesOf('NOT PART OF HAPPO', module).add('default', () => (
+      <AsyncComponent />
+    ));
   }
   storiesOf('Lazy', module).add('default', () => <AsyncComponent />);
 
   storiesOf('Button', module)
-    .add('with text', () => <Button>Hello Button</Button>, { happo: { delay: 2000 } })
+    .add('with text', () => <Button>Hello Button</Button>, {
+      happo: { delay: 2000 },
+    })
     .add('with image', () => (
       <Button>
         <img src={testImage} />
       </Button>
     ))
+    .add('failing', () => {
+      throw new Error('Some error');
+      return (
+        <Button>
+          <img src={testImage} />
+        </Button>
+      );
+    }, { happo: { delay: 300 } })
     .add('with some emoji', () => (
       <Button>
         <span role="img" aria-label="so cool">
