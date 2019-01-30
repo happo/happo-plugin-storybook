@@ -73,10 +73,12 @@ window.happo.nextExample = async () => {
     ReactDOM.render(render(), rootElement);
     await waitForContent(rootElement);
     await new Promise((resolve) => setTimeout(resolve, delay));
-    currentIndex++;
     return { component, variant };
   } catch (e) {
-    throw new Error(`Failed to render ${component} - ${variant}: ${e.message}`);
+    rootElement.innerHTML = `<pre>${e.stack}</pre>`;
+    return { component, variant };
+  } finally {
+    currentIndex++;
   }
 };
 
