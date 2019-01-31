@@ -27,6 +27,15 @@ window.onbeforeunload = function(e) {
   throw 'Failed to render because a page load event was fired';
 };
 
+class UnmountFail extends React.Component {
+  componentWillUnmount() {
+    throw new Error('Failed');
+  }
+  render() {
+    return <span>I throw on unmount</span>;
+  }
+};
+
 function loadStories() {
   if (!isHappoRun()) {
     storiesOf('NOT PART OF HAPPO', module).add('default', () => (
@@ -44,6 +53,11 @@ function loadStories() {
         <img src={testImage} />
       </Button>
     ))
+    .add('failing on unmount', () => {
+      return (
+        <UnmountFail />
+      );
+    })
     .add('failing', () => {
       throw new Error('Some error');
       return (

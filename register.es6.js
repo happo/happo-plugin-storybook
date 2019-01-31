@@ -48,7 +48,12 @@ function getExamples() {
 function cleanup() {
   let rootElement = document.getElementById('happo-plugin-storybook-root');
   if (rootElement) {
-    ReactDOM.unmountComponentAtNode(rootElement);
+    try {
+      ReactDOM.unmountComponentAtNode(rootElement);
+    } catch (e) {
+      // ignore unmount failures
+      console.warn('Failed to unmount React component');
+    }
   }
   document.body.innerHTML = '';
   rootElement = document.createElement('div');
