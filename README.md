@@ -75,6 +75,15 @@ storiesOf('FooComponent', module)
   .add('delayed', () => <FooComponent />, { happo: { delay: 200 } });
 ```
 
+If you need to perform some cleanup or initialization in between rendered
+stories, you can use the `onBeforeRender` hook:
+
+```js
+import { onBeforeRender } from 'happo-plugin-storybook/register';
+
+onBeforeRender(() => MockData.clearCaches());
+```
+
 ## Caveats
 
 When you're using this plugin, some of the regular Happo commands and

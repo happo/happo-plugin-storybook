@@ -5,9 +5,14 @@ import { storiesOf } from '@storybook/react';
 
 import testImage from './testImage.png';
 
-import { setDefaultDelay, isHappoRun } from '../register';
+import { onBeforeRender, setDefaultDelay, isHappoRun } from '../register';
 
 import Button from './src/Button';
+
+let globalState = 'Mexico';
+onBeforeRender(() => {
+  globalState = globalState + '!';
+});
 
 class AsyncComponent extends React.Component {
   componentDidMount() {
@@ -42,6 +47,11 @@ function loadStories() {
       <AsyncComponent />
     ));
   }
+
+  storiesOf('Hooked', module)
+    .add('first render', () => <h1>{globalState}</h1>)
+    .add('second render', () => <h1>{globalState}</h1>);
+
   storiesOf('Lazy', module).add('default', () => <AsyncComponent />);
 
   storiesOf('Button', module)

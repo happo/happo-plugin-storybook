@@ -8,6 +8,7 @@ let examples;
 let currentIndex = 0;
 let rootElement;
 let defaultDelay;
+let beforeRenderHook = () => {};
 
 async function waitForContent(elem, start = new Date().getTime(), attempt = 0) {
   const html = elem.innerHTML.trim();
@@ -55,6 +56,7 @@ function cleanup() {
       console.warn('Failed to unmount React component');
     }
   }
+
   document.body.innerHTML = '';
   rootElement = document.createElement('div');
   rootElement.setAttribute('data-happo-ignore', 'true');
@@ -73,6 +75,12 @@ window.happo.nextExample = async () => {
     return;
   }
   const rootElement = cleanup();
+  try {
+    beforeRenderHook();
+  } catch (e) {
+    // ignore cleanup hook failures
+    console.warn('Failed to execute before render hook');
+  }
   const { component, variant, render, delay } = examples[currentIndex];
   try {
     ReactDOM.render(render(), rootElement);
@@ -89,3 +97,4 @@ window.happo.nextExample = async () => {
 
 export const setDefaultDelay = (delay) => { defaultDelay = delay };
 export const isHappoRun = () => window.top === window.self;
+export const onBeforeRender = (hook) => { beforeRenderHook = hook };
