@@ -1,12 +1,7 @@
-import ReactDOM from 'react-dom';
-
-import { getStorybook } from '@storybook/react';
-
 const ASYNC_TIMEOUT = 100;
 
 let examples;
 let currentIndex = 0;
-let rootElement;
 let defaultDelay;
 
 async function waitForContent(elem, start = new Date().getTime(), attempt = 0) {
@@ -23,14 +18,15 @@ async function waitForContent(elem, start = new Date().getTime(), attempt = 0) {
 function getExamples() {
   const storyStore = __STORYBOOK_CLIENT_API__._storyStore;
   const result = [];
-  for (let story of getStorybook()) {
+  for (let story of __STORYBOOK_CLIENT_API__.getStorybook()) {
     const component = story.kind;
     for (let example of story.stories) {
       const { name: variant, render } = example;
       let delay = defaultDelay;
       if (storyStore.getStoryAndParameters) {
-        const { parameters: { happo = {} } } =
-          storyStore.getStoryAndParameters(story.kind, variant);
+        const {
+          parameters: { happo = {} },
+        } = storyStore.getStoryAndParameters(story.kind, variant);
         delay = happo.delay || defaultDelay;
       }
 
@@ -43,24 +39,6 @@ function getExamples() {
     }
   }
   return result;
-};
-
-function cleanup() {
-  let rootElement = document.getElementById('happo-plugin-storybook-root');
-  if (rootElement) {
-    try {
-      ReactDOM.unmountComponentAtNode(rootElement);
-    } catch (e) {
-      // ignore unmount failures
-      console.warn('Failed to unmount React component');
-    }
-  }
-  document.body.innerHTML = '';
-  rootElement = document.createElement('div');
-  rootElement.setAttribute('data-happo-ignore', 'true');
-  rootElement.setAttribute('id', 'happo-plugin-storybook-root');
-  document.body.appendChild(rootElement);
-  return rootElement;
 }
 
 window.happo = {};
@@ -72,20 +50,34 @@ window.happo.nextExample = async () => {
   if (currentIndex >= examples.length) {
     return;
   }
-  const rootElement = cleanup();
   const { component, variant, render, delay } = examples[currentIndex];
+
   try {
-    ReactDOM.render(render(), rootElement);
+    async function renderOnce() {
+    }
+    const rootElement = document.getElementById('root');
+    rootElement.setAttribute('data-happo-ignore', 'true');
+    __STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
+      kind: component,
+      story: variant,
+    });
     await waitForContent(rootElement);
-    await new Promise((resolve) => setTimeout(resolve, delay));
+    if (/sb-show-errordisplay/.test(document.body.className)) {
+      // It's possible that the error is from unmounting the previous story. We
+      // can try re-rendering in this case.
+      __STORYBOOK_ADDONS_CHANNEL__.emit('forceReRender');
+      await waitForContent(rootElement);
+    }
+    await new Promise(resolve => setTimeout(resolve, delay));
     return { component, variant };
   } catch (e) {
-    rootElement.innerHTML = `<pre>${e.stack}</pre>`;
     return { component, variant };
   } finally {
     currentIndex++;
   }
 };
 
-export const setDefaultDelay = (delay) => { defaultDelay = delay };
+export const setDefaultDelay = delay => {
+  defaultDelay = delay;
+};
 export const isHappoRun = () => window.top === window.self;
