@@ -90,7 +90,16 @@ configuration options aren't available. These include:
 - [`jsdomOptions`](https://github.com/happo/happo.io#jsdomoptions)
 - [The `happo dev` command](https://github.com/happo/happo.io#command-line-interface-cli)
 
+## Debugging
 
+If you want to debug your test suite similar to how the Happo browser workers do it, you can follow these steps: 
+
+1. In a browser, go to the storybook URL. E.g. http://localhost:3000
+2. The URL will change to something like http://localhost:3000/?selectedKind=foo&selectedStory=default
+3. Change the URL to point to `/iframe.html`, e.g. http://localhost:3000/iframe.html
+4. Open the javascript console
+5. Paste this javascript snippet and hit enter: `happo.nextExample().then((item) => console.log(item))`
+6. Run that code again repeatedly to step through each example (use the arrow up key to reuse the last command)
 
 
 
