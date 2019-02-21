@@ -41,6 +41,20 @@ function getExamples() {
   return result;
 }
 
+function cleanDocument() {
+  [...document.body.children].forEach((node) => {
+    if (node.getAttribute('id') === 'root') {
+      // don't clean out the root node
+      return;
+    }
+    if (node.classList.contains('sb-errordisplay')) {
+      // don't clean out the error container
+      return;
+    }
+    document.body.removeChild(node);
+  });
+}
+
 window.happo = {};
 
 window.happo.nextExample = async () => {
@@ -53,8 +67,7 @@ window.happo.nextExample = async () => {
   const { component, variant, render, delay } = examples[currentIndex];
 
   try {
-    async function renderOnce() {
-    }
+    cleanDocument();
     const rootElement = document.getElementById('root');
     rootElement.setAttribute('data-happo-ignore', 'true');
     __STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
@@ -71,6 +84,7 @@ window.happo.nextExample = async () => {
     await new Promise(resolve => setTimeout(resolve, delay));
     return { component, variant };
   } catch (e) {
+    console.warn(e);
     return { component, variant };
   } finally {
     currentIndex++;
