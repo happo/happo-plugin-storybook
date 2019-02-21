@@ -53,6 +53,9 @@ function loadStories() {
         <img src={testImage} />
       </Button>
     ))
+    .add('large', () => (
+      <div style={{ width: 400, height: 400, backgroundColor: 'red' }} />
+    ))
     .add('failing on unmount', () => {
       return (
         <UnmountFail />
