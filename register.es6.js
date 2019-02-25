@@ -21,7 +21,7 @@ function getExamples() {
   for (let story of __STORYBOOK_CLIENT_API__.getStorybook()) {
     const component = story.kind;
     for (let example of story.stories) {
-      const { name: variant, render } = example;
+      const { name: variant } = example;
       let delay = defaultDelay;
       if (storyStore.getStoryAndParameters) {
         const {
@@ -33,7 +33,6 @@ function getExamples() {
       result.push({
         component,
         variant,
-        render,
         delay,
       });
     }
@@ -42,17 +41,11 @@ function getExamples() {
 }
 
 function cleanDocument() {
-  [...document.body.children].forEach((node) => {
-    if (node.getAttribute('id') === 'root') {
-      // don't clean out the root node
-      return;
-    }
-    if (node.classList.contains('sb-errordisplay')) {
-      // don't clean out the error container
-      return;
-    }
-    document.body.removeChild(node);
-  });
+  const snapBox = document.getElementById('__snapshot-box');
+  if (!snapBox) {
+    return;
+  }
+  document.body.removeChild(snapBox);
 }
 
 window.happo = {};
@@ -64,7 +57,7 @@ window.happo.nextExample = async () => {
   if (currentIndex >= examples.length) {
     return;
   }
-  const { component, variant, render, delay } = examples[currentIndex];
+  const { component, variant, delay } = examples[currentIndex];
 
   try {
     cleanDocument();

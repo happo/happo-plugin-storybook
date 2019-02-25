@@ -6779,6 +6779,14 @@ react-style-proptype@^3.0.0:
   dependencies:
     prop-types "^15.5.4"
 
+react-tether@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/react-tether/-/react-tether-2.0.0.tgz#84928b9636f1fe0a6874d1e450e7822e87f8cb07"
+  integrity sha512-iJnqTQV42Pf7w4xrg3g1gxSxbBCXleDt8AzlSoAqRINqB+mhcJUeegpB8SFMJ/nKT7lSfMkx3GvUfYY+9sPBGw==
+  dependencies:
+    prop-types "^15.6.2"
+    tether "^1.4.5"
+
 react-textarea-autosize@^7.0.4:
   version "7.1.0"
   resolved "https://registry.npmjs.org/react-textarea-autosize/-/react-textarea-autosize-7.1.0.tgz#3132cb77e65d94417558d37c0bfe415a5afd3445"
@@ -7849,6 +7857,11 @@ terser@^3.8.1:
     commander "~2.17.1"
     source-map "~0.6.1"
     source-map-support "~0.5.6"
+
+tether@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.npmjs.org/tether/-/tether-1.4.5.tgz#8efd7b35572767ba502259ba9b1cc167fcf6f2c1"
+  integrity sha512-fysT1Gug2wbRi7a6waeu39yVDwiNtvwj5m9eRD+qZDSHKNghLo6KqP/U3yM2ap6TNUL2skjXGJaJJTJqoC31vw==
 
 text-table@0.2.0:
   version "0.2.0"
