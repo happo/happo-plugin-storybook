@@ -36,6 +36,19 @@ class UnmountFail extends React.Component {
   }
 };
 
+function PortalComponent() {
+  const domNode = document.getElementById('portal-root') || (() => {
+    const el = document.createElement('div');
+    el.setAttribute('id', 'portal-root');
+    document.body.appendChild(el);
+    return el;
+  })();
+  return ReactDOM.createPortal(
+    (<h1>I'm in a portal!</h1>),
+    domNode
+  );
+}
+
 function loadStories() {
   if (!isHappoRun()) {
     storiesOf('NOT PART OF HAPPO', module).add('default', () => (
@@ -43,6 +56,7 @@ function loadStories() {
     ));
   }
   storiesOf('Lazy', module).add('default', () => <AsyncComponent />);
+  storiesOf('Portal', module).add('default', () => <PortalComponent />);
 
   storiesOf('Button', module)
     .add('with text', () => <Button>Hello Button</Button>, {
