@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import TetherComponent from 'react-tether';
 import { configure } from '@storybook/react';
 import { storiesOf } from '@storybook/react';
 
@@ -34,18 +35,32 @@ class UnmountFail extends React.Component {
   render() {
     return <span>I throw on unmount</span>;
   }
-};
+}
 
 function PortalComponent() {
-  const domNode = document.getElementById('portal-root') || (() => {
-    const el = document.createElement('div');
-    el.setAttribute('id', 'portal-root');
-    document.body.appendChild(el);
-    return el;
-  })();
-  return ReactDOM.createPortal(
-    (<h1>I'm in a portal!</h1>),
-    domNode
+  const domNode =
+    document.getElementById('portal-root') ||
+    (() => {
+      const el = document.createElement('div');
+      el.setAttribute('id', 'portal-root');
+      document.body.appendChild(el);
+      return el;
+    })();
+  return ReactDOM.createPortal(<h1>I'm in a portal!</h1>, domNode);
+}
+
+function TetheredComponent() {
+  return (
+    <TetherComponent
+      attachment="top left"
+      renderTarget={ref => <button ref={ref}>I'm the target</button>}
+      renderElement={ref => (
+        <div ref={ref} style={{ border: '1px solid red', padding: 10 }}>
+          <h2>Tethered Content</h2>
+          <p>A paragraph to accompany the title.</p>
+        </div>
+      )}
+    />
   );
 }
 
@@ -57,6 +72,7 @@ function loadStories() {
   }
   storiesOf('Lazy', module).add('default', () => <AsyncComponent />);
   storiesOf('Portal', module).add('default', () => <PortalComponent />);
+  storiesOf('Tethered', module).add('default', () => <TetheredComponent />);
 
   storiesOf('Button', module)
     .add('with text', () => <Button>Hello Button</Button>, {
@@ -71,18 +87,20 @@ function loadStories() {
       <div style={{ width: 400, height: 400, backgroundColor: 'red' }} />
     ))
     .add('failing on unmount', () => {
-      return (
-        <UnmountFail />
-      );
+      return <UnmountFail />;
     })
-    .add('failing', () => {
-      throw new Error('Some error');
-      return (
-        <Button>
-          <img src={testImage} />
-        </Button>
-      );
-    }, { happo: { delay: 300 } })
+    .add(
+      'failing',
+      () => {
+        throw new Error('Some error');
+        return (
+          <Button>
+            <img src={testImage} />
+          </Button>
+        );
+      },
+      { happo: { delay: 300 } },
+    )
     .add('with some emoji', () => (
       <Button>
         <span role="img" aria-label="so cool">
