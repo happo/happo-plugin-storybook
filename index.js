@@ -62,7 +62,10 @@ module.exports = function happoStorybookPlugin({
         const iframeContent = fs.readFileSync(iframePath, 'utf-8');
         fs.writeFileSync(iframePath, iframeContent.replace(
           '<head>',
-          '<head><meta name="viewport" content="width=device-width, initial-scale=1">',
+          `<head>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <script type="text/javascript">window.__IS_HAPPO_RUN = true;</script>
+          `,
         ));
         const buffer = await zipFolderToBuffer(outputDir);
         return buffer.toString('base64');
