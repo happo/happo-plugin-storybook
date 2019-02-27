@@ -87,4 +87,4 @@ window.happo.nextExample = async () => {
 export const setDefaultDelay = delay => {
   defaultDelay = delay;
 };
-export const isHappoRun = () => window.top === window.self;
+export const isHappoRun = () => window.__IS_HAPPO_RUN;
