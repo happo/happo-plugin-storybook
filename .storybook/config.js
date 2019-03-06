@@ -114,6 +114,15 @@ function loadStories() {
         <img src={testImage} />
       </Button>
     ))
+    .add('with some emoji', () => (
+      <Button>
+        <span role="img" aria-label="so cool">
+          😀 😎 👍 💯
+        </span>
+      </Button>
+    ));
+
+  storiesOf('Misc', module)
     .add('large', () => (
       <div style={{ width: 400, height: 400, backgroundColor: 'red' }} />
     ))
@@ -132,13 +141,6 @@ function loadStories() {
       },
       { happo: { delay: 300 } },
     )
-    .add('with some emoji', () => (
-      <Button>
-        <span role="img" aria-label="so cool">
-          😀 😎 👍 💯
-        </span>
-      </Button>
-    ));
 }
 
 configure(loadStories, module);
