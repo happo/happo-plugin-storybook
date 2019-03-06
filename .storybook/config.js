@@ -114,6 +114,11 @@ function loadStories() {
         <img src={testImage} />
       </Button>
     ))
+    .add('with static image', () => (
+      <Button>
+        <img src='/assets/staticImage.png' />
+      </Button>
+    ))
     .add('with some emoji', () => (
       <Button>
         <span role="img" aria-label="so cool">

@@ -13,6 +13,12 @@ module.exports = {
     ie: new RemoteBrowserTarget('internet explorer', { viewport: '800x600' }),
     iosSafari: new RemoteBrowserTarget('ios-safari', { viewport: '375x600' }),
   },
-  plugins: [happoPluginStorybook({ configDir: '.storybook', outputDir: '.happo-out' })],
+  plugins: [
+    happoPluginStorybook({
+      configDir: '.storybook',
+      outputDir: '.happo-out',
+      staticDir: 'public',
+    }),
+  ],
   stylesheets: [path.resolve(__dirname, 'test.css')],
 };
