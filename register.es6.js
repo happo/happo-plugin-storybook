@@ -50,6 +50,14 @@ function cleanDocument() {
 
 window.happo = {};
 
+window.happo.initChunk = ({ index, total }) => {
+  const all = getExamples();
+  const examplesPerChunk = Math.ceil(all.length / total);
+  const startIndex = index * examplesPerChunk;
+  const endIndex = startIndex + examplesPerChunk;
+  examples = all.slice(startIndex, endIndex);
+}
+
 window.happo.nextExample = async () => {
   if (!examples) {
     examples = getExamples();
