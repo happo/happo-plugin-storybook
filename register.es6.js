@@ -4,12 +4,12 @@ let examples;
 let currentIndex = 0;
 let defaultDelay;
 
-async function waitForContent(elem, start = new Date().getTime(), attempt = 0) {
+async function waitForContent(elem, start = new Date().getTime()) {
   const html = elem.innerHTML.trim();
   const duration = new Date().getTime() - start;
   if (html === '' && duration < ASYNC_TIMEOUT) {
     return new Promise(resolve =>
-      setTimeout(() => resolve(waitForContent(elem, start, attempt + 1)), 10),
+      setTimeout(() => resolve(waitForContent(elem, start)), 10),
     );
   }
   return html;

@@ -64,6 +64,36 @@ function TetheredComponent() {
   );
 }
 
+class DataFetchComponent extends React.Component {
+  componentDidMount() {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = async () => {
+      this.setState({
+        xhr: true,
+      });
+      await window.fetch('https://reqres.in/api/users?page=2')
+      await window.fetch('https://reqres.in/api/users?page=3')
+      this.setState({
+        fetch: true,
+      });
+    };
+    xhr.open('GET', 'https://reqres.in/api/users?page=1', true);
+    xhr.send();
+
+  }
+  render() {
+    if (!this.state) {
+      return <div>Nothing ready</div>;
+    }
+    return (
+      <ul>
+        {this.state.xhr && <li>XHR ready</li>}
+        {this.state.fetch && <li>Fetch ready</li>}
+      </ul>
+    );
+  }
+}
+
 function loadStories() {
   if (!isHappoRun()) {
     storiesOf('NOT PART OF HAPPO', module).add('default', () => (
@@ -73,6 +103,7 @@ function loadStories() {
   storiesOf('Lazy', module).add('default', () => <AsyncComponent />);
   storiesOf('Portal', module).add('default', () => <PortalComponent />);
   storiesOf('Tethered', module).add('default', () => <TetheredComponent />);
+  storiesOf('Data Fetch', module).add('default', () => <DataFetchComponent />);
 
   storiesOf('Button', module)
     .add('with text', () => <Button>Hello Button</Button>, {
