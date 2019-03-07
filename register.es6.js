@@ -1,52 +1,18 @@
-const WAIT_FOR_CONTENT_TIMEOUT = 100;
-const WAIT_FOR_XHR_TIMEOUT = 2000;
+const ASYNC_TIMEOUT = 100;
 
 let examples;
 let currentIndex = 0;
 let defaultDelay;
 
-let outstandingRequests = 0;
-function decreaseOutstandingRequests() {
-  outstandingRequests--;
-}
-
-const originalXHROpen = window.XMLHttpRequest.prototype.open;
-window.XMLHttpRequest.prototype.open = function() {
-  console.log('xhr', arguments);
-  outstandingRequests++;
-  this.addEventListener('loadend', decreaseOutstandingRequests);
-  return originalXHROpen.apply(this, arguments);
-};
-
-if (window.fetch) {
-  const originalFetch = window.fetch;
-  window.fetch = function() {
-    outstandingRequests++;
-    console.log('fetch', arguments);
-    return originalFetch
-      .apply(this, arguments)
-      .then(decreaseOutstandingRequests)
-      .catch(decreaseOutstandingRequests);
-  };
-}
-
-async function waitForContent(elem, start = new Date().getTime()) {
+async function waitForContent(elem, start = new Date().getTime(), attempt = 0) {
   const html = elem.innerHTML.trim();
   const duration = new Date().getTime() - start;
-  if (html === '' && duration < WAIT_FOR_CONTENT_TIMEOUT) {
+  if (html === '' && duration < ASYNC_TIMEOUT) {
     return new Promise(resolve =>
-      setTimeout(() => resolve(waitForContent(elem, start)), 10),
+      setTimeout(() => resolve(waitForContent(elem, start, attempt + 1)), 10),
     );
   }
-}
-
-async function waitForXHRSilence(start = new Date().getTime()) {
-  const duration = new Date().getTime() - start;
-  if (outstandingRequests !== 0 && duration < WAIT_FOR_XHR_TIMEOUT) {
-    return new Promise(resolve =>
-      setTimeout(() => resolve(waitForXHRSilence(start)), 10),
-    );
-  }
+  return html;
 }
 
 function getExamples() {
@@ -102,13 +68,11 @@ window.happo.nextExample = async () => {
       story: variant,
     });
     await waitForContent(rootElement);
-    await waitForXHRSilence();
     if (/sb-show-errordisplay/.test(document.body.className)) {
       // It's possible that the error is from unmounting the previous story. We
       // can try re-rendering in this case.
       __STORYBOOK_ADDONS_CHANNEL__.emit('forceReRender');
       await waitForContent(rootElement);
-      await waitForXHRSilence();
     }
     await new Promise(resolve => setTimeout(resolve, delay));
     return { component, variant };
