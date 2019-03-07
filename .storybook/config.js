@@ -64,6 +64,36 @@ function TetheredComponent() {
   );
 }
 
+class DataFetchComponent extends React.Component {
+  componentDidMount() {
+    var xhr = new XMLHttpRequest();
+    xhr.onload = async () => {
+      this.setState({
+        xhr: true,
+      });
+      await window.fetch('https://reqres.in/api/users?page=2')
+      await window.fetch('https://reqres.in/api/users?page=3')
+      this.setState({
+        fetch: true,
+      });
+    };
+    xhr.open('GET', 'https://reqres.in/api/users?page=1', true);
+    xhr.send();
+
+  }
+  render() {
+    if (!this.state) {
+      return <div>Nothing ready</div>;
+    }
+    return (
+      <ul>
+        {this.state.xhr && <li>XHR ready</li>}
+        {this.state.fetch && <li>Fetch ready</li>}
+      </ul>
+    );
+  }
+}
+
 function loadStories() {
   if (!isHappoRun()) {
     storiesOf('NOT PART OF HAPPO', module).add('default', () => (
@@ -73,6 +103,7 @@ function loadStories() {
   storiesOf('Lazy', module).add('default', () => <AsyncComponent />);
   storiesOf('Portal', module).add('default', () => <PortalComponent />);
   storiesOf('Tethered', module).add('default', () => <TetheredComponent />);
+  storiesOf('Data Fetch', module).add('default', () => <DataFetchComponent />);
 
   storiesOf('Button', module)
     .add('with text', () => <Button>Hello Button</Button>, {
@@ -83,6 +114,20 @@ function loadStories() {
         <img src={testImage} />
       </Button>
     ))
+    .add('with static image', () => (
+      <Button>
+        <img src='/assets/staticImage.png' />
+      </Button>
+    ))
+    .add('with some emoji', () => (
+      <Button>
+        <span role="img" aria-label="so cool">
+          😀 😎 👍 💯
+        </span>
+      </Button>
+    ));
+
+  storiesOf('Misc', module)
     .add('large', () => (
       <div style={{ width: 400, height: 400, backgroundColor: 'red' }} />
     ))
@@ -101,13 +146,6 @@ function loadStories() {
       },
       { happo: { delay: 300 } },
     )
-    .add('with some emoji', () => (
-      <Button>
-        <span role="img" aria-label="so cool">
-          😀 😎 👍 💯
-        </span>
-      </Button>
-    ));
 }
 
 configure(loadStories, module);
