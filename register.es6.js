@@ -1,3 +1,5 @@
+import storybookClient from '@storybook/core/client';
+
 const ASYNC_TIMEOUT = 100;
 
 let examples;
@@ -30,10 +32,16 @@ function getExamples() {
         delay = happo.delay || defaultDelay;
       }
 
+      const storyId = (storybookClient.toId || (() => undefined))(
+        story.kind,
+        variant,
+      );
+
       result.push({
         component,
         variant,
         delay,
+        storyId,
       });
     }
   }
@@ -56,7 +64,7 @@ window.happo.initChunk = ({ index, total }) => {
   const startIndex = index * examplesPerChunk;
   const endIndex = startIndex + examplesPerChunk;
   examples = all.slice(startIndex, endIndex);
-}
+};
 
 window.happo.nextExample = async () => {
   if (!examples) {
@@ -65,7 +73,7 @@ window.happo.nextExample = async () => {
   if (currentIndex >= examples.length) {
     return;
   }
-  const { component, variant, delay } = examples[currentIndex];
+  const { component, variant, storyId, delay } = examples[currentIndex];
 
   try {
     cleanDocument();
@@ -74,6 +82,7 @@ window.happo.nextExample = async () => {
     __STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
       kind: component,
       story: variant,
+      storyId,
     });
     await waitForContent(rootElement);
     if (/sb-show-errordisplay/.test(document.body.className)) {
