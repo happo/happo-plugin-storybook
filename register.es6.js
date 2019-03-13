@@ -48,14 +48,6 @@ function getExamples() {
   return result;
 }
 
-function cleanDocument() {
-  const snapBox = document.getElementById('__snapshot-box');
-  if (!snapBox) {
-    return;
-  }
-  document.body.removeChild(snapBox);
-}
-
 window.happo = {};
 
 window.happo.initChunk = ({ index, total }) => {
@@ -76,7 +68,6 @@ window.happo.nextExample = async () => {
   const { component, variant, storyId, delay } = examples[currentIndex];
 
   try {
-    cleanDocument();
     const rootElement = document.getElementById('root');
     rootElement.setAttribute('data-happo-ignore', 'true');
     __STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
