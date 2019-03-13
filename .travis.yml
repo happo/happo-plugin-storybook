@@ -5,4 +5,4 @@ env:
   - SB_V=4
   - SB_V=5
 install: yarn install
-script: yarn install --no-save @storybook/addons@${SB_V} @storybook/react@${SB_V} && yarn build && yarn happo run
+script: yarn add --no-save @storybook/addons@${SB_V} @storybook/react@${SB_V} && yarn build && yarn happo run
