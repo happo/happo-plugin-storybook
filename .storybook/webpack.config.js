@@ -1,8 +1,15 @@
 const path = require('path');
 
-module.exports = (args) => {
+module.exports = args => {
   const config = args.config || args; // storybook@v4 v5 compat
   config.resolve.extensions = ['.tsx', '.ts', '.js', '.jsx'];
+  const babelLoader = config.module.rules.find(({ use }) => {
+    return use && /babel-loader/.test(use[0].loader);
+  });
+  if (babelLoader && babelLoader.exclude) {
+    babelLoader.exclude.push(path.resolve(__dirname, '../register.js'));
+  }
+
   if (config.module.rules.some(({ loader }) => /file-loader/.test(loader))) {
     return config;
   }
