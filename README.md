@@ -101,5 +101,9 @@ If you want to debug your test suite similar to how the Happo browser workers do
 5. Paste this javascript snippet and hit enter: `happo.nextExample().then((item) => console.log(item))`
 6. Run that code again repeatedly to step through each example (use the arrow up key to reuse the last command)
 
+To quickly run through all examples, follow steps 1-4, then paste this script instead: 
+```js
+var renderIter = function() { window.happo.nextExample().then(function(a) { if (!a) { return; } console.log(a); renderIter(); }) }; renderIter();
+```
 
 
