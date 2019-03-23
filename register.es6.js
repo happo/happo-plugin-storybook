@@ -80,6 +80,7 @@ window.happo.nextExample = async () => {
       story: variant,
       storyId,
     });
+    await new Promise(resolve => time.originalSetTimeout(resolve, 0));
     await waitForContent(rootElement);
     if (/sb-show-errordisplay/.test(document.body.className)) {
       // It's possible that the error is from unmounting the previous story. We
