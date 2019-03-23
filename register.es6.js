@@ -1,17 +1,22 @@
 import storybookClient from '@storybook/core/client';
 
+const time = window.happoTime || {
+  originalDateNow: Date.now,
+  originalSetTimeout: window.setTimeout.bind(window),
+};
+
 const ASYNC_TIMEOUT = 100;
 
 let examples;
 let currentIndex = 0;
 let defaultDelay;
 
-async function waitForContent(elem, start = new Date().getTime()) {
+async function waitForContent(elem, start = time.originalDateNow()) {
   const html = elem.innerHTML.trim();
-  const duration = new Date().getTime() - start;
+  const duration = time.originalDateNow() - start;
   if (html === '' && duration < ASYNC_TIMEOUT) {
     return new Promise(resolve =>
-      setTimeout(() => resolve(waitForContent(elem, start)), 10),
+      time.originalSetTimeout(() => resolve(waitForContent(elem, start)), 10),
     );
   }
   return html;
@@ -82,7 +87,7 @@ window.happo.nextExample = async () => {
       __STORYBOOK_ADDONS_CHANNEL__.emit('forceReRender');
       await waitForContent(rootElement);
     }
-    await new Promise(resolve => setTimeout(resolve, delay));
+    await new Promise(resolve => time.originalSetTimeout(resolve, delay));
     return { component, variant };
   } catch (e) {
     console.warn(e);
