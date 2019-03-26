@@ -4689,10 +4689,10 @@ gzip-size@5.0.0:
     duplexer "^0.1.1"
     pify "^3.0.0"
 
-happo.io@^3.12.0-rc.1:
-  version "3.12.0-rc.1"
-  resolved "https://registry.npmjs.org/happo.io/-/happo.io-3.12.0-rc.1.tgz#cae84af595d6795a950daf9f5be4908c7f2526d3"
-  integrity sha512-2KW2qia/JXgClg2L4uuwi4hpbDZEVQs5tpZfWpM0Q4Zovrx+wKzIbjpayusxaN9vBHZFSc0pkIacIogx3q9mNQ==
+happo.io@^3.13.1:
+  version "3.13.1"
+  resolved "https://registry.npmjs.org/happo.io/-/happo.io-3.13.1.tgz#844588ef7004d943f6d0d29804dd3929d873cc00"
+  integrity sha512-CEgmqGYlHwkjortTox9Yomx5f9Q3plQDBvwoM77vbAA1hv4GzXxGsNpmosk5j6k4G6fS5mFaEoP60S414qc6Hw==
   dependencies:
     archiver "^3.0.0"
     babel-plugin-dynamic-import-node "^2.1.0"

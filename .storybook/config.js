@@ -71,15 +71,14 @@ class DataFetchComponent extends React.Component {
       this.setState({
         xhr: true,
       });
-      await window.fetch('https://reqres.in/api/users?page=2')
-      await window.fetch('https://reqres.in/api/users?page=3')
+      await window.fetch('https://reqres.in/api/users?page=2');
+      await window.fetch('https://reqres.in/api/users?page=3');
       this.setState({
         fetch: true,
       });
     };
     xhr.open('GET', 'https://reqres.in/api/users?page=1', true);
     xhr.send();
-
   }
   render() {
     if (!this.state) {
@@ -94,6 +93,22 @@ class DataFetchComponent extends React.Component {
   }
 }
 
+const InputFocusComponent = () => (
+  <input type="text" ref={e => e && e.focus()} />
+);
+const AutoFocusComponent = () => (
+  <div>
+    <style type="text/css">{`
+      button:focus {
+        border: 5px solid red;
+      }
+    `}</style>
+    <button autoFocus>
+      I'm focused
+    </button>
+  </div>
+);
+
 function loadStories() {
   if (!isHappoRun()) {
     storiesOf('NOT PART OF HAPPO', module).add('default', () => (
@@ -104,6 +119,8 @@ function loadStories() {
   storiesOf('Portal', module).add('default', () => <PortalComponent />);
   storiesOf('Tethered', module).add('default', () => <TetheredComponent />);
   storiesOf('Data Fetch', module).add('default', () => <DataFetchComponent />);
+  storiesOf('Focus', module).add('input', () => <InputFocusComponent />);
+  storiesOf('Focus', module).add('auto', () => <AutoFocusComponent />);
 
   storiesOf('Button', module)
     .add('with text', () => <Button>Hello Button</Button>, {
@@ -116,7 +133,7 @@ function loadStories() {
     ))
     .add('with static image', () => (
       <Button>
-        <img src='/assets/staticImage.png' />
+        <img src="/assets/staticImage.png" />
       </Button>
     ))
     .add('with some emoji', () => (
@@ -145,7 +162,7 @@ function loadStories() {
         );
       },
       { happo: { delay: 300 } },
-    )
+    );
 }
 
 configure(loadStories, module);
