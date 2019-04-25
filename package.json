@@ -49,6 +49,7 @@
     "@storybook/addons": "^5.0.1",
     "@storybook/react": "^5.0.1",
     "babel-loader": "^8.0.5",
+    "fetch-mock": "^7.3.3",
     "file-loader": "^3.0.1",
     "happo.io": "^3.12.0-rc.1",
     "raw-loader": "^1.0.0",

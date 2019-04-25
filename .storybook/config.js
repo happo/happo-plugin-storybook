@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import TetherComponent from 'react-tether';
 import { configure } from '@storybook/react';
 import { storiesOf } from '@storybook/react';
+import fetchMock from 'fetch-mock';
 
 import testImage from './testImage.png';
 
@@ -64,6 +65,8 @@ function TetheredComponent() {
   );
 }
 
+fetchMock.get(/.*/, { hello: 'world' });
+
 class DataFetchComponent extends React.Component {
   componentDidMount() {
     var xhr = new XMLHttpRequest();
@@ -71,10 +74,11 @@ class DataFetchComponent extends React.Component {
       this.setState({
         xhr: true,
       });
-      await window.fetch('https://reqres.in/api/users?page=2')
+      const fRes = await window.fetch('https://reqres.in/api/users?page=2')
       await window.fetch('https://reqres.in/api/users?page=3')
       this.setState({
         fetch: true,
+        fRes,
       });
     };
     xhr.open('GET', 'https://reqres.in/api/users?page=1', true);
@@ -88,7 +92,7 @@ class DataFetchComponent extends React.Component {
     return (
       <ul>
         {this.state.xhr && <li>XHR ready</li>}
-        {this.state.fetch && <li>Fetch ready</li>}
+        {this.state.fetch && <li>Fetch ready {JSON.stringify(this.state.fRes)}</li>}
       </ul>
     );
   }
