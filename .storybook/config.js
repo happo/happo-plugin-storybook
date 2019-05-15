@@ -100,6 +100,9 @@ function loadStories() {
       <AsyncComponent />
     ));
   }
+  storiesOf('ALSO NOT PART OF HAPPO', module).add('default', () => (
+    <AsyncComponent />
+  ), { happo: false });
   storiesOf('Lazy', module).add('default', () => <AsyncComponent />);
   storiesOf('Portal', module).add('default', () => <PortalComponent />);
   storiesOf('Tethered', module).add('default', () => <TetheredComponent />);
