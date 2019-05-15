@@ -57,6 +57,26 @@ if (!isHappoRun()) {
 }
 ```
 
+### Disabling a story
+
+In a perfect case scenario, your stories should be built in such a way that all of them work well in Happo environment. Sometimes though you might want to disable some of the stories in Happo preview, i.e. because they depend on dynamic data that can't be accessed from Happo environment.
+
+In such case you can pass `happo: false` story parameter to it:
+
+```js
+storiesOf('FooComponent', module)
+  .add('Default', () => <FooComponent />);
+  .add('Dynamic', () => <DynamicFooComponent />, { happo: false });
+
+// or
+
+storiesOf('FooComponent', module)
+  .addParameters({ happo: false })
+  .add('Dynamic', () => <DynamicFooComponent />);
+```
+
+### Setting delay for a story
+
 Happo will make its best to wait for your stories to render, but at times you
 might need a little more control in the form of delays. There are two ways to
 set delays: one global and one per story. Here's an example of setting a global
