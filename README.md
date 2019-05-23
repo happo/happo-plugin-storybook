@@ -126,4 +126,7 @@ To quickly run through all examples, follow steps 1-4, then paste this script in
 var renderIter = function() { window.happo.nextExample().then(function(a) { if (!a) { return; } console.log(a); renderIter(); }) }; renderIter();
 ```
 
+## Troubleshooting
 
+- Getting a `Failed on worker` error? Make sure you are making a call to `import 'happo-plugin-storybook/register'` in your `.storybook/config.js` file. 
+- Getting spurious diffs from fonts not loading? Happo workers will wait for fonts to load before taking the screenshot, but it assumes that fonts it has already seen are already available. Make sure the `@font-face` declaration is declared globally and not part of the stories themselves. 
