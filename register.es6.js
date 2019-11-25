@@ -11,12 +11,12 @@ let examples;
 let currentIndex = 0;
 let defaultDelay;
 
-async function waitForContent(elem, start = time.originalDateNow()) {
+async function waitForSomeContent(elem, start = time.originalDateNow()) {
   const html = elem.innerHTML.trim();
   const duration = time.originalDateNow() - start;
   if (html === '' && duration < ASYNC_TIMEOUT) {
     return new Promise(resolve =>
-      time.originalSetTimeout(() => resolve(waitForContent(elem, start)), 10),
+      time.originalSetTimeout(() => resolve(waitForSomeContent(elem, start)), 10),
     );
   }
   return html;
@@ -84,12 +84,12 @@ window.happo.nextExample = async () => {
       storyId,
     });
     await new Promise(resolve => time.originalSetTimeout(resolve, 0));
-    await waitForContent(rootElement);
+    await waitForSomeContent(rootElement);
     if (/sb-show-errordisplay/.test(document.body.className)) {
       // It's possible that the error is from unmounting the previous story. We
       // can try re-rendering in this case.
       __STORYBOOK_ADDONS_CHANNEL__.emit('forceReRender');
-      await waitForContent(rootElement);
+      await waitForSomeContent(rootElement);
     }
     await new Promise(resolve => time.originalSetTimeout(resolve, delay));
     return { component, variant };
