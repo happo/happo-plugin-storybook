@@ -71,15 +71,14 @@ class DataFetchComponent extends React.Component {
       this.setState({
         xhr: true,
       });
-      await window.fetch('https://reqres.in/api/users?page=2')
-      await window.fetch('https://reqres.in/api/users?page=3')
+      await window.fetch('https://reqres.in/api/users?page=2');
+      await window.fetch('https://reqres.in/api/users?page=3');
       this.setState({
         fetch: true,
       });
     };
     xhr.open('GET', 'https://reqres.in/api/users?page=1', true);
     xhr.send();
-
   }
   render() {
     if (!this.state) {
@@ -94,19 +93,44 @@ class DataFetchComponent extends React.Component {
   }
 }
 
+class AsyncContent extends React.Component {
+  componentDidMount() {
+    setTimeout(() => {
+      this.setState({ asyncContent: 'world!' });
+    }, 1000);
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Hello {this.state && this.state.asyncContent}</h1>
+      </div>
+    );
+  }
+}
+
 function loadStories() {
   if (!isHappoRun()) {
     storiesOf('NOT PART OF HAPPO', module).add('default', () => (
       <AsyncComponent />
     ));
   }
-  storiesOf('ALSO NOT PART OF HAPPO', module).add('default', () => (
-    <AsyncComponent />
-  ), { happo: false });
+  storiesOf('ALSO NOT PART OF HAPPO', module).add(
+    'default',
+    () => <AsyncComponent />,
+    { happo: false },
+  );
   storiesOf('Lazy', module).add('default', () => <AsyncComponent />);
   storiesOf('Portal', module).add('default', () => <PortalComponent />);
   storiesOf('Tethered', module).add('default', () => <TetheredComponent />);
   storiesOf('Data Fetch', module).add('default', () => <DataFetchComponent />);
+  storiesOf('Async Content', module)
+    .add('with waitForContent', () => <AsyncContent />, {
+      happo: { waitForContent: 'world' },
+    })
+    .add('with delay', () => <AsyncContent />, {
+      happo: { delay: 1200 },
+    });
 
   storiesOf('Button', module)
     .add('with text', () => <Button>Hello Button</Button>, {
@@ -119,7 +143,7 @@ function loadStories() {
     ))
     .add('with static image', () => (
       <Button>
-        <img src='/assets/staticImage.png' />
+        <img src="/assets/staticImage.png" />
       </Button>
     ))
     .add('with some emoji', () => (
@@ -148,7 +172,7 @@ function loadStories() {
         );
       },
       { happo: { delay: 300 } },
-    )
+    );
 }
 
 configure(loadStories, module);
