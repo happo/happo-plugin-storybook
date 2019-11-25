@@ -95,6 +95,21 @@ storiesOf('FooComponent', module)
   .add('delayed', () => <FooComponent />, { happo: { delay: 200 } });
 ```
 
+### Waiting for content
+
+In some cases, examples might not be ready by the time Happo takes the
+screenshot. Adding a delay might help, but only if the asynchronous event is
+consistently timed. In these cases the `waitForContent` parameter might help.
+Let's assume that `PaymentForm` in the example below loads some third-party
+iframe that you have no control over, loading a credit card form. In order to
+wait for the iframe to finish, we can add a `waitForContent` parameter with
+some unique string in the iframe.
+
+```js
+storiesOf('PaymentForm', module)
+  .add('default', () => <PaymentForm />, { happo: { waitForContent: 'Credit card' } });
+```
+
 ## Caveats
 
 When you're using this plugin, some of the regular Happo commands and
@@ -112,7 +127,7 @@ configuration options aren't available. These include:
 
 ## Debugging
 
-If you want to debug your test suite similar to how the Happo browser workers do it, you can follow these steps: 
+If you want to debug your test suite similar to how the Happo browser workers do it, you can follow these steps:
 
 1. In a browser, go to the storybook URL. E.g. http://localhost:3000
 2. The URL will change to something like http://localhost:3000/?selectedKind=foo&selectedStory=default
@@ -121,12 +136,12 @@ If you want to debug your test suite similar to how the Happo browser workers do
 5. Paste this javascript snippet and hit enter: `happo.nextExample().then((item) => console.log(item))`
 6. Run that code again repeatedly to step through each example (use the arrow up key to reuse the last command)
 
-To quickly run through all examples, follow steps 1-4, then paste this script instead: 
+To quickly run through all examples, follow steps 1-4, then paste this script instead:
 ```js
 var renderIter = function() { window.happo.nextExample().then(function(a) { if (!a) { return; } console.log(a); renderIter(); }) }; renderIter();
 ```
 
 ## Troubleshooting
 
-- Getting a `Failed on worker` error? Make sure you are making a call to `import 'happo-plugin-storybook/register'` in your `.storybook/config.js` file. 
-- Getting spurious diffs from fonts not loading? Happo workers will wait for fonts to load before taking the screenshot, but it assumes that fonts it has already seen are already available. Make sure the `@font-face` declaration is declared globally and not part of the stories themselves. 
+- Getting a `Failed on worker` error? Make sure you are making a call to `import 'happo-plugin-storybook/register'` in your `.storybook/config.js` file.
+- Getting spurious diffs from fonts not loading? Happo workers will wait for fonts to load before taking the screenshot, but it assumes that fonts it has already seen are already available. Make sure the `@font-face` declaration is declared globally and not part of the stories themselves.

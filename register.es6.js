@@ -11,12 +11,15 @@ let examples;
 let currentIndex = 0;
 let defaultDelay;
 
-async function waitForContent(elem, start = time.originalDateNow()) {
+async function waitForSomeContent(elem, start = time.originalDateNow()) {
   const html = elem.innerHTML.trim();
   const duration = time.originalDateNow() - start;
   if (html === '' && duration < ASYNC_TIMEOUT) {
     return new Promise(resolve =>
-      time.originalSetTimeout(() => resolve(waitForContent(elem, start)), 10),
+      time.originalSetTimeout(
+        () => resolve(waitForSomeContent(elem, start)),
+        10,
+      ),
     );
   }
   return html;
@@ -30,14 +33,19 @@ function getExamples() {
     for (let example of story.stories) {
       const { name: variant } = example;
       let delay = defaultDelay;
+      let waitForContent;
       if (storyStore.getStoryAndParameters) {
-        const {
-          parameters: { happo = {} },
-        } = storyStore.getStoryAndParameters(story.kind, variant);
-        if (happo === false) {
+        const { parameters } = storyStore.getStoryAndParameters(
+          story.kind,
+          variant,
+        );
+        if (parameters.happo === false) {
           continue;
         }
-        delay = happo.delay || defaultDelay;
+        if (typeof parameters.happo === 'object' && parameters.happo !== null) {
+          delay = parameters.happo.delay || defaultDelay;
+          waitForContent = parameters.happo.waitForContent;
+        }
       }
 
       const storyId = (storybookClient.toId || (() => undefined))(
@@ -50,6 +58,7 @@ function getExamples() {
         variant,
         delay,
         storyId,
+        waitForContent,
       });
     }
   }
@@ -73,7 +82,9 @@ window.happo.nextExample = async () => {
   if (currentIndex >= examples.length) {
     return;
   }
-  const { component, variant, storyId, delay } = examples[currentIndex];
+  const { component, variant, storyId, delay, waitForContent } = examples[
+    currentIndex
+  ];
 
   try {
     const rootElement = document.getElementById('root');
@@ -84,15 +95,15 @@ window.happo.nextExample = async () => {
       storyId,
     });
     await new Promise(resolve => time.originalSetTimeout(resolve, 0));
-    await waitForContent(rootElement);
+    await waitForSomeContent(rootElement);
     if (/sb-show-errordisplay/.test(document.body.className)) {
       // It's possible that the error is from unmounting the previous story. We
       // can try re-rendering in this case.
       __STORYBOOK_ADDONS_CHANNEL__.emit('forceReRender');
-      await waitForContent(rootElement);
+      await waitForSomeContent(rootElement);
     }
     await new Promise(resolve => time.originalSetTimeout(resolve, delay));
-    return { component, variant };
+    return { component, variant, waitForContent };
   } catch (e) {
     console.warn(e);
     return { component, variant };
