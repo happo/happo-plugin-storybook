@@ -124,6 +124,7 @@ function loadStories() {
   storiesOf('Portal', module).add('default', () => <PortalComponent />);
   storiesOf('Tethered', module).add('default', () => <TetheredComponent />);
   storiesOf('Data Fetch', module).add('default', () => <DataFetchComponent />);
+  storiesOf('Long Variant Names', module).add('Execute a GraphQL mutation and handle the response when received.', () => <div>I am done</div>);
   storiesOf('Async Content', module)
     .add('with waitForContent', () => <AsyncContent />, {
       happo: { waitForContent: 'world' },
