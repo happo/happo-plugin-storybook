@@ -111,6 +111,10 @@ window.happo.nextExample = async () => {
   ];
 
   try {
+    const docsRootElement = document.getElementById('docs-root');
+    if (docsRootElement) {
+      docsRootElement.setAttribute('data-happo-ignore', 'true');
+    }
     const rootElement = document.getElementById('root');
     rootElement.setAttribute('data-happo-ignore', 'true');
     __STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
