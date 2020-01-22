@@ -27,7 +27,31 @@ async function waitForSomeContent(elem, start = time.originalDateNow()) {
 
 function getExamples() {
   const storyStore = __STORYBOOK_CLIENT_API__._storyStore;
+  if (storyStore.extract) {
+    return Object.values(storyStore.extract())
+      .map(({ id, kind, story, parameters }) => {
+        if (parameters.happo === false) {
+          return;
+        }
+        let delay = defaultDelay;
+        let waitForContent;
+        if (typeof parameters.happo === 'object' && parameters.happo !== null) {
+          delay = parameters.happo.delay || defaultDelay;
+          waitForContent = parameters.happo.waitForContent;
+        }
+        return {
+          component: kind,
+          variant: story,
+          storyId: id,
+          delay,
+          waitForContent,
+        };
+      })
+      .filter(Boolean);
+  }
+
   const result = [];
+
   for (let story of __STORYBOOK_CLIENT_API__.getStorybook()) {
     const component = story.kind;
     for (let example of story.stories) {
@@ -87,6 +111,10 @@ window.happo.nextExample = async () => {
   ];
 
   try {
+    const docsRootElement = document.getElementById('docs-root');
+    if (docsRootElement) {
+      docsRootElement.setAttribute('data-happo-ignore', 'true');
+    }
     const rootElement = document.getElementById('root');
     rootElement.setAttribute('data-happo-ignore', 'true');
     __STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
