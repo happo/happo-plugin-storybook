@@ -40,9 +40,13 @@ module.exports = function happoStorybookPlugin({
           params.push('--static-dir');
           params.push(staticDir);
         }
-        const spawned = spawn('node_modules/.bin/build-storybook', params, {
-          stdio: 'inherit',
-        });
+        const spawned = spawn(
+          path.join('node_modules', '.bin', 'build-storybook'),
+          params,
+          {
+            stdio: 'inherit',
+          },
+        );
 
         spawned.on('exit', code => {
           if (code === 0) {
@@ -60,13 +64,16 @@ module.exports = function happoStorybookPlugin({
       }
       try {
         const iframeContent = fs.readFileSync(iframePath, 'utf-8');
-        fs.writeFileSync(iframePath, iframeContent.replace(
-          '<head>',
-          `<head>
+        fs.writeFileSync(
+          iframePath,
+          iframeContent.replace(
+            '<head>',
+            `<head>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <script type="text/javascript">window.__IS_HAPPO_RUN = true;</script>
           `,
-        ));
+          ),
+        );
         const buffer = await zipFolderToBuffer(outputDir);
         return buffer.toString('base64');
       } catch (e) {
