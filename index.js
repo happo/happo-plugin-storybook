@@ -45,6 +45,7 @@ module.exports = function happoStorybookPlugin({
           params,
           {
             stdio: 'inherit',
+            shell: process.platform == 'win32',
           },
         );
 
