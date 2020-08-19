@@ -7,6 +7,9 @@ module.exports = args => {
     return use && /babel-loader/.test(use[0].loader);
   });
   if (babelLoader && babelLoader.exclude) {
+    if (babelLoader.exclude instanceof RegExp) {
+      babelLoader.exclude = [babelLoader.exclude];
+    }
     babelLoader.exclude.push(path.resolve(__dirname, '../register.js'));
   }
 
