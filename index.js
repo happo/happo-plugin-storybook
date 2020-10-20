@@ -26,37 +26,44 @@ function zipFolderToBuffer(outputDir) {
   });
 }
 
+function buildStorybook({ configDir, staticDir, outputDir }) {
+  return new Promise((resolve, reject) => {
+    rimraf.sync(outputDir);
+    const params = ['--output-dir', outputDir, '--config-dir', configDir];
+    if (staticDir) {
+      params.push('--static-dir');
+      params.push(staticDir);
+    }
+    const spawned = spawn(
+      path.join('node_modules', '.bin', 'build-storybook'),
+      params,
+      {
+        stdio: 'inherit',
+        shell: process.platform == 'win32',
+      },
+    );
+
+    spawned.on('exit', code => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error('Failed to build static storybook package'));
+      }
+    });
+  });
+}
+
 module.exports = function happoStorybookPlugin({
   configDir = '.storybook',
   staticDir,
   outputDir = '.out',
+  usePrebuiltPackage = false,
 } = {}) {
   return {
     generateStaticPackage: async () => {
-      await new Promise((resolve, reject) => {
-        rimraf.sync(outputDir);
-        const params = ['--output-dir', outputDir, '--config-dir', configDir];
-        if (staticDir) {
-          params.push('--static-dir');
-          params.push(staticDir);
-        }
-        const spawned = spawn(
-          path.join('node_modules', '.bin', 'build-storybook'),
-          params,
-          {
-            stdio: 'inherit',
-            shell: process.platform == 'win32',
-          },
-        );
-
-        spawned.on('exit', code => {
-          if (code === 0) {
-            resolve();
-          } else {
-            reject(new Error('Failed to build static storybook package'));
-          }
-        });
-      });
+      if (!usePrebuiltPackage) {
+        await buildStorybook({ configDir, staticDir, outputDir });
+      }
       const iframePath = path.join(outputDir, 'iframe.html');
       if (!fs.existsSync(iframePath)) {
         throw new Error(

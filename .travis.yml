@@ -4,5 +4,6 @@ node_js:
 env:
   - SB_V=5
   - SB_V=6
+  - SB_V=6 HAPPO_USE_PREBUILT_PACKAGE=yes
 install: yarn install
-script: yarn add @storybook/addons@${SB_V} @storybook/react@${SB_V} && rm -rf node_modules && yarn install && yarn build && yarn happo run
+script: yarn add @storybook/addons@${SB_V} @storybook/react@${SB_V} && rm -rf node_modules && yarn install && yarn build && yarn build-storybook && yarn happo run
