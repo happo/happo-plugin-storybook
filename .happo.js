@@ -33,6 +33,7 @@ module.exports = {
       configDir: '.storybook',
       outputDir: '.happo-out',
       staticDir: 'public',
+      usePrebuiltPackage: !!process.env.HAPPO_USE_PREBUILT_PACKAGE,
     }),
   ],
   stylesheets: [path.resolve(__dirname, 'test.css')],
