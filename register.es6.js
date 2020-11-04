@@ -6,6 +6,7 @@ const time = window.happoTime || {
 };
 
 const ASYNC_TIMEOUT = 100;
+const WAIT_FOR_TIMEOUT = 2000;
 
 let examples;
 let currentIndex = 0;
@@ -25,6 +26,18 @@ async function waitForSomeContent(elem, start = time.originalDateNow()) {
   return html;
 }
 
+async function waitForWaitFor(waitFor, start = time.originalDateNow()) {
+  const duration = time.originalDateNow() - start;
+  if (!waitFor() && duration < WAIT_FOR_TIMEOUT) {
+    return new Promise(resolve =>
+      time.originalSetTimeout(
+        () => resolve(waitForWaitFor(waitFor, start)),
+        50,
+      ),
+    );
+  }
+}
+
 function getExamples() {
   const storyStore = __STORYBOOK_CLIENT_API__._storyStore;
   if (storyStore.extract) {
@@ -35,9 +48,11 @@ function getExamples() {
         }
         let delay = defaultDelay;
         let waitForContent;
+        let waitFor;
         if (typeof parameters.happo === 'object' && parameters.happo !== null) {
           delay = parameters.happo.delay || defaultDelay;
           waitForContent = parameters.happo.waitForContent;
+          waitFor = parameters.happo.waitFor;
         }
         return {
           component: kind,
@@ -45,6 +60,7 @@ function getExamples() {
           storyId: id,
           delay,
           waitForContent,
+          waitFor,
         };
       })
       .filter(Boolean);
@@ -58,6 +74,7 @@ function getExamples() {
       const { name: variant } = example;
       let delay = defaultDelay;
       let waitForContent;
+      let waitFor;
       if (storyStore.getStoryAndParameters) {
         const { parameters } = storyStore.getStoryAndParameters(
           story.kind,
@@ -69,6 +86,7 @@ function getExamples() {
         if (typeof parameters.happo === 'object' && parameters.happo !== null) {
           delay = parameters.happo.delay || defaultDelay;
           waitForContent = parameters.happo.waitForContent;
+          waitFor = parameters.happo.waitFor;
         }
       }
 
@@ -83,6 +101,7 @@ function getExamples() {
         delay,
         storyId,
         waitForContent,
+        waitFor,
       });
     }
   }
@@ -106,7 +125,7 @@ window.happo.nextExample = async () => {
   if (currentIndex >= examples.length) {
     return;
   }
-  const { component, variant, storyId, delay, waitForContent } = examples[
+  const { component, variant, storyId, delay, waitForContent, waitFor } = examples[
     currentIndex
   ];
 
@@ -131,6 +150,9 @@ window.happo.nextExample = async () => {
       await waitForSomeContent(rootElement);
     }
     await new Promise(resolve => time.originalSetTimeout(resolve, delay));
+    if (waitFor) {
+      await waitForWaitFor(waitFor);
+    }
     return { component, variant, waitForContent };
   } catch (e) {
     console.warn(e);
