@@ -24,7 +24,7 @@ class AsyncComponent extends React.Component {
 
 setDefaultDelay(1);
 
-window.onbeforeunload = function(e) {
+window.onbeforeunload = function (e) {
   throw 'Failed to render because a page load event was fired';
 };
 
@@ -103,7 +103,12 @@ class AsyncContent extends React.Component {
   render() {
     return (
       <div>
-        <h1>Hello {this.state && this.state.asyncContent}</h1>
+        <h1>
+          Hello{' '}
+          {this.state && (
+            <span className="async-inner">{this.state.asyncContent}</span>
+          )}
+        </h1>
       </div>
     );
   }
@@ -124,10 +129,19 @@ function loadStories() {
   storiesOf('Portal', module).add('default', () => <PortalComponent />);
   storiesOf('Tethered', module).add('default', () => <TetheredComponent />);
   storiesOf('Data Fetch', module).add('default', () => <DataFetchComponent />);
-  storiesOf('Long Variant Names', module).add('Execute a GraphQL mutation and handle the response when received.', () => <div>I am done</div>);
+  storiesOf(
+    'Long Variant Names',
+    module,
+  ).add(
+    'Execute a GraphQL mutation and handle the response when received.',
+    () => <div>I am done</div>,
+  );
   storiesOf('Async Content', module)
     .add('with waitForContent', () => <AsyncContent />, {
       happo: { waitForContent: 'world' },
+    })
+    .add('with waitFor', () => <AsyncContent />, {
+      happo: { waitFor: () => document.querySelector('.async-inner') },
     })
     .add('with delay', () => <AsyncContent />, {
       happo: { delay: 1200 },
