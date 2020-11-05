@@ -103,7 +103,12 @@ class AsyncContent extends React.Component {
   render() {
     return (
       <div>
-        <h1>Hello {this.state && <code>{this.state.asyncContent}</code>}</h1>
+        <h1>
+          Hello{' '}
+          {this.state && (
+            <span className="async-inner">{this.state.asyncContent}</span>
+          )}
+        </h1>
       </div>
     );
   }
@@ -136,7 +141,7 @@ function loadStories() {
       happo: { waitForContent: 'world' },
     })
     .add('with waitFor', () => <AsyncContent />, {
-      happo: { waitFor: () => document.querySelector('code') },
+      happo: { waitFor: () => document.querySelector('.async-inner') },
     })
     .add('with delay', () => <AsyncContent />, {
       happo: { delay: 1200 },
