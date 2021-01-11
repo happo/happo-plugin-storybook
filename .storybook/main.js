@@ -1,1 +1,5 @@
-module.exports = {};
+module.exports = {
+  addons: [
+    '../register.js',
+  ]
+};

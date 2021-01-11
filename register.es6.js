@@ -1,3 +1,6 @@
+import React from 'react';
+import { AddonPanel } from '@storybook/components';
+import { addons, types } from '@storybook/addons';
 import storybookClient from '@storybook/core/client';
 
 const time = window.happoTime || {
@@ -125,9 +128,14 @@ window.happo.nextExample = async () => {
   if (currentIndex >= examples.length) {
     return;
   }
-  const { component, variant, storyId, delay, waitForContent, waitFor } = examples[
-    currentIndex
-  ];
+  const {
+    component,
+    variant,
+    storyId,
+    delay,
+    waitForContent,
+    waitFor,
+  } = examples[currentIndex];
 
   try {
     const docsRootElement = document.getElementById('docs-root');
@@ -161,6 +169,20 @@ window.happo.nextExample = async () => {
     currentIndex++;
   }
 };
+
+addons.register('happo/happo-plugin-storybook', () => {
+  addons.add('design-addon/panel', {
+    title: 'Happo',
+    type: types.PANEL,
+    render: ({ active, key }) => (
+      <AddonPanel active={active} key={key}>
+        <div style={{ padding: 10 }}>
+          <button>Take screenshot</button>
+        </div>
+      </AddonPanel>
+    ),
+  });
+});
 
 export const setDefaultDelay = delay => {
   defaultDelay = delay;
