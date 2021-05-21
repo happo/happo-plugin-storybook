@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import TetherComponent from 'react-tether';
 import { configure } from '@storybook/react';
@@ -114,6 +114,14 @@ class AsyncContent extends React.Component {
   }
 }
 
+function ClickToReveal() {
+  const [open, setOpen] = useState(false);
+  if (open) {
+    return <div>I'm open</div>;
+  }
+  return <button onClick={() => setOpen(true)}>Open</button>;
+}
+
 function loadStories() {
   if (!isHappoRun()) {
     storiesOf('NOT PART OF HAPPO', module).add('default', () => (
@@ -125,6 +133,18 @@ function loadStories() {
     () => <AsyncComponent />,
     { happo: false },
   );
+  storiesOf('ClickToReveal', module).add('default', () => <ClickToReveal />, {
+    happo: {
+      beforeScreenshot: () => {
+        const clickEvent = new MouseEvent('click', {
+          view: window,
+          bubbles: true,
+          cancelable: false,
+        });
+        document.querySelector('button').dispatchEvent(clickEvent);
+      },
+    },
+  });
   storiesOf('Lazy', module).add('default', () => <AsyncComponent />);
   storiesOf('Portal', module).add('default', () => <PortalComponent />);
   storiesOf('Tethered', module).add('default', () => <TetheredComponent />);

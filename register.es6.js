@@ -49,10 +49,12 @@ function getExamples() {
         let delay = defaultDelay;
         let waitForContent;
         let waitFor;
+        let beforeScreenshot;
         if (typeof parameters.happo === 'object' && parameters.happo !== null) {
           delay = parameters.happo.delay || defaultDelay;
           waitForContent = parameters.happo.waitForContent;
           waitFor = parameters.happo.waitFor;
+          beforeScreenshot = parameters.happo.beforeScreenshot;
         }
         return {
           component: kind,
@@ -61,6 +63,7 @@ function getExamples() {
           delay,
           waitForContent,
           waitFor,
+          beforeScreenshot,
         };
       })
       .filter(Boolean);
@@ -87,6 +90,7 @@ function getExamples() {
           delay = parameters.happo.delay || defaultDelay;
           waitForContent = parameters.happo.waitForContent;
           waitFor = parameters.happo.waitFor;
+          beforeScreenshot = parameters.happo.beforeScreenshot;
         }
       }
 
@@ -102,6 +106,7 @@ function getExamples() {
         storyId,
         waitForContent,
         waitFor,
+        beforeScreenshot,
       });
     }
   }
@@ -125,9 +130,15 @@ window.happo.nextExample = async () => {
   if (currentIndex >= examples.length) {
     return;
   }
-  const { component, variant, storyId, delay, waitForContent, waitFor } = examples[
-    currentIndex
-  ];
+  const {
+    component,
+    variant,
+    storyId,
+    delay,
+    waitForContent,
+    waitFor,
+    beforeScreenshot,
+  } = examples[currentIndex];
 
   try {
     const docsRootElement = document.getElementById('docs-root');
@@ -152,6 +163,9 @@ window.happo.nextExample = async () => {
     await new Promise(resolve => time.originalSetTimeout(resolve, delay));
     if (waitFor) {
       await waitForWaitFor(waitFor);
+    }
+    if (beforeScreenshot && typeof beforeScreenshot === 'function') {
+      beforeScreenshot({ rootElement });
     }
     return { component, variant, waitForContent };
   } catch (e) {
