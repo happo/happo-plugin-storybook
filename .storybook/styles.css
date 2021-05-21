@@ -1,0 +1,52 @@
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(50%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.fade-in, .bounce, .slide-in {
+  background-color: lightblue;
+  border: 1px solid blue;
+  border-radius: 5px;
+  padding: 5px 10px;
+  display: inline-block;
+}
+
+.fade-in {
+  animation: fadeIn ease 0.2s;
+  animation-duration: 10s;
+}
+
+.bounce {
+  animation: bounce ease 1s infinite;
+}
+
+.slide-in {
+  animation: slideIn ease 200ms;
+}

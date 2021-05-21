@@ -9,6 +9,7 @@ import testImage from './testImage.png';
 import { setDefaultDelay, isHappoRun } from '../register';
 
 import Button from './src/Button';
+import './styles.css';
 
 class AsyncComponent extends React.Component {
   componentDidMount() {
@@ -188,6 +189,11 @@ function loadStories() {
       },
       { happo: { delay: 300 } },
     );
+
+  storiesOf('Animation', module)
+    .add('fade-in', () => <div className="fade-in">I fade in</div>)
+    .add('bounce', () => <div className="bounce">I bounce</div>)
+    .add('slide-in', () => <div className="slide-in">I slide in</div>);
 }
 
 configure(loadStories, module);
