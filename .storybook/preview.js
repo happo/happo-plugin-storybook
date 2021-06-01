@@ -145,6 +145,29 @@ function loadStories() {
       },
     },
   });
+  storiesOf('Modify Global State', module).add(
+    'default',
+    () => <div>Modify Global State</div>,
+    {
+      happo: {
+        beforeScreenshot: () => {
+          const el = document.createElement('div');
+          el.id = 'global-state';
+          el.innerHTML = 'clean up after me!';
+          document.body.appendChild(el);
+
+          // We should be able to fail here and still have a screenshot taken
+          throw new Error('Whoopsie!');
+        },
+        afterScreenshot: () => {
+          document.querySelector('#global-state').remove();
+
+          // We should be able to fail here and still have execution continue
+          throw new Error('Whoopsie!');
+        },
+      },
+    },
+  );
   storiesOf('Lazy', module).add('default', () => <AsyncComponent />);
   storiesOf('Portal', module).add('default', () => <PortalComponent />);
   storiesOf('Tethered', module).add('default', () => <TetheredComponent />);

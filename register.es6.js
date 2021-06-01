@@ -50,11 +50,13 @@ function getExamples() {
         let waitForContent;
         let waitFor;
         let beforeScreenshot;
+        let afterScreenshot;
         if (typeof parameters.happo === 'object' && parameters.happo !== null) {
           delay = parameters.happo.delay || defaultDelay;
           waitForContent = parameters.happo.waitForContent;
           waitFor = parameters.happo.waitFor;
           beforeScreenshot = parameters.happo.beforeScreenshot;
+          afterScreenshot = parameters.happo.afterScreenshot;
         }
         return {
           component: kind,
@@ -64,6 +66,7 @@ function getExamples() {
           waitForContent,
           waitFor,
           beforeScreenshot,
+          afterScreenshot,
         };
       })
       .filter(Boolean);
@@ -91,6 +94,7 @@ function getExamples() {
           waitForContent = parameters.happo.waitForContent;
           waitFor = parameters.happo.waitFor;
           beforeScreenshot = parameters.happo.beforeScreenshot;
+          afterScreenshot = parameters.happo.afterScreenshot;
         }
       }
 
@@ -107,6 +111,7 @@ function getExamples() {
         waitForContent,
         waitFor,
         beforeScreenshot,
+        afterScreenshot,
       });
     }
   }
@@ -147,6 +152,15 @@ window.happo.nextExample = async () => {
     }
     const rootElement = document.getElementById('root');
     rootElement.setAttribute('data-happo-ignore', 'true');
+
+    const { afterScreenshot } = examples[currentIndex - 1] || {};
+    if (typeof afterScreenshot === 'function') {
+      try {
+        afterScreenshot({ rootElement });
+      } catch (e) {
+        console.error('Failed to invoke afterScreenshot hook', e);
+      }
+    }
     __STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
       kind: component,
       story: variant,
@@ -165,7 +179,11 @@ window.happo.nextExample = async () => {
       await waitForWaitFor(waitFor);
     }
     if (beforeScreenshot && typeof beforeScreenshot === 'function') {
-      beforeScreenshot({ rootElement });
+      try {
+        beforeScreenshot({ rootElement });
+      } catch (e) {
+        console.error('Failed to invoke beforeScreenshot hook', e);
+      }
     }
     return { component, variant, waitForContent };
   } catch (e) {
