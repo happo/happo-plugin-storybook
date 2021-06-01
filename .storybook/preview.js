@@ -145,6 +145,23 @@ function loadStories() {
       },
     },
   });
+  storiesOf('Modify Global State', module).add(
+    'default',
+    () => <div>Modify Global State</div>,
+    {
+      happo: {
+        beforeScreenshot: () => {
+          const el = document.createElement('div');
+          el.id = 'global-state';
+          el.innerHTML = 'clean up after me!';
+          document.body.appendChild(el);
+        },
+        afterScreenshot: () => {
+          document.querySelector('#global-state').remove();
+        },
+      },
+    },
+  );
   storiesOf('Lazy', module).add('default', () => <AsyncComponent />);
   storiesOf('Portal', module).add('default', () => <PortalComponent />);
   storiesOf('Tethered', module).add('default', () => <TetheredComponent />);
