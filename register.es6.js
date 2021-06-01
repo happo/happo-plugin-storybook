@@ -153,9 +153,13 @@ window.happo.nextExample = async () => {
     const rootElement = document.getElementById('root');
     rootElement.setAttribute('data-happo-ignore', 'true');
 
-    const { afterScreenshot } = examples[currentIndex -1] || {};
+    const { afterScreenshot } = examples[currentIndex - 1] || {};
     if (typeof afterScreenshot === 'function') {
-      afterScreenshot({ rootElement });
+      try {
+        afterScreenshot({ rootElement });
+      } catch (e) {
+        console.error('Failed to invoke afterScreenshot hook', e);
+      }
     }
     __STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
       kind: component,
@@ -175,7 +179,11 @@ window.happo.nextExample = async () => {
       await waitForWaitFor(waitFor);
     }
     if (beforeScreenshot && typeof beforeScreenshot === 'function') {
-      beforeScreenshot({ rootElement });
+      try {
+        beforeScreenshot({ rootElement });
+      } catch (e) {
+        console.error('Failed to invoke beforeScreenshot hook', e);
+      }
     }
     return { component, variant, waitForContent };
   } catch (e) {
