@@ -114,7 +114,7 @@ class AsyncContent extends React.Component {
   }
 }
 
-function Async2 () {
+function Async2() {
   const [ready, setReady] = React.useState(false);
   React.useEffect(() => {
     setTimeout(() => {
@@ -210,6 +210,9 @@ function loadStories() {
   storiesOf('Button', module)
     .add('with text', () => <Button>Hello Button</Button>, {
       happo: { delay: 2000 },
+    })
+    .add('firefox only', () => <Button>Hello Firefox Button</Button>, {
+      happo: { targets: ['firefox'] },
     })
     .add('with image', () => (
       <Button>

@@ -51,12 +51,14 @@ function getExamples() {
         let waitFor;
         let beforeScreenshot;
         let afterScreenshot;
+        let targets;
         if (typeof parameters.happo === 'object' && parameters.happo !== null) {
           delay = parameters.happo.delay || defaultDelay;
           waitForContent = parameters.happo.waitForContent;
           waitFor = parameters.happo.waitFor;
           beforeScreenshot = parameters.happo.beforeScreenshot;
           afterScreenshot = parameters.happo.afterScreenshot;
+          targets = parameters.happo.targets;
         }
         return {
           component: kind,
@@ -67,6 +69,7 @@ function getExamples() {
           waitFor,
           beforeScreenshot,
           afterScreenshot,
+          targets,
         };
       })
       .filter(Boolean);
@@ -81,6 +84,7 @@ function getExamples() {
       let delay = defaultDelay;
       let waitForContent;
       let waitFor;
+      let targets;
       if (storyStore.getStoryAndParameters) {
         const { parameters } = storyStore.getStoryAndParameters(
           story.kind,
@@ -95,6 +99,7 @@ function getExamples() {
           waitFor = parameters.happo.waitFor;
           beforeScreenshot = parameters.happo.beforeScreenshot;
           afterScreenshot = parameters.happo.afterScreenshot;
+          targets = parameters.happo.targets;
         }
       }
 
@@ -112,6 +117,7 @@ function getExamples() {
         waitFor,
         beforeScreenshot,
         afterScreenshot,
+        targets,
       });
     }
   }
@@ -126,6 +132,24 @@ window.happo.initChunk = ({ index, total }) => {
   const startIndex = index * examplesPerChunk;
   const endIndex = startIndex + examplesPerChunk;
   examples = all.slice(startIndex, endIndex);
+};
+
+// The happoProcessor is used by happo workers for regular Happo Examples
+// integrations. We can abuse it a little to do target filtering.
+window.happoProcessor = {
+  init({ targetName }) {
+    examples = examples.filter(e => {
+      if (!e.targets || !Array.isArray(e.targets)) {
+        // This story hasn't been filtered for specific targets
+        return true;
+      }
+      return e.targets.includes(targetName);
+    });
+    // Now that we've filtered our examples we need to clean out the processor
+    // so that Happo workers don't continue using it (we want the regular
+    // `happo.nextExample()` iteration process to kick in.
+    delete window.happoProcessor;
+  }
 };
 
 window.happo.nextExample = async () => {
