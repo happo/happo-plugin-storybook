@@ -114,6 +114,20 @@ class AsyncContent extends React.Component {
   }
 }
 
+function Async2 () {
+  const [ready, setReady] = React.useState(false);
+  React.useEffect(() => {
+    setTimeout(() => {
+      setReady(true);
+    }, 1000);
+  }, []);
+  return (
+    <div data-async-ready={ready}>
+      <h1>{ready ? 'Ready' : 'Not ready'}</h1>
+    </div>
+  );
+}
+
 function ClickToReveal() {
   const [open, setOpen] = useState(false);
   if (open) {
@@ -190,6 +204,9 @@ function loadStories() {
       happo: { delay: 1200 },
     });
 
+  storiesOf('Async2', module).add('attribute selector', () => <Async2 />, {
+    happo: { waitFor: () => document.querySelector('[data-async-ready=true]') },
+  });
   storiesOf('Button', module)
     .add('with text', () => <Button>Hello Button</Button>, {
       happo: { delay: 2000 },
