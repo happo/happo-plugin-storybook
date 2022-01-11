@@ -39,7 +39,7 @@ async function waitForWaitFor(waitFor, start = time.originalDateNow()) {
 }
 
 function getExamples() {
-  const storyStore = __STORYBOOK_CLIENT_API__._storyStore;
+  const storyStore = window.__STORYBOOK_CLIENT_API__._storyStore;
   if (storyStore.extract) {
     return Object.values(storyStore.extract())
       .map(({ id, kind, story, parameters }) => {
@@ -77,7 +77,7 @@ function getExamples() {
 
   const result = [];
 
-  for (let story of __STORYBOOK_CLIENT_API__.getStorybook()) {
+  for (let story of window.__STORYBOOK_CLIENT_API__.getStorybook()) {
     const component = story.kind;
     for (let example of story.stories) {
       const { name: variant } = example;
@@ -85,6 +85,8 @@ function getExamples() {
       let waitForContent;
       let waitFor;
       let targets;
+      let beforeScreenshot;
+      let afterScreenshot;
       if (storyStore.getStoryAndParameters) {
         const { parameters } = storyStore.getStoryAndParameters(
           story.kind,
@@ -185,7 +187,7 @@ window.happo.nextExample = async () => {
         console.error('Failed to invoke afterScreenshot hook', e);
       }
     }
-    __STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
+    window.__STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
       kind: component,
       story: variant,
       storyId,
@@ -195,7 +197,7 @@ window.happo.nextExample = async () => {
     if (/sb-show-errordisplay/.test(document.body.className)) {
       // It's possible that the error is from unmounting the previous story. We
       // can try re-rendering in this case.
-      __STORYBOOK_ADDONS_CHANNEL__.emit('forceReRender');
+      window.__STORYBOOK_ADDONS_CHANNEL__.emit('forceReRender');
       await waitForSomeContent(rootElement);
     }
     await new Promise(resolve => time.originalSetTimeout(resolve, delay));
