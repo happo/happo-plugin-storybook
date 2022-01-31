@@ -38,9 +38,12 @@ async function waitForWaitFor(waitFor, start = time.originalDateNow()) {
   }
 }
 
-function getExamples() {
+async function getExamples() {
   const storyStore = window.__STORYBOOK_CLIENT_API__._storyStore;
   if (storyStore.extract) {
+    if (storyStore.cacheAllCSFFiles) {
+      await storyStore.cacheAllCSFFiles();
+    }
     return Object.values(storyStore.extract())
       .map(({ id, kind, story, parameters }) => {
         if (parameters.happo === false) {
@@ -126,37 +129,38 @@ function getExamples() {
   return result;
 }
 
-window.happo = {};
-
-window.happo.initChunk = ({ index, total }) => {
-  const all = getExamples();
-  const examplesPerChunk = Math.ceil(all.length / total);
-  const startIndex = index * examplesPerChunk;
-  const endIndex = startIndex + examplesPerChunk;
-  examples = all.slice(startIndex, endIndex);
-};
-
-// The happoProcessor is used by happo workers for regular Happo Examples
-// integrations. We can abuse it a little to do target filtering.
-window.happoProcessor = {
-  init({ targetName }) {
-    examples = examples.filter(e => {
+function filterExamples(all) {
+  if (initConfig.chunk) {
+    const examplesPerChunk = Math.ceil(
+      all.length / initConfig.chunk.total,
+    );
+    const startIndex = initConfig.chunk.index * examplesPerChunk;
+    const endIndex = startIndex + examplesPerChunk;
+    all = all.slice(startIndex, endIndex);
+  }
+  if (initConfig.targetName) {
+    all = all.filter(e => {
       if (!e.targets || !Array.isArray(e.targets)) {
         // This story hasn't been filtered for specific targets
         return true;
       }
-      return e.targets.includes(targetName);
+      return e.targets.includes(initConfig.targetName);
     });
-    // Now that we've filtered our examples we need to clean out the processor
-    // so that Happo workers don't continue using it (we want the regular
-    // `happo.nextExample()` iteration process to kick in.
-    delete window.happoProcessor;
   }
+  return all;
+}
+
+let initConfig = {};
+
+window.happo = {};
+
+window.happo.init = (config) => {
+  initConfig = config;
 };
 
 window.happo.nextExample = async () => {
   if (!examples) {
-    examples = getExamples();
+    examples = filterExamples(await getExamples());
   }
   if (currentIndex >= examples.length) {
     return;

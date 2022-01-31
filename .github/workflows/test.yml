@@ -27,4 +27,4 @@ jobs:
     - run: yarn install --frozen-lockfile
     - run: yarn add @storybook/addons@${{ matrix.storybook-version }} @storybook/react@${{ matrix.storybook-version }} && rm -rf node_modules && yarn install && yarn build && yarn happo run
     - run: yarn lint
-    - run: HAPPO_USE_PREBUILT_PACKAGE=yes yarn build-storybook && yarn happo run
+    - run: HAPPO_USE_PREBUILT_PACKAGE=yes STORYBOOK_VERSION=${{ matrix.storybook-version }} yarn build-storybook && yarn happo run
