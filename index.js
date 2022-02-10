@@ -29,19 +29,22 @@ function zipFolderToBuffer(outputDir) {
 function buildStorybook({ configDir, staticDir, outputDir }) {
   return new Promise((resolve, reject) => {
     rimraf.sync(outputDir);
-    const params = ['--output-dir', outputDir, '--config-dir', configDir];
+    const params = [
+      'build-storybook',
+      '--output-dir',
+      outputDir,
+      '--config-dir',
+      configDir,
+    ];
     if (staticDir) {
       params.push('--static-dir');
       params.push(staticDir);
     }
-    const spawned = spawn(
-      path.join('node_modules', '.bin', 'build-storybook'),
-      params,
-      {
-        stdio: 'inherit',
-        shell: process.platform == 'win32',
-      },
-    );
+    const binary = fs.existsSync('yarn.lock') ? 'yarn' : 'npx';
+    const spawned = spawn(binary, params, {
+      stdio: 'inherit',
+      shell: process.platform == 'win32',
+    });
 
     spawned.on('exit', code => {
       if (code === 0) {
