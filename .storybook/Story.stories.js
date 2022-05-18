@@ -238,16 +238,16 @@ export const WithTooltip = () => (
 );
 WithTooltip.parameters = {
   happo: {
-    waitForContent: 'here I am',
-    beforeScreenshot: ({ rootElement }) =>
-      rootElement
-        .querySelector('button')
-        .dispatchEvent(
-          new MouseEvent('mouseover', {
-            view: window,
-            bubbles: true,
-            cancelable: false,
-          }),
-        ),
+    beforeScreenshot: async ({ rootElement }) => {
+      rootElement.querySelector('button').dispatchEvent(
+        new MouseEvent('mouseover', {
+          view: window,
+          bubbles: true,
+          cancelable: false,
+        }),
+      );
+      // delay with 200ms to allow the animation to finish
+      await new Promise(r => setTimeout(r, 200));
+    },
   },
 };

@@ -186,7 +186,7 @@ window.happo.nextExample = async () => {
     const { afterScreenshot } = examples[currentIndex - 1] || {};
     if (typeof afterScreenshot === 'function') {
       try {
-        afterScreenshot({ rootElement });
+        await afterScreenshot({ rootElement });
       } catch (e) {
         console.error('Failed to invoke afterScreenshot hook', e);
       }
@@ -210,7 +210,7 @@ window.happo.nextExample = async () => {
     }
     if (beforeScreenshot && typeof beforeScreenshot === 'function') {
       try {
-        beforeScreenshot({ rootElement });
+        await beforeScreenshot({ rootElement });
       } catch (e) {
         console.error('Failed to invoke beforeScreenshot hook', e);
       }
