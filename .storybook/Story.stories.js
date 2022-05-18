@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import TetherComponent from 'react-tether';
 import { configure } from '@storybook/react';
 import { storiesOf } from '@storybook/react';
+import Tooltip from '@mui/material/Tooltip';
 
 import testImage from './testImage.png';
 
@@ -12,7 +13,7 @@ import Button from './src/Button';
 
 export default {
   title: 'Stories',
-}
+};
 
 class AsyncComponent extends React.Component {
   componentDidMount() {
@@ -225,5 +226,28 @@ export const MiscLarge = () => (
   <div style={{ width: 400, height: 400, backgroundColor: 'red' }} />
 );
 export const MiscFailingOnUnmount = () => <UnmountFail />;
-export const MiscFailing = () => { throw new Error('Some error') };
+export const MiscFailing = () => {
+  throw new Error('Some error');
+};
 MiscFailing.parameters = { happo: { delay: 300 } };
+
+export const WithTooltip = () => (
+  <Tooltip title="here I am">
+    <button>hover me</button>
+  </Tooltip>
+);
+WithTooltip.parameters = {
+  happo: {
+    waitForContent: 'here I am',
+    beforeScreenshot: ({ rootElement }) =>
+      rootElement
+        .querySelector('button')
+        .dispatchEvent(
+          new MouseEvent('mouseover', {
+            view: window,
+            bubbles: true,
+            cancelable: false,
+          }),
+        ),
+  },
+};
