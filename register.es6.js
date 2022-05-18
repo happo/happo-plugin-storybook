@@ -186,7 +186,7 @@ window.happo.nextExample = async () => {
     const { afterScreenshot } = examples[currentIndex - 1] || {};
     if (typeof afterScreenshot === 'function') {
       try {
-        afterScreenshot({ rootElement });
+        await afterScreenshot({ rootElement });
       } catch (e) {
         console.error('Failed to invoke afterScreenshot hook', e);
       }
@@ -204,16 +204,16 @@ window.happo.nextExample = async () => {
       window.__STORYBOOK_ADDONS_CHANNEL__.emit('forceReRender');
       await waitForSomeContent(rootElement);
     }
-    await new Promise(resolve => time.originalSetTimeout(resolve, delay));
-    if (waitFor) {
-      await waitForWaitFor(waitFor);
-    }
     if (beforeScreenshot && typeof beforeScreenshot === 'function') {
       try {
-        beforeScreenshot({ rootElement });
+        await beforeScreenshot({ rootElement });
       } catch (e) {
         console.error('Failed to invoke beforeScreenshot hook', e);
       }
+    }
+    await new Promise(resolve => time.originalSetTimeout(resolve, delay));
+    if (waitFor) {
+      await waitForWaitFor(waitFor);
     }
     return { component, variant, waitForContent };
   } catch (e) {
