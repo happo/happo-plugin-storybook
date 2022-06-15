@@ -1,0 +1,2 @@
+--ignore-dir=is:.happo-out
+--ignore-dir=is:node_modules
