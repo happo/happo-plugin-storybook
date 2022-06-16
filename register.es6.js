@@ -1,5 +1,3 @@
-import storybookClient from '@storybook/core/client';
-
 const time = window.happoTime || {
   originalDateNow: Date.now,
   originalSetTimeout: window.setTimeout.bind(window),
@@ -40,100 +38,50 @@ async function waitForWaitFor(waitFor, start = time.originalDateNow()) {
 
 async function getExamples() {
   const storyStore = window.__STORYBOOK_CLIENT_API__._storyStore;
-  if (storyStore.extract) {
-    if (storyStore.cacheAllCSFFiles) {
-      await storyStore.cacheAllCSFFiles();
-    }
-    return Object.values(storyStore.extract())
-      .map(({ id, kind, story, parameters }) => {
-        if (parameters.happo === false) {
-          return;
-        }
-        let delay = defaultDelay;
-        let waitForContent;
-        let waitFor;
-        let beforeScreenshot;
-        let afterScreenshot;
-        let targets;
-        if (typeof parameters.happo === 'object' && parameters.happo !== null) {
-          delay = parameters.happo.delay || defaultDelay;
-          waitForContent = parameters.happo.waitForContent;
-          waitFor = parameters.happo.waitFor;
-          beforeScreenshot = parameters.happo.beforeScreenshot;
-          afterScreenshot = parameters.happo.afterScreenshot;
-          targets = parameters.happo.targets;
-        }
-        return {
-          component: kind,
-          variant: story,
-          storyId: id,
-          delay,
-          waitForContent,
-          waitFor,
-          beforeScreenshot,
-          afterScreenshot,
-          targets,
-        };
-      })
-      .filter(Boolean);
+
+  if (!storyStore.extract) {
+    throw new Error('Missing Storybook Client API');
   }
-
-  const result = [];
-
-  for (let story of window.__STORYBOOK_CLIENT_API__.getStorybook()) {
-    const component = story.kind;
-    for (let example of story.stories) {
-      const { name: variant } = example;
+  if (storyStore.cacheAllCSFFiles) {
+    await storyStore.cacheAllCSFFiles();
+  }
+  return Object.values(storyStore.extract())
+    .map(({ id, kind, story, parameters }) => {
+      if (parameters.happo === false) {
+        return;
+      }
       let delay = defaultDelay;
       let waitForContent;
       let waitFor;
-      let targets;
       let beforeScreenshot;
       let afterScreenshot;
-      if (storyStore.getStoryAndParameters) {
-        const { parameters } = storyStore.getStoryAndParameters(
-          story.kind,
-          variant,
-        );
-        if (parameters.happo === false) {
-          continue;
-        }
-        if (typeof parameters.happo === 'object' && parameters.happo !== null) {
-          delay = parameters.happo.delay || defaultDelay;
-          waitForContent = parameters.happo.waitForContent;
-          waitFor = parameters.happo.waitFor;
-          beforeScreenshot = parameters.happo.beforeScreenshot;
-          afterScreenshot = parameters.happo.afterScreenshot;
-          targets = parameters.happo.targets;
-        }
+      let targets;
+      if (typeof parameters.happo === 'object' && parameters.happo !== null) {
+        delay = parameters.happo.delay || defaultDelay;
+        waitForContent = parameters.happo.waitForContent;
+        waitFor = parameters.happo.waitFor;
+        beforeScreenshot = parameters.happo.beforeScreenshot;
+        afterScreenshot = parameters.happo.afterScreenshot;
+        targets = parameters.happo.targets;
       }
-
-      const storyId = (storybookClient.toId || (() => undefined))(
-        story.kind,
-        variant,
-      );
-
-      result.push({
-        component,
-        variant,
+      return {
+        component: kind,
+        variant: story,
+        storyId: id,
         delay,
-        storyId,
         waitForContent,
         waitFor,
         beforeScreenshot,
         afterScreenshot,
         targets,
-      });
-    }
-  }
-  return result;
+      };
+    })
+    .filter(Boolean);
 }
 
 function filterExamples(all) {
   if (initConfig.chunk) {
-    const examplesPerChunk = Math.ceil(
-      all.length / initConfig.chunk.total,
-    );
+    const examplesPerChunk = Math.ceil(all.length / initConfig.chunk.total);
     const startIndex = initConfig.chunk.index * examplesPerChunk;
     const endIndex = startIndex + examplesPerChunk;
     all = all.slice(startIndex, endIndex);
@@ -154,7 +102,7 @@ let initConfig = {};
 
 window.happo = {};
 
-window.happo.init = (config) => {
+window.happo.init = config => {
   initConfig = config;
 };
 
