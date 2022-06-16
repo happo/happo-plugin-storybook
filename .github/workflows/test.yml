@@ -2,25 +2,41 @@ name: Run tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
-  build:
-
+  storybook6:
     runs-on: ubuntu-latest
     env:
       HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
       HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js 14
-      uses: actions/setup-node@v2
-      with:
-        node-version: 14
-    - run: yarn install --frozen-lockfile
-    - run: yarn build && yarn happo run
-    - run: yarn lint
-    - run: HAPPO_USE_PREBUILT_PACKAGE=yes yarn build-storybook && yarn happo run
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+      - run: yarn build && yarn happo run
+      - run: HAPPO_USE_PREBUILT_PACKAGE=yes yarn build-storybook && yarn happo run
+
+  storybook5:
+    runs-on: ubuntu-latest
+    env:
+      HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
+      HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - run: yarn install --frozen-lockfile
+      - run: echo "import '../register'; module.exports = {};" > .storybook/config.js
+      - run: yarn add @storybook/addons@5 @storybook/react@5
+      - run: yarn build && yarn happo run
