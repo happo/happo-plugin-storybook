@@ -38,5 +38,5 @@ jobs:
           node-version: 14
       - run: yarn install --frozen-lockfile
       - run: echo "import '../register'; module.exports = {};" > .storybook/config.js
-      - run: yarn add @storybook/addons@5.2 @storybook/react@5.2
+      - run: yarn add @storybook/addons@5 @storybook/react@5
       - run: yarn build && yarn happo run
