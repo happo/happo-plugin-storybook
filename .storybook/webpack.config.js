@@ -11,6 +11,9 @@ module.exports = args => {
       babelLoader.exclude = [babelLoader.exclude];
     }
     babelLoader.exclude.push(path.resolve(__dirname, '../register.js'));
+    babelLoader.exclude.push(path.resolve(__dirname, '../addon.js'));
+    babelLoader.exclude.push(path.resolve(__dirname, '../preset.js'));
+    babelLoader.exclude.push(path.resolve(__dirname, '../preview.js'));
   }
 
   if (config.module.rules.some(({ loader }) => /file-loader/.test(loader))) {

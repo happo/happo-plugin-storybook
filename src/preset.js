@@ -1,5 +1,9 @@
 function managerEntries(entry = []) {
-  return [...entry, require.resolve("./addon")]; //👈 Addon implementation
+  return [...entry, require.resolve('./addon')];
 }
 
-module.exports = { managerEntries }
+function config(entry = []) {
+  return [...entry, require.resolve('./preview')];
+}
+
+module.exports = { managerEntries, config };

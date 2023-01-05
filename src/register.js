@@ -175,15 +175,6 @@ window.happo.nextExample = async () => {
   }
 };
 
-addons.getChannel().on('happo-event', ({ storyId, funcName }) => {
-  const rootElement = document.getElementById('root');
-  const storyStore = window.__STORYBOOK_CLIENT_API__._storyStore;
-  const stories = storyStore.extract();
-  const story = stories[storyId];
-
-  story.parameters.happo[funcName]({ rootElement });
-});
-
 export const setDefaultDelay = (delay) => {
   defaultDelay = delay;
 };

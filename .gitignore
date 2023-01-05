@@ -3,4 +3,5 @@ node_modules
 /register.js
 /addon.js
 /preset.js
+/preview.js
 
