@@ -1,11 +1,11 @@
 module.exports = {
   features: {
-    storyStoreV7: process.env.STORYBOOK_VERSION === '6',
+    storyStoreV7: process.env.USE_STORYSTORE_V7 !== 'false',
   },
   stories: ['./*.stories.js'],
-  addons: process.env.STORYBOOK_VERSION === '6' ? [
+  addons: [
     '@storybook/addon-actions',
     '@storybook/addon-interactions',
     '../preset.js',
-  ] : [],
+  ],
 };
