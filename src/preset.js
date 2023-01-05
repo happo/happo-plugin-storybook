@@ -3,7 +3,7 @@ function managerEntries(entry = []) {
 }
 
 function config(entry = []) {
-  return [...entry, require.resolve('./preview')];
+  return [...entry, require.resolve('./decorator')];
 }
 
 module.exports = { managerEntries, config };

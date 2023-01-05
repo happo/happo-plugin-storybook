@@ -13,7 +13,7 @@ module.exports = args => {
     babelLoader.exclude.push(path.resolve(__dirname, '../register.js'));
     babelLoader.exclude.push(path.resolve(__dirname, '../addon.js'));
     babelLoader.exclude.push(path.resolve(__dirname, '../preset.js'));
-    babelLoader.exclude.push(path.resolve(__dirname, '../preview.js'));
+    babelLoader.exclude.push(path.resolve(__dirname, '../decorator.js'));
   }
 
   if (config.module.rules.some(({ loader }) => /file-loader/.test(loader))) {
