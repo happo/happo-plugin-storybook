@@ -1,3 +1,5 @@
+import { addons } from '@storybook/addons';
+
 const time = window.happoTime || {
   originalDateNow: Date.now,
   originalSetTimeout: window.setTimeout.bind(window),
@@ -14,7 +16,7 @@ async function waitForSomeContent(elem, start = time.originalDateNow()) {
   const html = elem.innerHTML.trim();
   const duration = time.originalDateNow() - start;
   if (html === '' && duration < ASYNC_TIMEOUT) {
-    return new Promise(resolve =>
+    return new Promise((resolve) =>
       time.originalSetTimeout(
         () => resolve(waitForSomeContent(elem, start)),
         10,
@@ -27,7 +29,7 @@ async function waitForSomeContent(elem, start = time.originalDateNow()) {
 async function waitForWaitFor(waitFor, start = time.originalDateNow()) {
   const duration = time.originalDateNow() - start;
   if (!waitFor() && duration < WAIT_FOR_TIMEOUT) {
-    return new Promise(resolve =>
+    return new Promise((resolve) =>
       time.originalSetTimeout(
         () => resolve(waitForWaitFor(waitFor, start)),
         50,
@@ -87,7 +89,7 @@ function filterExamples(all) {
     all = all.slice(startIndex, endIndex);
   }
   if (initConfig.targetName) {
-    all = all.filter(e => {
+    all = all.filter((e) => {
       if (!e.targets || !Array.isArray(e.targets)) {
         // This story hasn't been filtered for specific targets
         return true;
@@ -102,7 +104,7 @@ let initConfig = {};
 
 window.happo = {};
 
-window.happo.init = config => {
+window.happo.init = (config) => {
   initConfig = config;
 };
 
@@ -139,17 +141,18 @@ window.happo.nextExample = async () => {
         console.error('Failed to invoke afterScreenshot hook', e);
       }
     }
-    window.__STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
+    const channel = addons.getChannel();
+    channel.emit('setCurrentStory', {
       kind: component,
       story: variant,
       storyId,
     });
-    await new Promise(resolve => time.originalSetTimeout(resolve, 0));
+    await new Promise((resolve) => time.originalSetTimeout(resolve, 0));
     await waitForSomeContent(rootElement);
     if (/sb-show-errordisplay/.test(document.body.className)) {
       // It's possible that the error is from unmounting the previous story. We
       // can try re-rendering in this case.
-      window.__STORYBOOK_ADDONS_CHANNEL__.emit('forceReRender');
+      channel.emit('forceReRender');
       await waitForSomeContent(rootElement);
     }
     if (beforeScreenshot && typeof beforeScreenshot === 'function') {
@@ -159,7 +162,7 @@ window.happo.nextExample = async () => {
         console.error('Failed to invoke beforeScreenshot hook', e);
       }
     }
-    await new Promise(resolve => time.originalSetTimeout(resolve, delay));
+    await new Promise((resolve) => time.originalSetTimeout(resolve, delay));
     if (waitFor) {
       await waitForWaitFor(waitFor);
     }
@@ -172,7 +175,16 @@ window.happo.nextExample = async () => {
   }
 };
 
-export const setDefaultDelay = delay => {
+addons.getChannel().on('happo-event', ({ storyId, funcName }) => {
+  const rootElement = document.getElementById('root');
+  const storyStore = window.__STORYBOOK_CLIENT_API__._storyStore;
+  const stories = storyStore.extract();
+  const story = stories[storyId];
+
+  story.parameters.happo[funcName]({ rootElement });
+});
+
+export const setDefaultDelay = (delay) => {
   defaultDelay = delay;
 };
 export const isHappoRun = () => window.__IS_HAPPO_RUN;

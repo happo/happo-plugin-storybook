@@ -1,3 +1,6 @@
 node_modules
 .happo-out
-register.js
+/register.js
+/addon.js
+/preset.js
+

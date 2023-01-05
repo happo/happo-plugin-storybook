@@ -4,10 +4,10 @@
   "description": "A happo.io plugin for projects using Storybook",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint src/",
     "test": "jest",
     "happo": "happo",
-    "build": "babel register.es6.js --out-file register.js",
+    "build": "babel ./src --out-dir ./",
     "prepublish": "yarn build",
     "storybook": "start-storybook -p 9001 -c .storybook -s public",
     "build-storybook": "build-storybook -c .storybook -o .happo-out -s public"

@@ -3,5 +3,9 @@ module.exports = {
     storyStoreV7: process.env.STORYBOOK_VERSION === '6',
   },
   stories: ['./*.stories.js'],
-  addons: ['@storybook/addon-interactions'],
+  addons: [
+    '@storybook/addon-actions',
+    '@storybook/addon-interactions',
+    '../preset.js',
+  ],
 };
