@@ -141,13 +141,13 @@ NotPartOfHappo.parameters = { happo: false };
 export const ClickToRevealStory = () => <ClickToReveal />;
 ClickToRevealStory.parameters = {
   happo: {
-    beforeScreenshot: () => {
+    beforeScreenshot: ({ rootElement }) => {
       const clickEvent = new MouseEvent('click', {
         view: window,
         bubbles: true,
         cancelable: false,
       });
-      document.querySelector('button').dispatchEvent(clickEvent);
+      rootElement.querySelector('button').dispatchEvent(clickEvent);
     },
   },
 };

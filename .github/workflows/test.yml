@@ -38,5 +38,6 @@ jobs:
           node-version: 14
       - run: yarn install --frozen-lockfile
       - run: echo "import '../register'; export default {};" > .storybook/config.js
-      - run: yarn add @storybook/core@5 @storybook/addons@5 @storybook/react@5
-      - run: yarn build && yarn happo run
+      - run: rm .storybook/preview.js
+      - run: yarn add @storybook/core@5 @storybook/addons@5 @storybook/react@5 @storybook/addon-actions@5 @storybook/api@5 --dev
+      - run: USE_STORYSTORE_V7=false yarn build && yarn happo run
