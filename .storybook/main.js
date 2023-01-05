@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   features: {
     storyStoreV7: process.env.STORYBOOK_VERSION === '6',
@@ -6,6 +8,6 @@ module.exports = {
   addons: [
     '@storybook/addon-actions',
     '@storybook/addon-interactions',
-    '../preset.js',
+    path.resolve(__dirname, '..', 'preset.js'),
   ],
 };
