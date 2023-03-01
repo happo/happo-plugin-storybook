@@ -29,7 +29,7 @@ function zipFolderToBuffer(outputDir) {
 function resolveBuildCommandParts() {
   const binary = fs.existsSync('yarn.lock') ? 'yarn' : 'npm';
   try {
-    execSync(`${binary} run | grep build-storybook`);
+    execSync(`${binary} list | grep 'storybook/react@[56]'`);
     // Storybook 6 or earlier, or the user has a custom build-storybook script
     // defined.
     return ['build-storybook'];
@@ -60,7 +60,7 @@ function buildStorybook({ configDir, staticDir, outputDir }) {
       shell: process.platform == 'win32',
     });
 
-    spawned.on('exit', code => {
+    spawned.on('exit', (code) => {
       if (code === 0) {
         resolve();
       } else {
