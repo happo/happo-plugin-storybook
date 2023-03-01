@@ -32,12 +32,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 14
+      - name: Use Node.js 16
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 16
       - run: yarn install --frozen-lockfile
-      - run: yarn add @storybook/core@6 @storybook/addons@6 @storybook/react@6 @storybook/addon-actions@6 @storybook/api@6 --dev
+      - run: yarn add @storybook/core@6 @storybook/addons@6 @storybook/react@6 @storybook/addon-actions@6 @storybook/api@6 @storybook/addon-interactions@6 storybook@6 --dev
       - run: yarn build && yarn happo run
 
   storybook5:
@@ -48,12 +48,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 14
+      - name: Use Node.js 16
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 16
       - run: yarn install --frozen-lockfile
       - run: echo "import '../register'; export default {};" > .storybook/config.js
       - run: rm .storybook/preview.js
-      - run: yarn add @storybook/core@5 @storybook/addons@5 @storybook/react@5 @storybook/addon-actions@5 @storybook/api@5 --dev
+      - run: yarn add @storybook/core@5 @storybook/addons@5 @storybook/react@5 @storybook/addon-actions@5 @storybook/api@5 @storybook/addon-interactions@5 storybook@5 --dev
       - run: USE_STORYSTORE_V7=false yarn build && yarn happo run
