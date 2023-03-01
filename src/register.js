@@ -1,5 +1,7 @@
 import { addons } from '@storybook/addons';
 
+const { SB_ROOT_ELEMENT_SELECTOR } = require('./constants');
+
 const time = window.happoTime || {
   originalDateNow: Date.now,
   originalSetTimeout: window.setTimeout.bind(window),
@@ -130,7 +132,7 @@ window.happo.nextExample = async () => {
     if (docsRootElement) {
       docsRootElement.setAttribute('data-happo-ignore', 'true');
     }
-    const rootElement = document.getElementById('root');
+    const rootElement = document.querySelector(SB_ROOT_ELEMENT_SELECTOR);
     rootElement.setAttribute('data-happo-ignore', 'true');
 
     const { afterScreenshot } = examples[currentIndex - 1] || {};

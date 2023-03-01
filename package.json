@@ -9,8 +9,8 @@
     "happo": "happo",
     "build": "babel ./src --out-dir ./",
     "prepublish": "yarn build",
-    "storybook": "start-storybook -p 9001 -c .storybook -s public",
-    "build-storybook": "build-storybook -c .storybook -o .happo-out -s public"
+    "dev": "storybook dev -p 9001 -c .storybook -s public",
+    "build-local-storybook": "storybook build -c .storybook -o .happo-out -s public"
   },
   "jest": {
     "testMatch": [
@@ -51,13 +51,14 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.8.0",
-    "@storybook/addon-actions": "^6.5.15",
-    "@storybook/addon-interactions": "^6.5.5",
-    "@storybook/addons": "^6.5.5",
-    "@storybook/api": "^6.5.15",
+    "@storybook/addon-actions": "^7.0.0-beta.57",
+    "@storybook/addon-interactions": "^7.0.0-beta.57",
+    "@storybook/addons": "^7.0.0-beta.57",
+    "@storybook/api": "^7.0.0-beta.57",
     "@storybook/core": "^6.5.5",
-    "@storybook/react": "^6.5.5",
-    "@storybook/testing-library": "^0.0.11",
+    "@storybook/react": "^7.0.0-beta.57",
+    "@storybook/react-webpack5": "^7.0.0-beta.57",
+    "@storybook/testing-library": "^0.0.14-next.1",
     "babel-loader": "^8.0.5",
     "eslint": "^8.6.0",
     "eslint-plugin-react": "^7.28.0",
@@ -67,6 +68,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-tether": "^2.0.0",
+    "storybook": "^7.0.0-beta.57",
     "styled-components": "^4.1.3",
     "webpack": "^4.0.0"
   },
