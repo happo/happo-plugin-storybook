@@ -10,7 +10,7 @@ module.exports = {
     storyStoreV7: process.env.USE_STORYSTORE_V7 !== 'false',
   },
   stories: ['./**/*.stories.js'],
-  addons: [
+  addons: process.env.DISABLE_ADDONS ? [] : [
     '@storybook/addon-actions',
     '@storybook/addon-interactions',
     '../preset.js',
