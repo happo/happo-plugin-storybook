@@ -37,7 +37,7 @@ jobs:
         with:
           node-version: 16
       - run: yarn install --frozen-lockfile
-      - run: yarn add @storybook/core@6 @storybook/addons@6 @storybook/react@6 @storybook/addon-actions@6 @storybook/api@6 @storybook/addon-interactions@6 storybook@6 --dev
+      - run: yarn add @storybook/core@6.5.5 @storybook/addons@6.5.15 @storybook/react@6.5.5 @storybook/addon-actions@6.5.15 @storybook/api@6.5.15 @storybook/addon-interactions@6.5.5 storybook@6.5.5 --dev
       - run: yarn remove @storybook/react-webpack5
       - run: yarn list
       - run: DISABLE_ADDONS=true DISABLE_REACT_WEBPACK5_FRAMEWORK=true yarn build && yarn happo run
