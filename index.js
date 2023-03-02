@@ -1,5 +1,5 @@
 const { Writable } = require('stream');
-const { spawn } = require('child_process');
+const { spawn, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -26,11 +26,25 @@ function zipFolderToBuffer(outputDir) {
   });
 }
 
+function resolveBuildCommandParts() {
+  const binary = fs.existsSync('yarn.lock') ? 'yarn' : 'npm';
+  try {
+    execSync(`${binary} list | grep 'storybook/react@[56]'`);
+    // Storybook 6 or earlier, or the user has a custom build-storybook script
+    // defined.
+    return ['build-storybook'];
+  } catch (e) {
+    // Storybook 7 or later
+    return ['storybook', 'build'];
+  }
+}
+
 function buildStorybook({ configDir, staticDir, outputDir }) {
   return new Promise((resolve, reject) => {
     rimraf.sync(outputDir);
+    const buildCommandParts = resolveBuildCommandParts();
     const params = [
-      'build-storybook',
+      ...buildCommandParts,
       '--output-dir',
       outputDir,
       '--config-dir',
@@ -46,7 +60,7 @@ function buildStorybook({ configDir, staticDir, outputDir }) {
       shell: process.platform == 'win32',
     });
 
-    spawned.on('exit', code => {
+    spawned.on('exit', (code) => {
       if (code === 0) {
         resolve();
       } else {

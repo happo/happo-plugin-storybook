@@ -1,5 +1,7 @@
-import { useEffect } from 'react';
 import { makeDecorator, addons } from '@storybook/addons';
+import { useEffect } from 'react';
+
+const { SB_ROOT_ELEMENT_SELECTOR } = require('./constants');
 
 const withHappo = makeDecorator({
   name: 'withHappo',
@@ -8,7 +10,7 @@ const withHappo = makeDecorator({
     useEffect(() => {
       const channel = addons.getChannel();
       function listen({ funcName }) {
-        const rootElement = document.getElementById('root');
+        const rootElement = document.querySelector(SB_ROOT_ELEMENT_SELECTOR);
         parameters[funcName]({ rootElement });
       }
       channel.on('happo-event', listen);
