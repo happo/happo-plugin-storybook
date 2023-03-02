@@ -49,8 +49,8 @@ jobs:
       HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
       HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
       USE_STORYSTORE_V7: false
-      DISABLE_ADDONS: true
       DISABLE_REACT_WEBPACK5_FRAMEWORK: true
+      DISABLE_ADDONS: true
 
     steps:
       - uses: actions/checkout@v2
@@ -61,6 +61,6 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: echo "import '../register'; export default {};" > .storybook/config.js
       - run: rm .storybook/preview.js
-      - run: yarn add @storybook/core@5 @storybook/addons@5 @storybook/react@5 @storybook/addon-actions@5 @storybook/api@5 storybook@5 --dev
-      - run: yarn remove @storybook/react-webpack5
+      - run: yarn remove @storybook/react-webpack5 storybook
+      - run: yarn add @storybook/testing-library@0.0.11 @storybook/core@5 @storybook/addons@5 @storybook/react@5 @storybook/addon-actions@5 @storybook/api@5 react@17 react-dom@17 --dev
       - run: yarn build && yarn happo run

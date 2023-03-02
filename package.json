@@ -9,7 +9,7 @@
     "happo": "happo",
     "build": "babel ./src --out-dir ./",
     "prepublish": "yarn build",
-    "dev": "storybook dev -p 9001 -c .storybook -s public",
+    "dev": "storybook dev -p 9001 -c .storybook",
     "build-local-storybook": "storybook build -c .storybook -o .happo-out"
   },
   "jest": {
