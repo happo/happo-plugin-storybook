@@ -1,11 +1,4 @@
-const framework = process.env.DISABLE_REACT_WEBPACK5_FRAMEWORK
-  ? '@storybook/react'
-  : {
-      name: '@storybook/react-webpack5',
-      options: {},
-    };
-
-module.exports = {
+const result = {
   features: {
     storyStoreV7: process.env.USE_STORYSTORE_V7 !== 'false',
   },
@@ -17,5 +10,13 @@ module.exports = {
         '@storybook/addon-interactions',
         '../preset.js',
       ],
-  framework,
 };
+
+if (!process.env.DISABLE_REACT_WEBPACK5_FRAMEWORK) {
+  result.framework = {
+    name: '@storybook/react-webpack5',
+    options: {},
+  };
+}
+
+module.exports = result;
