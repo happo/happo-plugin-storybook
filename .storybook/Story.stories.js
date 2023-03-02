@@ -52,8 +52,8 @@ function TetheredComponent() {
   return (
     <TetherComponent
       attachment="top left"
-      renderTarget={ref => <button ref={ref}>I'm the target</button>}
-      renderElement={ref => (
+      renderTarget={(ref) => <button ref={ref}>I'm the target</button>}
+      renderElement={(ref) => (
         <div ref={ref} style={{ border: '1px solid red', padding: 10 }}>
           <h2>Tethered Content</h2>
           <p>A paragraph to accompany the title.</p>
@@ -134,6 +134,13 @@ function ClickToReveal() {
   }
   return <button onClick={() => setOpen(true)}>Open</button>;
 }
+
+export const Themed = () => (
+  <div style={{ color: 'gray' }}>My color is gray</div>
+);
+Themed.parameters = {
+  happo: { themes: ['black', 'white'] },
+};
 
 export const NotPartOfHappo = () => <AsyncComponent />;
 NotPartOfHappo.parameters = { happo: false };
@@ -247,7 +254,7 @@ WithTooltip.parameters = {
         }),
       );
       // delay with 200ms to allow the animation to finish
-      await new Promise(r => setTimeout(r, 200));
+      await new Promise((r) => setTimeout(r, 200));
     },
   },
 };
