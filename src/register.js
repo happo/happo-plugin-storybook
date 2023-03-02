@@ -13,6 +13,7 @@ const WAIT_FOR_TIMEOUT = 2000;
 let examples;
 let currentIndex = 0;
 let defaultDelay;
+let themeSwitcher;
 
 async function waitForSomeContent(elem, start = time.originalDateNow()) {
   const html = elem.innerHTML.trim();
@@ -60,6 +61,7 @@ async function getExamples() {
       let beforeScreenshot;
       let afterScreenshot;
       let targets;
+      let themes;
       if (typeof parameters.happo === 'object' && parameters.happo !== null) {
         delay = parameters.happo.delay || defaultDelay;
         waitForContent = parameters.happo.waitForContent;
@@ -67,6 +69,7 @@ async function getExamples() {
         beforeScreenshot = parameters.happo.beforeScreenshot;
         afterScreenshot = parameters.happo.afterScreenshot;
         targets = parameters.happo.targets;
+        themes = parameters.happo.themes;
       }
       return {
         component: kind,
@@ -78,9 +81,25 @@ async function getExamples() {
         beforeScreenshot,
         afterScreenshot,
         targets,
+        themes,
       };
     })
-    .filter(Boolean);
+    .filter(Boolean)
+    .reduce((result, { themes, ...rest }) => {
+      if (!themes) {
+        result.push(rest);
+      } else {
+        themes.forEach((theme) => {
+          result.push({
+            ...rest,
+            variant: `${rest.variant} [${theme}]`,
+            theme,
+          });
+        });
+      }
+
+      return result;
+    }, []);
 }
 
 function filterExamples(all) {
@@ -125,6 +144,7 @@ window.happo.nextExample = async () => {
     waitForContent,
     waitFor,
     beforeScreenshot,
+    theme,
   } = examples[currentIndex];
 
   try {
@@ -150,6 +170,9 @@ window.happo.nextExample = async () => {
       storyId,
     });
     await new Promise((resolve) => time.originalSetTimeout(resolve, 0));
+    if (theme && themeSwitcher) {
+      await themeSwitcher(theme, channel);
+    }
     await waitForSomeContent(rootElement);
     if (/sb-show-errordisplay/.test(document.body.className)) {
       // It's possible that the error is from unmounting the previous story. We
@@ -179,5 +202,8 @@ window.happo.nextExample = async () => {
 
 export const setDefaultDelay = (delay) => {
   defaultDelay = delay;
+};
+export const setThemeSwitcher = (func) => {
+  themeSwitcher = func;
 };
 export const isHappoRun = () => window.__IS_HAPPO_RUN;
