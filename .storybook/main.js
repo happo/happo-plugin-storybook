@@ -12,7 +12,9 @@ const result = {
       ],
 };
 
-if (!process.env.DISABLE_REACT_WEBPACK5_FRAMEWORK) {
+if (process.env.DISABLE_REACT_WEBPACK5_FRAMEWORK) {
+  result.framework = '@storybook/react';
+} else {
   result.framework = {
     name: '@storybook/react-webpack5',
     options: {},
