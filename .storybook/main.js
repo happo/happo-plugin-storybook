@@ -3,6 +3,7 @@ const result = {
     storyStoreV7: process.env.USE_STORYSTORE_V7 !== 'false',
   },
   stories: ['./**/*.stories.js'],
+  staticDirs: ['../public'],
   addons: process.env.DISABLE_ADDONS
     ? []
     : [

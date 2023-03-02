@@ -28,7 +28,6 @@ module.exports = {
     happoPluginStorybook({
       configDir: '.storybook',
       outputDir: '.happo-out',
-      staticDir: 'public',
       usePrebuiltPackage: !!process.env.HAPPO_USE_PREBUILT_PACKAGE,
     }),
   ],

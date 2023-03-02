@@ -10,7 +10,7 @@
     "build": "babel ./src --out-dir ./",
     "prepublish": "yarn build",
     "dev": "storybook dev -p 9001 -c .storybook -s public",
-    "build-local-storybook": "storybook build -c .storybook -o .happo-out -s public"
+    "build-local-storybook": "storybook build -c .storybook -o .happo-out"
   },
   "jest": {
     "testMatch": [
