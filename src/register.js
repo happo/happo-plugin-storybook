@@ -1,5 +1,3 @@
-import { addons } from '@storybook/addons';
-
 const { SB_ROOT_ELEMENT_SELECTOR } = require('./constants');
 
 const time = window.happoTime || {
@@ -163,21 +161,20 @@ window.happo.nextExample = async () => {
         console.error('Failed to invoke afterScreenshot hook', e);
       }
     }
-    const channel = addons.getChannel();
-    channel.emit('setCurrentStory', {
+    window.__STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
       kind: component,
       story: variant,
       storyId,
     });
     await new Promise((resolve) => time.originalSetTimeout(resolve, 0));
     if (theme && themeSwitcher) {
-      await themeSwitcher(theme, channel);
+      await themeSwitcher(theme, window.__STORYBOOK_ADDONS_CHANNEL__);
     }
     await waitForSomeContent(rootElement);
     if (/sb-show-errordisplay/.test(document.body.className)) {
       // It's possible that the error is from unmounting the previous story. We
       // can try re-rendering in this case.
-      channel.emit('forceReRender');
+      window.__STORYBOOK_ADDONS_CHANNEL__.emit('forceReRender');
       await waitForSomeContent(rootElement);
     }
     if (beforeScreenshot && typeof beforeScreenshot === 'function') {
