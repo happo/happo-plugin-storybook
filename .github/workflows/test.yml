@@ -38,6 +38,7 @@ jobs:
         with:
           node-version: 16
       - run: yarn install --frozen-lockfile
+      - run: rm .storybook/Interactive.stories.js
       - run: yarn remove @storybook/react-webpack5 storybook
       - run: yarn add @storybook/testing-library@0.0.11 @storybook/core@6.5.13 @storybook/addons@6.5.13 @storybook/react@6.4 @storybook/addon-actions@6.5.15 @storybook/api@6.5.13 @storybook/addon-interactions@6.5.13 react@17 react-dom@17 --dev
       - run: yarn list
@@ -61,6 +62,7 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: echo "import '../register'; export default {};" > .storybook/config.js
       - run: rm .storybook/preview.js
+      - run: rm .storybook/Interactive.stories.js
       - run: yarn remove @storybook/react-webpack5 storybook
       - run: yarn add @storybook/testing-library@0.0.11 @storybook/core@5 @storybook/addons@5 @storybook/react@5 @storybook/addon-actions@5 @storybook/api@5 react@17 react-dom@17 --dev
       - run: yarn build && yarn happo run
