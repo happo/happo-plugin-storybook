@@ -6,6 +6,8 @@ const path = require('path');
 const Archiver = require('archiver');
 const rimraf = require('rimraf');
 
+const { HAPPO_DEBUG, HAPPO_STORYBOOK_BUILD_COMMAND } = process.env;
+
 function zipFolderToBuffer(outputDir) {
   return new Promise((resolve, reject) => {
     const archive = new Archiver('zip');
@@ -27,16 +29,32 @@ function zipFolderToBuffer(outputDir) {
 }
 
 function resolveBuildCommandParts() {
+  if (HAPPO_STORYBOOK_BUILD_COMMAND) {
+    return HAPPO_STORYBOOK_BUILD_COMMAND.split(' ');
+  }
   const binary = fs.existsSync('yarn.lock') ? 'yarn' : 'npm';
   try {
     execSync(`${binary} list | grep 'storybook/react@[56]'`);
-    // Storybook 6 or earlier, or the user has a custom build-storybook script
-    // defined.
+    // Storybook 6 or earlier
     return ['build-storybook'];
   } catch (e) {
-    // Storybook 7 or later
-    return ['storybook', 'build'];
+    if (HAPPO_DEBUG) {
+      console.log('[happo] Check for Storybook v6 failed. Details:', e);
+    }
   }
+  try {
+    execSync(`${binary} build-storybook --version`);
+    return ['build-storybook'];
+  } catch (e) {
+    if (HAPPO_DEBUG) {
+      console.log(
+        '[happo] Check for build-storybook command failed. Details:',
+        e,
+      );
+    }
+  }
+  // Storybook 7 or later
+  return ['storybook', 'build'];
 }
 
 function buildStorybook({ configDir, staticDir, outputDir }) {
