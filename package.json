@@ -1,6 +1,6 @@
 {
   "name": "happo-plugin-storybook",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "description": "A happo.io plugin for projects using Storybook",
   "main": "index.js",
   "scripts": {
