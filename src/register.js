@@ -127,6 +127,33 @@ window.happo.init = (config) => {
   initConfig = config;
 };
 
+function renderStory(story) {
+  const channel = window.__STORYBOOK_ADDONS_CHANNEL__;
+  return new Promise((resolve) => {
+    const timeout = time.originalSetTimeout(resolve, WAIT_FOR_TIMEOUT);
+    function handleRenderPhaseChanged(ev) {
+      if (ev.newPhase === 'completed') {
+        channel.off('storyRenderPhaseChanged', handleRenderPhaseChanged);
+        clearTimeout(timeout);
+        return resolve();
+      }
+    }
+    const shouldWaitForCompletedEvent =
+      window.__STORYBOOK_ADDONS_CHANNEL__.events &&
+      window.__STORYBOOK_ADDONS_CHANNEL__.events.storyRenderPhaseChanged;
+    if (shouldWaitForCompletedEvent) {
+      channel.on('storyRenderPhaseChanged', handleRenderPhaseChanged);
+    }
+    channel.emit('setCurrentStory', story);
+    if (!shouldWaitForCompletedEvent) {
+      time.originalSetTimeout(() => {
+        clearTimeout(timeout);
+        resolve();
+      }, 0);
+    }
+  });
+}
+
 window.happo.nextExample = async () => {
   if (!examples) {
     examples = filterExamples(await getExamples());
@@ -161,12 +188,11 @@ window.happo.nextExample = async () => {
         console.error('Failed to invoke afterScreenshot hook', e);
       }
     }
-    window.__STORYBOOK_ADDONS_CHANNEL__.emit('setCurrentStory', {
+    await renderStory({
       kind: component,
       story: variant,
       storyId,
     });
-    await new Promise((resolve) => time.originalSetTimeout(resolve, 0));
     if (theme && themeSwitcher) {
       await themeSwitcher(theme, window.__STORYBOOK_ADDONS_CHANNEL__);
     }
