@@ -130,7 +130,7 @@ window.happo.init = (config) => {
 function renderStory(story) {
   const channel = window.__STORYBOOK_ADDONS_CHANNEL__;
   return new Promise((resolve) => {
-    const timeout = setTimeout(resolve, WAIT_FOR_TIMEOUT);
+    const timeout = time.originalSetTimeout(resolve, WAIT_FOR_TIMEOUT);
     function handleRenderPhaseChanged(ev) {
       if (ev.newPhase === 'completed') {
         channel.off('storyRenderPhaseChanged', handleRenderPhaseChanged);
@@ -138,8 +138,19 @@ function renderStory(story) {
         return resolve();
       }
     }
-    channel.on('storyRenderPhaseChanged', handleRenderPhaseChanged);
+    const shouldWaitForCompletedEvent =
+      window.__STORYBOOK_ADDONS_CHANNEL__.events &&
+      window.__STORYBOOK_ADDONS_CHANNEL__.events.storyRenderPhaseChanged;
+    if (shouldWaitForCompletedEvent) {
+      channel.on('storyRenderPhaseChanged', handleRenderPhaseChanged);
+    }
     channel.emit('setCurrentStory', story);
+    if (!shouldWaitForCompletedEvent) {
+      time.originalSetTimeout(() => {
+        clearTimeout(timeout);
+        resolve();
+      }, 0);
+    }
   });
 }
 
