@@ -6,8 +6,8 @@ const time = window.happoTime || {
 };
 
 const ASYNC_TIMEOUT = 100;
-const WAIT_FOR_TIMEOUT = 2000;
 
+let renderTimeoutMs = 2000;
 let examples;
 let currentIndex = 0;
 let defaultDelay;
@@ -29,7 +29,7 @@ async function waitForSomeContent(elem, start = time.originalDateNow()) {
 
 async function waitForWaitFor(waitFor, start = time.originalDateNow()) {
   const duration = time.originalDateNow() - start;
-  if (!waitFor() && duration < WAIT_FOR_TIMEOUT) {
+  if (!waitFor() && duration < renderTimeoutMs) {
     return new Promise((resolve) =>
       time.originalSetTimeout(
         () => resolve(waitForWaitFor(waitFor, start)),
@@ -130,7 +130,7 @@ window.happo.init = (config) => {
 function renderStory(story) {
   const channel = window.__STORYBOOK_ADDONS_CHANNEL__;
   return new Promise((resolve) => {
-    const timeout = time.originalSetTimeout(resolve, WAIT_FOR_TIMEOUT);
+    const timeout = time.originalSetTimeout(resolve, renderTimeoutMs);
     function handleRenderPhaseChanged(ev) {
       if (ev.newPhase === 'completed') {
         channel.off('storyRenderPhaseChanged', handleRenderPhaseChanged);
@@ -225,6 +225,9 @@ window.happo.nextExample = async () => {
 
 export const setDefaultDelay = (delay) => {
   defaultDelay = delay;
+};
+export const setRenderTimeoutMs = (timeoutMs) => {
+  renderTimeoutMs = timeoutMs;
 };
 export const setThemeSwitcher = (func) => {
   themeSwitcher = func;
