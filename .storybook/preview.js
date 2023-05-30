@@ -1,4 +1,4 @@
-import { setThemeSwitcher } from '../register';
+import { setThemeSwitcher, setRenderTimeoutMs } from '../register';
 
 setThemeSwitcher(async (theme, channel) => {
   // Make sure that it can be async
@@ -7,3 +7,4 @@ setThemeSwitcher(async (theme, channel) => {
   document.body.style = `background-color: ${theme}`;
 });
 
+setRenderTimeoutMs(4000);
