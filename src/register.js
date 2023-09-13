@@ -97,7 +97,15 @@ async function getExamples() {
       }
 
       return result;
-    }, []);
+    }, [])
+    .sort((a, b) => {
+      const aCompare = `${a.theme}-${a.storyId}`;
+      const bCompare = `${b.theme}-${b.storyId}`;
+      if (aCompare === bCompare) {
+        return 0;
+      }
+      return aCompare < bCompare ? -1 : 1;
+    });
 }
 
 function filterExamples(all) {
