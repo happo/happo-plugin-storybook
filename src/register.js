@@ -12,6 +12,7 @@ let examples;
 let currentIndex = 0;
 let defaultDelay;
 let themeSwitcher;
+let forcedHappoScreenshotSteps;
 
 async function waitForSomeContent(elem, start = time.originalDateNow()) {
   const html = elem.innerHTML.trim();
@@ -135,24 +136,46 @@ window.happo.init = (config) => {
   initConfig = config;
 };
 
-function renderStory(story) {
+function renderStory(story, { force = false } = {}) {
   const channel = window.__STORYBOOK_ADDONS_CHANNEL__;
+  let isPlaying = false;
   return new Promise((resolve) => {
     const timeout = time.originalSetTimeout(resolve, renderTimeoutMs);
     function handleRenderPhaseChanged(ev) {
+      console.log(ev);
       if (ev.newPhase === 'completed') {
         channel.off('storyRenderPhaseChanged', handleRenderPhaseChanged);
         clearTimeout(timeout);
         return resolve();
       }
+      if (
+        ev.newPhase === 'errored' &&
+        isPlaying &&
+        forcedHappoScreenshotSteps
+      ) {
+        channel.off('storyRenderPhaseChanged', handleRenderPhaseChanged);
+        clearTimeout(timeout);
+        return resolve({
+          pausedAtStep:
+            forcedHappoScreenshotSteps[forcedHappoScreenshotSteps.length - 1],
+        });
+      }
+      if (ev.newPhase === 'playing') {
+        isPlaying = true;
+      }
     }
-    const shouldWaitForCompletedEvent =
-      window.__STORYBOOK_ADDONS_CHANNEL__.events &&
-      window.__STORYBOOK_ADDONS_CHANNEL__.events.storyRenderPhaseChanged;
+
+    const shouldWaitForCompletedEvent = (channel.events || {})
+      .storyRenderPhaseChanged;
+
     if (shouldWaitForCompletedEvent) {
       channel.on('storyRenderPhaseChanged', handleRenderPhaseChanged);
     }
-    channel.emit('setCurrentStory', story);
+    if (force) {
+      channel.emit('forceRemount', story);
+    } else {
+      channel.emit('setCurrentStory', story);
+    }
     if (!shouldWaitForCompletedEvent) {
       time.originalSetTimeout(() => {
         clearTimeout(timeout);
@@ -171,7 +194,7 @@ window.happo.nextExample = async () => {
   }
   const {
     component,
-    variant,
+    variant: rawVariant,
     storyId,
     delay,
     waitForContent,
@@ -179,6 +202,9 @@ window.happo.nextExample = async () => {
     beforeScreenshot,
     theme,
   } = examples[currentIndex];
+
+  let variant = rawVariant;
+  let pausedAtStep;
 
   try {
     const docsRootElement = document.getElementById('docs-root');
@@ -196,11 +222,22 @@ window.happo.nextExample = async () => {
         console.error('Failed to invoke afterScreenshot hook', e);
       }
     }
-    await renderStory({
-      kind: component,
-      story: variant,
-      storyId,
-    });
+    const renderResult =
+      (await renderStory(
+        {
+          kind: component,
+          story: rawVariant,
+          storyId,
+        },
+        { force: !!forcedHappoScreenshotSteps },
+      )) || {};
+    pausedAtStep = renderResult.pausedAtStep;
+    if (pausedAtStep) {
+      variant = `${variant}-${pausedAtStep}`;
+    } else {
+      forcedHappoScreenshotSteps = undefined;
+    }
+
     if (theme && themeSwitcher) {
       await themeSwitcher(theme, window.__STORYBOOK_ADDONS_CHANNEL__);
     }
@@ -227,9 +264,42 @@ window.happo.nextExample = async () => {
     console.warn(e);
     return { component, variant };
   } finally {
-    currentIndex++;
+    if (!pausedAtStep) {
+      currentIndex++;
+    }
   }
 };
+
+export function forceHappoScreenshot(stepLabel) {
+  if (!currentIndex) {
+    console.log(
+      `Ignoring forceHappoScreenshot with step label "${stepLabel}" since we are not currently rendering for Happo`,
+    );
+    return;
+  }
+  if (!stepLabel) {
+    throw new Error(
+      'Missing stepLabel argument. Make sure to pass a string as the first argument to this function. E.g. `forceHappoScreenshot("modal open")`',
+    );
+  }
+
+  if (
+    forcedHappoScreenshotSteps &&
+    forcedHappoScreenshotSteps.includes(stepLabel)
+  ) {
+    // ignore, this step has already been handled
+    return;
+  }
+
+  forcedHappoScreenshotSteps = forcedHappoScreenshotSteps || [];
+  forcedHappoScreenshotSteps.push(stepLabel);
+
+  const e = new Error(`Forced screenshot with label "${stepLabel}"`);
+  e.type = 'ForcedHappoScreenshot';
+  e.step = stepLabel;
+  console.log('Forcing happo screenshot', stepLabel);
+  throw e;
+}
 
 export const setDefaultDelay = (delay) => {
   defaultDelay = delay;

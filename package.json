@@ -55,6 +55,7 @@
     "@storybook/addon-interactions": "^7.0.0-beta.57",
     "@storybook/addons": "^7.0.0-beta.57",
     "@storybook/api": "^7.0.0-beta.57",
+    "@storybook/jest": "^0.2.3",
     "@storybook/react": "^7.0.0-beta.57",
     "@storybook/react-webpack5": "^7.0.0-beta.57",
     "@storybook/testing-library": "^0.0.14-next.1",
