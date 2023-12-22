@@ -43,6 +43,18 @@ function resolveBuildCommandParts() {
     }
   }
   try {
+    execSync(`${binary} storybook --version`);
+    // Storybook v7 or later
+    return ['storybook', 'build'];
+  } catch (e) {
+    if (HAPPO_DEBUG) {
+      console.log(
+        '[happo] Check for Storybook v7 failed. Details:',
+        e,
+      );
+    }
+  }
+  try {
     execSync(`${binary} build-storybook --version`);
     return ['build-storybook'];
   } catch (e) {
