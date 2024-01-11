@@ -19,6 +19,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 18
+      - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: yarn lint
       - run: yarn build && yarn happo run
@@ -30,39 +31,19 @@ jobs:
       HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
       HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
       DISABLE_REACT_WEBPACK5_FRAMEWORK: true
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 16
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-      - run: yarn install --frozen-lockfile
-      - run: rm .storybook/Interactive.stories.js
-      - run: yarn remove @storybook/react-webpack5 storybook
-      - run: yarn add @storybook/testing-library@0.0.11 @storybook/core@6.5.13 @storybook/addons@6.5.13 @storybook/react@6.4 @storybook/addon-actions@6.5.15 @storybook/api@6.5.13 @storybook/addon-interactions@6.5.13 react@17 react-dom@17 --dev
-      - run: yarn list
-      - run: yarn build && yarn happo run
-
-  storybook5:
-    runs-on: ubuntu-latest
-    env:
-      HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
-      HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
-      USE_STORYSTORE_V7: false
-      DISABLE_REACT_WEBPACK5_FRAMEWORK: true
       DISABLE_ADDONS: true
+      HAPPO_DEBUG: true
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 16
+      - name: Use Node.js 18
         uses: actions/setup-node@v2
         with:
-          node-version: 16
+          node-version: 18
+      - run: corepack enable
       - run: yarn install --frozen-lockfile
-      - run: echo "import '../register'; export default {};" > .storybook/config.js
-      - run: rm .storybook/preview.js
       - run: rm .storybook/Interactive.stories.js
-      - run: yarn remove @storybook/react-webpack5 storybook
-      - run: yarn add @storybook/testing-library@0.0.11 @storybook/core@5 @storybook/addons@5 @storybook/react@5 @storybook/addon-actions@5 @storybook/api@5 react@17 react-dom@17 --dev
-      - run: yarn build && yarn happo run
+      - run: yarn add --dev storybook@6 @storybook/addon-actions@6 @storybook/addon-interactions@6 @storybook/api@6 @storybook/react@6 global @storybook/channels@6 @storybook/channel-websocket@6
+      - run: yarn build
+      - run: yarn storybook build --version
+      - run: yarn happo run

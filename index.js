@@ -8,6 +8,31 @@ const rimraf = require('rimraf');
 
 const { HAPPO_DEBUG, HAPPO_STORYBOOK_BUILD_COMMAND } = process.env;
 
+function getStorybookVersionFromPackageJson() {
+  const packageJsonPath = path.join(process.cwd(), 'package.json');
+  const data = fs.readFileSync(packageJsonPath, 'utf8');
+  const packageJson = JSON.parse(data);
+
+  const combinedDependencies = {
+    ...packageJson.dependencies,
+    ...packageJson.devDependencies,
+  };
+
+  const storybookPackage = [
+    '@storybook/react',
+    '@storybook/angular',
+    '@storybook/vue',
+  ].find((pkg) => combinedDependencies[pkg]);
+
+  if (storybookPackage) {
+    const storybookVersion = combinedDependencies[storybookPackage];
+    const majorVersion = parseInt(storybookVersion.match(/\d/)[0], 10);
+    return majorVersion;
+  } else {
+    throw new Error('Storybook is not listed as a dependency in package.json');
+  }
+}
+
 function zipFolderToBuffer(outputDir) {
   return new Promise((resolve, reject) => {
     const archive = new Archiver('zip');
@@ -32,6 +57,22 @@ function resolveBuildCommandParts() {
   if (HAPPO_STORYBOOK_BUILD_COMMAND) {
     return HAPPO_STORYBOOK_BUILD_COMMAND.split(' ');
   }
+  try {
+    const version = getStorybookVersionFromPackageJson();
+    if (version === 6) {
+      return ['build-storybook'];
+    }
+    if (version === 7) {
+      return ['storybook', 'build'];
+    }
+  } catch (e) {
+    if (HAPPO_DEBUG) {
+      console.log(
+        '[happo] Check for Storybook version in package.json failed. Details:',
+        e,
+      );
+    }
+  }
   const binary = fs.existsSync('yarn.lock') ? 'yarn' : 'npm';
   try {
     execSync(`${binary} list | grep 'storybook/react@[56]'`);
@@ -48,10 +89,7 @@ function resolveBuildCommandParts() {
     return ['storybook', 'build'];
   } catch (e) {
     if (HAPPO_DEBUG) {
-      console.log(
-        '[happo] Check for Storybook v7 failed. Details:',
-        e,
-      );
+      console.log('[happo] Check for Storybook v7 failed. Details:', e);
     }
   }
   try {
