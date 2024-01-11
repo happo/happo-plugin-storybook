@@ -1,4 +1,4 @@
-import { makeDecorator, addons } from '@storybook/addons';
+import { makeDecorator, addons } from '@storybook/preview-api';
 import { useEffect } from 'react';
 
 const { SB_ROOT_ELEMENT_SELECTOR } = require('./constants');
