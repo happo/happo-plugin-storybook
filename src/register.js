@@ -13,6 +13,7 @@ let currentIndex = 0;
 let defaultDelay;
 let themeSwitcher;
 let forcedHappoScreenshotSteps;
+let shouldWaitForCompletedEvent = true;
 
 async function waitForSomeContent(elem, start = time.originalDateNow()) {
   const html = elem.innerHTML.trim();
@@ -165,9 +166,6 @@ function renderStory(story, { force = false } = {}) {
       }
     }
 
-    const shouldWaitForCompletedEvent = (channel.events || {})
-      .storyRenderPhaseChanged;
-
     if (shouldWaitForCompletedEvent) {
       channel.on('storyRenderPhaseChanged', handleRenderPhaseChanged);
     }
@@ -301,13 +299,16 @@ export function forceHappoScreenshot(stepLabel) {
   throw e;
 }
 
-export const setDefaultDelay = (delay) => {
+export function setDefaultDelay(delay) {
   defaultDelay = delay;
-};
-export const setRenderTimeoutMs = (timeoutMs) => {
+}
+export function setRenderTimeoutMs(timeoutMs) {
   renderTimeoutMs = timeoutMs;
-};
-export const setThemeSwitcher = (func) => {
+}
+export function setThemeSwitcher(func) {
   themeSwitcher = func;
-};
+}
+export function setShouldWaitForCompletedEvent(swfce) {
+  shouldWaitForCompletedEvent = swfce;
+}
 export const isHappoRun = () => window.__IS_HAPPO_RUN;
