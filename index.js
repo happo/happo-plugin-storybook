@@ -6,8 +6,7 @@ const path = require('path');
 const Archiver = require('archiver');
 const rimraf = require('rimraf');
 
-const getStorybookVersionFromPackageJson =
-  require('./getStorybookVersionFromPackageJson');
+const getStorybookVersionFromPackageJson = require('./getStorybookVersionFromPackageJson');
 
 const { HAPPO_DEBUG, HAPPO_STORYBOOK_BUILD_COMMAND } = process.env;
 
@@ -101,6 +100,12 @@ function buildStorybook({ configDir, staticDir, outputDir }) {
       params.push(staticDir);
     }
     const binary = fs.existsSync('yarn.lock') ? 'yarn' : 'npx';
+
+    if (HAPPO_DEBUG) {
+      console.log(
+        `[happo] Using build command \`${binary} ${params.join(' ')}\``,
+      );
+    }
     const spawned = spawn(binary, params, {
       stdio: 'inherit',
       shell: process.platform == 'win32',
