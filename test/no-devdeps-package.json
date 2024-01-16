@@ -1,0 +1,8 @@
+{
+  "name": "test-project-no-storybook",
+  "version": "0.0.0",
+  "dependencies": {
+    "@babel/runtime": "7.23.8",
+    "storybook": "7"
+  }
+}

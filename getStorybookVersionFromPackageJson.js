@@ -1,8 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-module.exports = function getStorybookVersionFromPackageJson() {
-  const packageJsonPath = path.join(process.cwd(), 'package.json');
+module.exports = function getStorybookVersionFromPackageJson(
+  packageJsonPath = path.join(process.cwd(), 'package.json'),
+) {
   const data = fs.readFileSync(packageJsonPath, 'utf8');
   const packageJson = JSON.parse(data);
 
@@ -12,6 +13,7 @@ module.exports = function getStorybookVersionFromPackageJson() {
   };
 
   const storybookPackage = [
+    'storybook',
     '@storybook/react',
     '@storybook/angular',
     '@storybook/vue',
@@ -24,5 +26,4 @@ module.exports = function getStorybookVersionFromPackageJson() {
   } else {
     throw new Error('Storybook is not listed as a dependency in package.json');
   }
-}
-
+};
