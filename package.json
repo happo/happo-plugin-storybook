@@ -63,6 +63,7 @@
     "@storybook/testing-library": "^0.2.2",
     "babel-loader": "^8.0.5",
     "eslint": "^8.6.0",
+    "eslint-plugin-jest": "^27.6.3",
     "eslint-plugin-react": "^7.28.0",
     "file-loader": "^3.0.1",
     "happo.io": "^5.1.3",
