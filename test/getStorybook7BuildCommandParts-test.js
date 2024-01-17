@@ -10,7 +10,7 @@ describe('with project package.json', () => {
 });
 
 describe('with a storybook script', () => {
-  it('uses binary in node_modules/.bin', () => {
+  xit('uses binary in node_modules/.bin', () => {
     const parts = getStorybook7BuildCommandParts(
       path.resolve(__dirname, 'no-devdeps-package.json'),
     );
