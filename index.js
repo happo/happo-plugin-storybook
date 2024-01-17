@@ -6,6 +6,8 @@ const path = require('path');
 const Archiver = require('archiver');
 const rimraf = require('rimraf');
 
+const getStorybook7BuildCommandParts =
+  require('./getStorybook7BuildCommandParts');
 const getStorybookVersionFromPackageJson = require('./getStorybookVersionFromPackageJson');
 
 const { HAPPO_DEBUG, HAPPO_STORYBOOK_BUILD_COMMAND } = process.env;
