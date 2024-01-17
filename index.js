@@ -40,7 +40,7 @@ function resolveBuildCommandParts() {
       return ['build-storybook'];
     }
     if (version === 7) {
-      return ['storybook', 'build'];
+      return getStorybook7BuildCommandParts();
     }
   } catch (e) {
     if (HAPPO_DEBUG) {
@@ -63,7 +63,7 @@ function resolveBuildCommandParts() {
   try {
     execSync(`${binary} storybook --version`);
     // Storybook v7 or later
-    return ['storybook', 'build'];
+    return getStorybook7BuildCommandParts();
   } catch (e) {
     if (HAPPO_DEBUG) {
       console.log('[happo] Check for Storybook v7 failed. Details:', e);
@@ -81,7 +81,7 @@ function resolveBuildCommandParts() {
     }
   }
   // Storybook 7 or later
-  return ['storybook', 'build'];
+  return getStorybook7BuildCommandParts();
 }
 
 function buildStorybook({ configDir, staticDir, outputDir }) {
@@ -99,7 +99,12 @@ function buildStorybook({ configDir, staticDir, outputDir }) {
       params.push('--static-dir');
       params.push(staticDir);
     }
-    const binary = fs.existsSync('yarn.lock') ? 'yarn' : 'npx';
+    let binary = fs.existsSync('yarn.lock') ? 'yarn' : 'npx';
+
+    if (buildCommandParts[0].includes('node_modules')) {
+      binary = buildCommandParts[0];
+      params.shift(); // remove binary from params
+    }
 
     if (HAPPO_DEBUG) {
       console.log(
