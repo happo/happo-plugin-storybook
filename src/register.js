@@ -126,6 +126,13 @@ function filterExamples(all) {
       return e.targets.includes(initConfig.targetName);
     });
   }
+  if (initConfig.only) {
+    all = all.filter(
+      (e) =>
+        e.component === initConfig.only.component &&
+        e.variant === initConfig.only.variant,
+    );
+  }
   return all;
 }
 
