@@ -1,22 +1,21 @@
-const { Writable } = require('stream');
-const { spawn, execSync } = require('child_process');
-const fs = require('fs');
-const path = require('path');
+import { Writable } from 'stream';
+import { spawn, execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
 
-const Archiver = require('archiver');
-const rimraf = require('rimraf');
+import Archiver from 'archiver';
+import { rimraf } from 'rimraf';
 
-const getStorybook7BuildCommandParts =
-  require('./getStorybook7BuildCommandParts');
-const getStorybookVersionFromPackageJson = require('./getStorybookVersionFromPackageJson');
+import getStorybook7BuildCommandParts from './getStorybook7BuildCommandParts';
+import getStorybookVersionFromPackageJson from './getStorybookVersionFromPackageJson';
 
 const { HAPPO_DEBUG, HAPPO_STORYBOOK_BUILD_COMMAND } = process.env;
 
-function zipFolderToBuffer(outputDir) {
+function zipFolderToBuffer(outputDir: string): Promise<Buffer> {
   return new Promise((resolve, reject) => {
-    const archive = new Archiver('zip');
+    const archive = Archiver('zip', {});
     const stream = new Writable();
-    const data = [];
+    const data: any[] = [];
     stream._write = (chunk, enc, done) => {
       data.push(...chunk);
       done();
@@ -41,7 +40,7 @@ function resolveBuildCommandParts() {
     if (version === 6) {
       return ['build-storybook'];
     }
-    if (version === 7) {
+    if (version >= 7) {
       return getStorybook7BuildCommandParts();
     }
   } catch (e) {
@@ -68,7 +67,7 @@ function resolveBuildCommandParts() {
     return getStorybook7BuildCommandParts();
   } catch (e) {
     if (HAPPO_DEBUG) {
-      console.log('[happo] Check for Storybook v7 failed. Details:', e);
+      console.log('[happo] Check for Storybook v7+ failed. Details:', e);
     }
   }
   try {
@@ -86,7 +85,7 @@ function resolveBuildCommandParts() {
   return getStorybook7BuildCommandParts();
 }
 
-function buildStorybook({ configDir, staticDir, outputDir }) {
+function buildStorybook({ configDir, staticDir, outputDir }: {configDir: string, staticDir?: string, outputDir: string}): Promise<void> {
   return new Promise((resolve, reject) => {
     rimraf.sync(outputDir);
     const buildCommandParts = resolveBuildCommandParts();
@@ -120,7 +119,7 @@ function buildStorybook({ configDir, staticDir, outputDir }) {
 
     spawned.on('exit', (code) => {
       if (code === 0) {
-        resolve();
+        resolve(undefined);
       } else {
         reject(new Error('Failed to build static storybook package'));
       }
@@ -128,12 +127,12 @@ function buildStorybook({ configDir, staticDir, outputDir }) {
   });
 }
 
-module.exports = function happoStorybookPlugin({
+export default function happoStorybookPlugin({
   configDir = '.storybook',
   staticDir,
   outputDir = '.out',
   usePrebuiltPackage = false,
-} = {}) {
+}: {configDir?: string, staticDir?: string, outputDir?: string, usePrebuiltPackage?: boolean} = {}) {
   return {
     generateStaticPackage: async () => {
       if (!usePrebuiltPackage) {

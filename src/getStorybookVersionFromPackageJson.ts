@@ -1,7 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
-module.exports = function getStorybookVersionFromPackageJson(
+export default function getStorybookVersionFromPackageJson(
   packageJsonPath = path.join(process.cwd(), 'package.json'),
 ) {
   const data = fs.readFileSync(packageJsonPath, 'utf8');

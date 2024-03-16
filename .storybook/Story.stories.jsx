@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import TetherComponent from 'react-tether';
-import { configure } from '@storybook/react';
-import { storiesOf } from '@storybook/react';
 import Tooltip from '@mui/material/Tooltip';
 
 import testImage from './testImage.png';
 
-import { setDefaultDelay, isHappoRun } from '../register';
-
 import Button from './src/Button';
+import { PARAM_KEY } from "../dist/constants"
 
 export default {
   title: 'Stories',
@@ -45,7 +42,7 @@ function PortalComponent() {
       document.body.appendChild(el);
       return el;
     })();
-  return ReactDOM.createPortal(<h1>I'm in a portal!</h1>, domNode);
+  return <>{ReactDOM.createPortal(<h1>I'm in a portal!</h1>, domNode)}</>;
 }
 
 function TetheredComponent() {
@@ -65,7 +62,7 @@ function TetheredComponent() {
 
 class DataFetchComponent extends React.Component {
   componentDidMount() {
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.onload = async () => {
       this.setState({
         xhr: true,
@@ -139,15 +136,15 @@ export const Themed = () => (
   <div style={{ color: 'gray' }}>My color is gray</div>
 );
 Themed.parameters = {
-  happo: { themes: ['black', 'white'] },
+  [PARAM_KEY]: { themes: ['black', 'white'] },
 };
 
 export const NotPartOfHappo = () => <AsyncComponent />;
-NotPartOfHappo.parameters = { happo: false };
+NotPartOfHappo.parameters = { [PARAM_KEY]: false };
 
 export const ClickToRevealStory = () => <ClickToReveal />;
 ClickToRevealStory.parameters = {
-  happo: {
+  [PARAM_KEY]: {
     beforeScreenshot: ({ rootElement }) => {
       const clickEvent = new MouseEvent('click', {
         view: window,
@@ -161,7 +158,7 @@ ClickToRevealStory.parameters = {
 
 export const ModifyGlobalState = () => <div>Modify Global State</div>;
 ModifyGlobalState.parameters = {
-  happo: {
+  [PARAM_KEY]: {
     beforeScreenshot: () => {
       const el = document.createElement('div');
       el.id = 'global-state';
@@ -189,27 +186,27 @@ export const ExecuteAGraphQLMutationAndHandleTheResponseWhenReceived = () => (
 );
 export const AsyncWithWaitForContent = () => <AsyncContent />;
 AsyncWithWaitForContent.parameters = {
-  happo: { waitForContent: 'world' },
+  [PARAM_KEY]: { waitForContent: 'world' },
 };
 export const AsyncWithWaitFor = () => <AsyncContent />;
 AsyncWithWaitFor.parameters = {
-  happo: { waitFor: () => document.querySelector('.async-inner') },
+  [PARAM_KEY]: { waitFor: () => document.querySelector('.async-inner') },
 };
 
 export const AsyncWithDelay = () => <AsyncContent />;
 AsyncWithDelay.parameters = {
-  happo: { delay: 1200 },
+  [PARAM_KEY]: { delay: 1200 },
 };
 
 export const AsyncWithWaitForDataSelector = () => <AsyncContent />;
 AsyncWithWaitForDataSelector.parameters = {
-  happo: { waitFor: () => document.querySelector('[data-async-ready=true]') },
+  [PARAM_KEY]: { waitFor: () => document.querySelector('[data-async-ready=true]') },
 };
 
 export const ButtonWithText = () => <Button>Hello Button</Button>;
 export const ButtonFirefoxOnly = () => <Button>Hello Firefox Button</Button>;
 ButtonFirefoxOnly.parameters = {
-  happo: { targets: ['firefox'] },
+  [PARAM_KEY]: { targets: ['firefox'] },
 };
 export const ButtonWithImage = () => (
   <Button>
@@ -236,7 +233,7 @@ export const MiscFailingOnUnmount = () => <UnmountFail />;
 export const MiscFailing = () => {
   throw new Error('Some error');
 };
-MiscFailing.parameters = { happo: { delay: 300 } };
+MiscFailing.parameters = { [PARAM_KEY]: { delay: 300 } };
 
 export const WithTooltip = () => (
   <Tooltip title="here I am">
@@ -244,7 +241,7 @@ export const WithTooltip = () => (
   </Tooltip>
 );
 WithTooltip.parameters = {
-  happo: {
+  [PARAM_KEY]: {
     beforeScreenshot: async ({ rootElement }) => {
       rootElement.querySelector('button').dispatchEvent(
         new MouseEvent('mouseover', {

@@ -4,9 +4,7 @@ import { addons, types } from '@storybook/manager-api';
 import { useParameter, useChannel, useStorybookState } from '@storybook/api';
 
 import { AddonPanel } from '@storybook/components';
-
-const ADDON_ID = 'happo';
-const PANEL_ID = `${ADDON_ID}/panel`;
+import { ADDON_ID, PANEL_ID } from 'src/constants';
 
 function HappoPanel() {
   const happoParams = useParameter('happo', null);
@@ -62,7 +60,7 @@ addons.register(ADDON_ID, () => {
   addons.add(PANEL_ID, {
     type: types.PANEL,
     title: 'Happo',
-    render: ({ active, key }) => {
+    render: ({ active, key }: any) => {
       return (
         <AddonPanel active={active} key={key}>
           <HappoPanel />

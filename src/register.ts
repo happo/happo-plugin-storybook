@@ -1,4 +1,4 @@
-const { SB_ROOT_ELEMENT_SELECTOR } = require('./constants');
+import { SB_ROOT_ELEMENT_SELECTOR } from './constants';
 
 const time = window.happoTime || {
   originalDateNow: Date.now,
@@ -8,14 +8,14 @@ const time = window.happoTime || {
 const ASYNC_TIMEOUT = 100;
 
 let renderTimeoutMs = 2000;
-let examples;
+let examples: any;
 let currentIndex = 0;
-let defaultDelay;
-let themeSwitcher;
-let forcedHappoScreenshotSteps;
+let defaultDelay: number;
+let themeSwitcher: any;
+let forcedHappoScreenshotSteps: any[];
 let shouldWaitForCompletedEvent = true;
 
-async function waitForSomeContent(elem, start = time.originalDateNow()) {
+async function waitForSomeContent(elem: Element, start = time.originalDateNow()) {
   const html = elem.innerHTML.trim();
   const duration = time.originalDateNow() - start;
   if (html === '' && duration < ASYNC_TIMEOUT) {
@@ -29,7 +29,7 @@ async function waitForSomeContent(elem, start = time.originalDateNow()) {
   return html;
 }
 
-async function waitForWaitFor(waitFor, start = time.originalDateNow()) {
+async function waitForWaitFor(waitFor: () => string, start = time.originalDateNow()) {
   const duration = time.originalDateNow() - start;
   if (!waitFor() && duration < renderTimeoutMs) {
     return new Promise((resolve) =>
@@ -42,7 +42,7 @@ async function waitForWaitFor(waitFor, start = time.originalDateNow()) {
 }
 
 async function getExamples() {
-  const storyStore = window.__STORYBOOK_CLIENT_API__._storyStore;
+  const storyStore = window.__STORYBOOK_CLIENT_API__.storyStore ?? window.__STORYBOOK_PREVIEW__.storyStoreValue;
 
   if (!storyStore.extract) {
     throw new Error('Missing Storybook Client API');
@@ -51,7 +51,7 @@ async function getExamples() {
     await storyStore.cacheAllCSFFiles();
   }
   return Object.values(storyStore.extract())
-    .map(({ id, kind, story, parameters }) => {
+    .map(({ id, kind, story, parameters }: any) => {
       if (parameters.happo === false) {
         return;
       }
@@ -89,7 +89,7 @@ async function getExamples() {
       if (!themes) {
         result.push(rest);
       } else {
-        themes.forEach((theme) => {
+        themes.forEach((theme: any) => {
           result.push({
             ...rest,
             variant: `${rest.variant} [${theme}]`,
@@ -110,7 +110,7 @@ async function getExamples() {
     });
 }
 
-function filterExamples(all) {
+function filterExamples(all: any[]) {
   if (initConfig.chunk) {
     const examplesPerChunk = Math.ceil(all.length / initConfig.chunk.total);
     const startIndex = initConfig.chunk.index * examplesPerChunk;
@@ -136,7 +136,7 @@ function filterExamples(all) {
   return all;
 }
 
-let initConfig = {};
+let initConfig: any = {};
 
 window.happo = {};
 
@@ -144,12 +144,12 @@ window.happo.init = (config) => {
   initConfig = config;
 };
 
-function renderStory(story, { force = false } = {}) {
+function renderStory(story: any, { force = false } = {}): Promise<void | {pausedAtStep: any}> {
   const channel = window.__STORYBOOK_ADDONS_CHANNEL__;
   let isPlaying = false;
   return new Promise((resolve) => {
     const timeout = time.originalSetTimeout(resolve, renderTimeoutMs);
-    function handleRenderPhaseChanged(ev) {
+    function handleRenderPhaseChanged(ev: any) {
       console.log(ev);
       if (ev.newPhase === 'completed') {
         channel.off('storyRenderPhaseChanged', handleRenderPhaseChanged);
@@ -189,7 +189,6 @@ function renderStory(story, { force = false } = {}) {
     }
   });
 }
-
 window.happo.nextExample = async () => {
   if (!examples) {
     examples = filterExamples(await getExamples());
@@ -227,7 +226,7 @@ window.happo.nextExample = async () => {
         console.error('Failed to invoke afterScreenshot hook', e);
       }
     }
-    const renderResult =
+    const renderResult: any =
       (await renderStory(
         {
           kind: component,
@@ -274,8 +273,7 @@ window.happo.nextExample = async () => {
     }
   }
 };
-
-export function forceHappoScreenshot(stepLabel) {
+export function forceHappoScreenshot(stepLabel: string) {
   if (!currentIndex) {
     console.log(
       `Ignoring forceHappoScreenshot with step label "${stepLabel}" since we are not currently rendering for Happo`,
@@ -300,22 +298,22 @@ export function forceHappoScreenshot(stepLabel) {
   forcedHappoScreenshotSteps.push(stepLabel);
 
   const e = new Error(`Forced screenshot with label "${stepLabel}"`);
-  e.type = 'ForcedHappoScreenshot';
-  e.step = stepLabel;
+  (e as any).type = 'ForcedHappoScreenshot';
+  (e as any).step = stepLabel;
   console.log('Forcing happo screenshot', stepLabel);
   throw e;
 }
 
-export function setDefaultDelay(delay) {
+export function setDefaultDelay(delay: number) {
   defaultDelay = delay;
 }
-export function setRenderTimeoutMs(timeoutMs) {
+export function setRenderTimeoutMs(timeoutMs: number) {
   renderTimeoutMs = timeoutMs;
 }
-export function setThemeSwitcher(func) {
+export function setThemeSwitcher(func: (theme: any, channel: any) => Promise<void>) {
   themeSwitcher = func;
 }
-export function setShouldWaitForCompletedEvent(swfce) {
+export function setShouldWaitForCompletedEvent(swfce: boolean) {
   shouldWaitForCompletedEvent = swfce;
 }
 export const isHappoRun = () => window.__IS_HAPPO_RUN;

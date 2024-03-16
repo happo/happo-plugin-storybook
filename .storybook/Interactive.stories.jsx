@@ -1,10 +1,9 @@
-import { within, userEvent } from '@storybook/testing-library';
-import { useState } from 'react';
-import { expect } from '@storybook/jest';
+import { within, userEvent, expect } from '@storybook/test';
+import React, { useState } from 'react';
 import { forceHappoScreenshot } from '../register';
 
 const Interactive = () => {
-  const [value, setValue] = useState();
+  const [value, setValue] = useState(false);
   return (
     <div>
       <button onClick={() => setValue(old => !old)}>click me</button>
@@ -31,13 +30,13 @@ export const Demo = {
       console.log(args);
       await userEvent.click(canvas.getByRole('button'));
       await expect(canvas.getByText('I was clicked')).toBeInTheDocument();
-      await forceHappoScreenshot('clicked');
+      forceHappoScreenshot('clicked');
     });
 
     await step('second click', async () => {
       await userEvent.click(canvas.getByRole('button'));
       await expect(canvas.getByText('I was not clicked')).toBeInTheDocument();
-      await forceHappoScreenshot('second click');
+      forceHappoScreenshot('second click');
     });
   },
 };
