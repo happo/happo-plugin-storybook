@@ -42,7 +42,9 @@ async function waitForWaitFor(waitFor, start = time.originalDateNow()) {
 }
 
 async function getExamples() {
-  const storyStore = window.__STORYBOOK_CLIENT_API__._storyStore;
+  const storyStore = window.__STORYBOOK_CLIENT_API__
+    ? window.__STORYBOOK_CLIENT_API__._storyStore
+    : window.__STORYBOOK_PREVIEW__.storyStoreValue;
 
   if (!storyStore.extract) {
     throw new Error('Missing Storybook Client API');

@@ -1,13 +1,13 @@
-import { within, userEvent } from '@storybook/testing-library';
-import { useState } from 'react';
-import { expect } from '@storybook/jest';
+import { within, userEvent } from '@storybook/test';
+import React, { useState } from 'react';
+import { expect } from '@storybook/test';
 import { forceHappoScreenshot } from '../register';
 
 const Interactive = () => {
   const [value, setValue] = useState();
   return (
     <div>
-      <button onClick={() => setValue(old => !old)}>click me</button>
+      <button onClick={() => setValue((old) => !old)}>click me</button>
       {value && <p>I was clicked</p>}
       {!value && <p>I was not clicked</p>}
     </div>
