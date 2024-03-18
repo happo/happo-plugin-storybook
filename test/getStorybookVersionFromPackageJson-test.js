@@ -5,7 +5,7 @@ const getStorybookVersionFromPackageJson = require('../getStorybookVersionFromPa
 describe('with project package.json', () => {
   it('finds the right version', () => {
     const version = getStorybookVersionFromPackageJson();
-    expect(version).toBe(7);
+    expect(version).toBe(8);
   });
 });
 

@@ -7,3 +7,4 @@ node_modules
 /constants.js
 .yarnrc.yml
 .yarn
+dist

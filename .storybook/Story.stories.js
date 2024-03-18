@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import TetherComponent from 'react-tether';
-import { configure } from '@storybook/react';
-import { storiesOf } from '@storybook/react';
 import Tooltip from '@mui/material/Tooltip';
 
 import testImage from './testImage.png';

@@ -1,3 +1,4 @@
 node_modules
 .happo-out
 test
+dist
