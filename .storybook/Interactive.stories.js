@@ -41,3 +41,22 @@ export const Demo = {
     });
   },
 };
+
+export const InteractiveThrowsError = {
+  // This story exists to test what happens when the play function throws an
+  // error that isn't caused by `forceHappoScreenshot`.
+  play: async ({ args, canvasElement, step }) => {
+    const canvas = within(canvasElement);
+    await new Promise((r) => setTimeout(r, 200));
+
+    await step('clicked', async () => {
+      await userEvent.click(canvas.getByRole('button'));
+      await expect(canvas.getByText('I was clicked')).toBeInTheDocument();
+      await forceHappoScreenshot('clicked');
+      throw new Error('Whoops');
+
+      // We will never reach this line
+      await forceHappoScreenshot('clicked2');
+    });
+  },
+};
