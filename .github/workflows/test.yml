@@ -26,7 +26,7 @@ jobs:
       - run: corepack enable
       - run: yarn set version 4.1.1
       - run: yarn -v
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --immutable
       - run: yarn lint
       - run: yarn test
       - run: yarn build && yarn happo-ci-github-actions
@@ -50,7 +50,7 @@ jobs:
           node-version: 18
       - run: corepack enable
       - run: yarn set version 4.1.1
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --immutable
       - run: yarn add --dev @storybook/addon-actions@7 @storybook/addon-interactions@7 @storybook/api@7 @storybook/manager-api@7 @storybook/preview-api@7 @storybook/react@7 @storybook/react-webpack5@7 storybook@7
       - run: yarn build && yarn happo-ci-github-actions
 
@@ -74,7 +74,7 @@ jobs:
           node-version: 18
       - run: corepack enable
       - run: yarn set version 4.1.1
-      - run: yarn install --frozen-lockfile
+      - run: yarn install --immutable
       - run: rm .storybook/Interactive.stories.js
       - run: yarn add --dev storybook@6 @storybook/addon-actions@6 @storybook/addon-interactions@6 @storybook/api@6 @storybook/react@6 global @storybook/channels@6 @storybook/channel-websocket@6
       - run: yarn build
