@@ -7,7 +7,7 @@
     "lint": "eslint src/",
     "test": "jest",
     "happo": "happo",
-    "happo-ci-github-actions": "bash $(yarn bin happo-ci-github-actions)",
+    "happo-gha": "bash ./node_modules/.bin/happo-ci-github-actions",
     "build": "babel ./src --out-dir ./",
     "prepublishOnly": "yarn build",
     "dev": "storybook dev -p 9001 -c .storybook",
