@@ -165,9 +165,14 @@ function renderStory(story, { force = false } = {}) {
       ) {
         channel.off('storyRenderPhaseChanged', handleRenderPhaseChanged);
         clearTimeout(timeout);
+        const pausedAtStep =
+          forcedHappoScreenshotSteps[forcedHappoScreenshotSteps.length - 1];
+        if (pausedAtStep.done) {
+          // Already processed this step
+          return resolve();
+        }
         return resolve({
-          pausedAtStep:
-            forcedHappoScreenshotSteps[forcedHappoScreenshotSteps.length - 1],
+          pausedAtStep,
         });
       }
       if (ev.newPhase === 'playing') {
@@ -240,7 +245,7 @@ window.happo.nextExample = async () => {
       )) || {};
     pausedAtStep = renderResult.pausedAtStep;
     if (pausedAtStep) {
-      variant = `${variant}-${pausedAtStep}`;
+      variant = `${variant}-${pausedAtStep.stepLabel}`;
     } else {
       forcedHappoScreenshotSteps = undefined;
     }
@@ -273,6 +278,8 @@ window.happo.nextExample = async () => {
   } finally {
     if (!pausedAtStep) {
       currentIndex++;
+    } else {
+      pausedAtStep.done = true;
     }
   }
 };
@@ -292,14 +299,14 @@ export function forceHappoScreenshot(stepLabel) {
 
   if (
     forcedHappoScreenshotSteps &&
-    forcedHappoScreenshotSteps.includes(stepLabel)
+    forcedHappoScreenshotSteps.some((s) => s.stepLabel === stepLabel)
   ) {
     // ignore, this step has already been handled
     return;
   }
 
   forcedHappoScreenshotSteps = forcedHappoScreenshotSteps || [];
-  forcedHappoScreenshotSteps.push(stepLabel);
+  forcedHappoScreenshotSteps.push({ stepLabel, done: false });
 
   const e = new Error(`Forced screenshot with label "${stepLabel}"`);
   e.type = 'ForcedHappoScreenshot';
