@@ -13,6 +13,7 @@ jobs:
       HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
       HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
       HAPPO_PROJECT: storybook8
+      YARN_IGNORE_PATH: 1
 
     steps:
       - uses: actions/checkout@v2
@@ -23,6 +24,7 @@ jobs:
         with:
           node-version: 18
       - run: corepack enable
+      - run: yarn set version 4.0.2
       - run: yarn -v
       - run: yarn install --frozen-lockfile
       - run: yarn lint
@@ -36,6 +38,7 @@ jobs:
       HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
       HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
       HAPPO_PROJECT: storybook7
+      YARN_IGNORE_PATH: 1
 
     steps:
       - uses: actions/checkout@v2
@@ -46,6 +49,7 @@ jobs:
         with:
           node-version: 18
       - run: corepack enable
+      - run: yarn set version 4.0.2
       - run: yarn install --frozen-lockfile
       - run: yarn add --dev @storybook/addon-actions@7 @storybook/addon-interactions@7 @storybook/api@7 @storybook/manager-api@7 @storybook/preview-api@7 @storybook/react@7 @storybook/react-webpack5@7 storybook@7
       - run: yarn build && yarn happo-ci-github-actions
@@ -58,6 +62,7 @@ jobs:
       DISABLE_ADDONS: true
       HAPPO_DEBUG: true
       HAPPO_PROJECT: storybook6
+      YARN_IGNORE_PATH: 1
 
     steps:
       - uses: actions/checkout@v2
@@ -68,6 +73,7 @@ jobs:
         with:
           node-version: 18
       - run: corepack enable
+      - run: yarn set version 4.0.2
       - run: yarn install --frozen-lockfile
       - run: rm .storybook/Interactive.stories.js
       - run: yarn add --dev storybook@6 @storybook/addon-actions@6 @storybook/addon-interactions@6 @storybook/api@6 @storybook/react@6 global @storybook/channels@6 @storybook/channel-websocket@6
