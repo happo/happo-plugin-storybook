@@ -12,9 +12,12 @@ jobs:
     env:
       HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
       HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
+      HAPPO_PROJECT: storybook8
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 100
       - name: Use Node.js 18
         uses: actions/setup-node@v2
         with:
@@ -23,17 +26,20 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn lint
       - run: yarn test
-      - run: yarn build && yarn happo run
-      - run: yarn build-local-storybook && HAPPO_USE_PREBUILT_PACKAGE=yes yarn happo run
+      - run: yarn build && yarn happo-ci-github-actions
+      - run: yarn build-local-storybook && HAPPO_USE_PREBUILT_PACKAGE=yes HAPPO_PROJECT=storybook8-prebuilt yarn happo-ci-github-actions
 
   storybook7:
     runs-on: ubuntu-latest
     env:
       HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
       HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
+      HAPPO_PROJECT: storybook7
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 100
       - name: Use Node.js 18
         uses: actions/setup-node@v2
         with:
@@ -41,19 +47,21 @@ jobs:
       - run: corepack enable
       - run: yarn install --frozen-lockfile
       - run: yarn add --dev @storybook/addon-actions@7 @storybook/addon-interactions@7 @storybook/api@7 @storybook/manager-api@7 @storybook/preview-api@7 @storybook/react@7 @storybook/react-webpack5@7 storybook@7
-      - run: yarn build && yarn happo run
+      - run: yarn build && yarn happo-ci-github-actions
 
   storybook6:
     runs-on: ubuntu-latest
     env:
       HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
-      HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
       DISABLE_REACT_WEBPACK5_FRAMEWORK: true
       DISABLE_ADDONS: true
       HAPPO_DEBUG: true
+      HAPPO_PROJECT: storybook6
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 100
       - name: Use Node.js 18
         uses: actions/setup-node@v2
         with:
@@ -64,4 +72,4 @@ jobs:
       - run: yarn add --dev storybook@6 @storybook/addon-actions@6 @storybook/addon-interactions@6 @storybook/api@6 @storybook/react@6 global @storybook/channels@6 @storybook/channel-websocket@6
       - run: yarn build
       - run: yarn storybook build --version
-      - run: yarn happo run
+      - run: yarn happo-ci-github-actions
