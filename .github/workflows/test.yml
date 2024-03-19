@@ -23,6 +23,7 @@ jobs:
         with:
           node-version: 18
       - run: corepack enable
+      - run: yarn -v
       - run: yarn install --frozen-lockfile
       - run: yarn lint
       - run: yarn test
