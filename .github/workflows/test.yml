@@ -29,8 +29,8 @@ jobs:
       - run: yarn install --immutable
       - run: yarn lint
       - run: yarn test
-      - run: yarn build && bash ./node_modules/.bin/happo-ci-github-actions
-      - run: yarn build-local-storybook && HAPPO_USE_PREBUILT_PACKAGE=yes HAPPO_PROJECT=storybook8-prebuilt bash ./node_modules/.bin/happo-ci-github-actions
+      - run: yarn build && yarn happo-ci-github-actions
+      - run: yarn build-local-storybook && HAPPO_USE_PREBUILT_PACKAGE=yes HAPPO_PROJECT=storybook8-prebuilt yarn happo-ci-github-actions
 
   storybook7:
     runs-on: ubuntu-latest
@@ -52,7 +52,7 @@ jobs:
       - run: yarn set version 4.1.1
       - run: yarn install --immutable
       - run: yarn add --dev @storybook/addon-actions@7 @storybook/addon-interactions@7 @storybook/api@7 @storybook/manager-api@7 @storybook/preview-api@7 @storybook/react@7 @storybook/react-webpack5@7 storybook@7
-      - run: yarn build && bash ./node_modules/.bin/happo-ci-github-actions
+      - run: yarn build && yarn happo-ci-github-actions
 
   storybook6:
     runs-on: ubuntu-latest
@@ -79,4 +79,4 @@ jobs:
       - run: yarn add --dev storybook@6 @storybook/addon-actions@6 @storybook/addon-interactions@6 @storybook/api@6 @storybook/react@6 global @storybook/channels@6 @storybook/channel-websocket@6
       - run: yarn build
       - run: yarn storybook build --version
-      - run: bash ./node_modules/.bin/happo-ci-github-actions
+      - run: yarn happo-ci-github-actions
