@@ -81,5 +81,5 @@
     "archiver": "^3.0.0",
     "rimraf": "^2.6.3"
   },
-  "packageManager": "yarn@1.22.22"
+  "packageManager": "yarn@4.1.1"
 }
