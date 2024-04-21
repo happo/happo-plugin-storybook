@@ -1,9 +1,7 @@
-const { Writable } = require('stream');
 const { spawn, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const Archiver = require('archiver');
 const rimraf = require('rimraf');
 
 const getStorybook7BuildCommandParts =
@@ -11,26 +9,6 @@ const getStorybook7BuildCommandParts =
 const getStorybookVersionFromPackageJson = require('./getStorybookVersionFromPackageJson');
 
 const { HAPPO_DEBUG, HAPPO_STORYBOOK_BUILD_COMMAND } = process.env;
-
-function zipFolderToBuffer(outputDir) {
-  return new Promise((resolve, reject) => {
-    const archive = new Archiver('zip');
-    const stream = new Writable();
-    const data = [];
-    stream._write = (chunk, enc, done) => {
-      data.push(...chunk);
-      done();
-    };
-    stream.on('finish', () => {
-      const buffer = Buffer.from(data);
-      resolve(buffer);
-    });
-    archive.pipe(stream);
-    archive.directory(outputDir, '');
-    archive.on('error', reject);
-    archive.finalize();
-  });
-}
 
 function resolveBuildCommandParts() {
   if (HAPPO_STORYBOOK_BUILD_COMMAND) {
@@ -157,8 +135,8 @@ module.exports = function happoStorybookPlugin({
           `,
           ),
         );
-        const buffer = await zipFolderToBuffer(outputDir);
-        return buffer.toString('base64');
+        // Tell happo.io where the files are located.
+        return { path: outputDir };
       } catch (e) {
         console.error(e);
         throw e;
