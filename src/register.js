@@ -215,8 +215,10 @@ window.happo.nextExample = async () => {
     theme,
   } = examples[currentIndex];
 
+  let pausedAtStep;
+  let variant = rawVariant;
+
   try {
-    let variant = rawVariant;
     if (
       window.happoSkipped &&
       window.happoSkipped.some(
@@ -228,8 +230,6 @@ window.happo.nextExample = async () => {
       );
       return { component, variant, skipped: true };
     }
-
-    let pausedAtStep;
 
     const docsRootElement = document.getElementById('docs-root');
     if (docsRootElement) {
