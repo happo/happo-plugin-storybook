@@ -215,22 +215,22 @@ window.happo.nextExample = async () => {
     theme,
   } = examples[currentIndex];
 
-  let variant = rawVariant;
-  if (
-    window.happoSkipped &&
-    window.happoSkipped.some(
-      (item) => item.component === component && item.variant === variant,
-    )
-  ) {
-    console.log(
-      `Skipping ${component}, ${variant} since it is in the skip list`,
-    );
-    return { component, variant, skipped: true };
-  }
-
-  let pausedAtStep;
-
   try {
+    let variant = rawVariant;
+    if (
+      window.happoSkipped &&
+      window.happoSkipped.some(
+        (item) => item.component === component && item.variant === variant,
+      )
+    ) {
+      console.log(
+        `Skipping ${component}, ${variant} since it is in the skip list`,
+      );
+      return { component, variant, skipped: true };
+    }
+
+    let pausedAtStep;
+
     const docsRootElement = document.getElementById('docs-root');
     if (docsRootElement) {
       docsRootElement.setAttribute('data-happo-ignore', 'true');
