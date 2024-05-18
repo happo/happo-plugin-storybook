@@ -37,6 +37,14 @@ module.exports = {
       configDir: '.storybook',
       outputDir: '.happo-out',
       usePrebuiltPackage: !!process.env.HAPPO_USE_PREBUILT_PACKAGE,
+      skip: () => {
+        return [
+          {
+            component: 'Stories',
+            variant: 'Button With Text [white]',
+          },
+        ];
+      },
     }),
   ],
   stylesheets: [path.resolve(__dirname, 'test.css')],

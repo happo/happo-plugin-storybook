@@ -4,11 +4,21 @@ const path = require('path');
 
 const rimraf = require('rimraf');
 
-const getStorybook7BuildCommandParts =
-  require('./getStorybook7BuildCommandParts');
+const getStorybook7BuildCommandParts = require('./getStorybook7BuildCommandParts');
 const getStorybookVersionFromPackageJson = require('./getStorybookVersionFromPackageJson');
 
 const { HAPPO_DEBUG, HAPPO_STORYBOOK_BUILD_COMMAND } = process.env;
+
+function validateSkipped(skipped) {
+  if (!Array.isArray(skipped)) {
+    throw new Error(`The \`skip\` option didn't provide an array`);
+  }
+  if (skipped.some((item) => !item.component || !item.variant)) {
+    throw new Error(
+      `Each item provided by the \`skip\` option need a \`component\` and a \`variant\` property`,
+    );
+  }
+}
 
 function resolveBuildCommandParts() {
   if (HAPPO_STORYBOOK_BUILD_COMMAND) {
@@ -111,6 +121,7 @@ module.exports = function happoStorybookPlugin({
   staticDir,
   outputDir = '.out',
   usePrebuiltPackage = false,
+  skip,
 } = {}) {
   return {
     generateStaticPackage: async () => {
@@ -124,6 +135,13 @@ module.exports = function happoStorybookPlugin({
         );
       }
       try {
+        const skipped =
+          typeof skip === 'function'
+            ? await skip()
+            : Array.isArray(skip)
+              ? skip
+              : [];
+        validateSkipped(skipped);
         const iframeContent = fs.readFileSync(iframePath, 'utf-8');
         fs.writeFileSync(
           iframePath,
@@ -132,6 +150,7 @@ module.exports = function happoStorybookPlugin({
             `<head>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <script type="text/javascript">window.__IS_HAPPO_RUN = true;</script>
+            <script type="text/javascript">window.happoSkipped = ${JSON.stringify(skipped)};</script>
           `,
           ),
         );
