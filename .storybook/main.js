@@ -9,6 +9,7 @@ const result = {
         '@storybook/addon-interactions',
         '../preset.js',
         '@storybook/addon-webpack5-compiler-babel',
+        '@storybook/addon-essentials',
       ],
 
   docs: {
