@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import TetherComponent from 'react-tether';
 import Tooltip from '@mui/material/Tooltip';
+import { useGlobals } from '@storybook/addons';
 
 import testImage from './testImage.png';
 
@@ -226,6 +227,14 @@ export const ButtonWithSomeEmoji = () => (
     </span>
   </Button>
 );
+
+export const Localed = () => {
+  const [{ locale }] = useGlobals();
+  if (locale === 'sv') {
+    return <div>Hallå världen!</div>;
+  }
+  return <div>Hello local world!</div>;
+};
 
 export const MiscLarge = () => (
   <div style={{ width: 400, height: 400, backgroundColor: 'red' }} />
