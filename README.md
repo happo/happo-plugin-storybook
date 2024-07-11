@@ -1,8 +1,8 @@
 # happo-plugin-storybook
 
-A [happo.io](https://github.com/enduire/happo.io) plugin for Storybook.
+A [Happo](https://happo.io) plugin for Storybook.
 
-*Documentation is available at
-[docs.happo.io](https://docs.happo.io/docs/storybook)*
+_Documentation is available at
+[docs.happo.io](https://docs.happo.io/docs/storybook)_
 
 ## https://docs.happo.io/docs/storybook
