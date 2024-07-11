@@ -1,4 +1,12 @@
-node_modules
+.eslintrc.js
+.github
 .happo-out
-test
+.happo.js
+.importjs.js
+.pnp.*
+.storybook
+.yarn
+.yarnrc.yml
 dist
+node_modules
+test

@@ -1,9 +1,17 @@
-node_modules
 .happo-out
-/register.js
 /addon.js
-/preset.js
-/decorator.js
 /constants.js
-.yarn
+/decorator.js
+/preset.js
+/register.js
 dist
+node_modules
+
+# yarn https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
