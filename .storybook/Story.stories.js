@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
+import { ErrorBoundary } from 'react-error-boundary';
 import TetherComponent from 'react-tether';
 import Tooltip from '@mui/material/Tooltip';
 
@@ -231,9 +232,27 @@ export const MiscLarge = () => (
   <div style={{ width: 400, height: 400, backgroundColor: 'red' }} />
 );
 export const MiscFailingOnUnmount = () => <UnmountFail />;
-export const MiscFailing = () => {
+
+const ComponentThatThrows = () => {
   throw new Error('Some error');
 };
+
+// https://github.com/bvaughn/react-error-boundary?tab=readme-ov-file#errorboundary-with-fallbackrender-prop
+const fallbackRender = ({ error }) => {
+  // We need to sanitize ports, asset hashes, and line/col numbers from
+  // the stack trace to make the Happo diffs stabilized.
+  error.stack = error.stack.replace(
+    /http:\/\/localhost:\d{4}.*?:\d+:\d+/g,
+    'http://localhost:1234/path-to-file.1234abcd.bundle.js:1234:56',
+  );
+
+  throw error;
+};
+export const MiscFailing = () => (
+  <ErrorBoundary fallbackRender={fallbackRender}>
+    <ComponentThatThrows />
+  </ErrorBoundary>
+);
 MiscFailing.parameters = { happo: { delay: 300 } };
 
 export const WithTooltip = () => (
