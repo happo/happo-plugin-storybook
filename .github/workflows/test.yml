@@ -58,6 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
+      HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
       DISABLE_REACT_WEBPACK5_FRAMEWORK: true
       DISABLE_ADDONS: true
       HAPPO_DEBUG: true
