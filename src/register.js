@@ -103,8 +103,8 @@ async function getExamples() {
       return result;
     }, [])
     .sort((a, b) => {
-      const aCompare = `${a.theme}-${a.storyId}`;
-      const bCompare = `${b.theme}-${b.storyId}`;
+      const aCompare = `${a.component}-${a.theme}-${a.storyId}`;
+      const bCompare = `${b.component}-${b.theme}-${b.storyId}`;
       if (aCompare === bCompare) {
         return 0;
       }
