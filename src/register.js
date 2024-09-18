@@ -297,7 +297,7 @@ window.happo.nextExample = async () => {
 };
 
 export function forceHappoScreenshot(stepLabel) {
-  if (!currentIndex) {
+  if (!examples) {
     console.log(
       `Ignoring forceHappoScreenshot with step label "${stepLabel}" since we are not currently rendering for Happo`,
     );
