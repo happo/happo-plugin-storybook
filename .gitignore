@@ -1,4 +1,5 @@
 .happo-out
+.out
 /addon.js
 /constants.js
 /decorator.js

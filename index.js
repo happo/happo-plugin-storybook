@@ -108,6 +108,13 @@ function buildStorybook({ configDir, staticDir, outputDir }) {
 
     spawned.on('exit', (code) => {
       if (code === 0) {
+        try {
+          fs.unlinkSync(path.join(outputDir, 'project.json'));
+        } catch (error) {
+          console.warn(
+            `Ignoring error when attempting to remove project.json: ${error}`,
+          );
+        }
         resolve();
       } else {
         reject(new Error('Failed to build static storybook package'));

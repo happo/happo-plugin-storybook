@@ -28,8 +28,9 @@ jobs:
       - run: yarn -v
       - run: yarn install --immutable
       - run: yarn lint
+      - run: yarn build
       - run: yarn test
-      - run: yarn build && npx -p happo.io happo-ci-github-actions
+      - run: npx -p happo.io happo-ci-github-actions
       - run: yarn build-local-storybook && HAPPO_USE_PREBUILT_PACKAGE=yes HAPPO_PROJECT=storybook8-prebuilt npx -p happo.io happo-ci-github-actions
 
   storybook7:
