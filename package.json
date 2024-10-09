@@ -77,7 +77,7 @@
     "webpack": "^4.0.0"
   },
   "dependencies": {
-    "rimraf": "^2.6.3"
+    "rimraf": "^5.0.0"
   },
   "packageManager": "yarn@4.1.1"
 }
