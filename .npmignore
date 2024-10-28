@@ -3,6 +3,7 @@
 .happo-out
 .happo.js
 .importjs.js
+.out
 .pnp.*
 .storybook
 .yarn
