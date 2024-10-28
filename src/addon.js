@@ -1,7 +1,12 @@
 import React from 'react';
 
-import { addons, types } from '@storybook/manager-api';
-import { useParameter, useChannel, useStorybookState } from '@storybook/api';
+import {
+  addons,
+  types,
+  useParameter,
+  useChannel,
+  useStorybookState,
+} from '@storybook/manager-api';
 
 import { AddonPanel } from '@storybook/components';
 
