@@ -2,7 +2,7 @@ const { spawn, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const rimraf = require('rimraf');
+const { rimrafSync } = require('rimraf');
 
 const getStorybook7BuildCommandParts = require('./getStorybook7BuildCommandParts');
 const getStorybookVersionFromPackageJson = require('./getStorybookVersionFromPackageJson');
@@ -76,7 +76,7 @@ function resolveBuildCommandParts() {
 
 function buildStorybook({ configDir, staticDir, outputDir }) {
   return new Promise((resolve, reject) => {
-    rimraf.sync(outputDir);
+    rimrafSync(outputDir);
     const buildCommandParts = resolveBuildCommandParts();
     const params = [
       ...buildCommandParts,
@@ -146,8 +146,8 @@ module.exports = function happoStorybookPlugin({
           typeof skip === 'function'
             ? await skip()
             : Array.isArray(skip)
-              ? skip
-              : [];
+            ? skip
+            : [];
         validateSkipped(skipped);
         const iframeContent = fs.readFileSync(iframePath, 'utf-8');
         fs.writeFileSync(
@@ -157,7 +157,9 @@ module.exports = function happoStorybookPlugin({
             `<head>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <script type="text/javascript">window.__IS_HAPPO_RUN = true;</script>
-            <script type="text/javascript">window.happoSkipped = ${JSON.stringify(skipped)};</script>
+            <script type="text/javascript">window.happoSkipped = ${JSON.stringify(
+              skipped,
+            )};</script>
           `,
           ),
         );
