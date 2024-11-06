@@ -152,7 +152,6 @@ function renderStory(story, { force = false } = {}) {
   return new Promise((resolve) => {
     const timeout = time.originalSetTimeout(resolve, renderTimeoutMs);
     function handleRenderPhaseChanged(ev) {
-      console.log(ev);
       if (ev.newPhase === 'completed') {
         channel.off('storyRenderPhaseChanged', handleRenderPhaseChanged);
         clearTimeout(timeout);
