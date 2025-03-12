@@ -13,7 +13,6 @@ jobs:
       HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
       HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
       HAPPO_PROJECT: storybook8
-      YARN_IGNORE_PATH: 1
 
     steps:
       - uses: actions/checkout@v4
@@ -23,10 +22,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: corepack enable
-      - run: yarn set version 4.1.1
-      - run: yarn -v
-      - run: yarn install --immutable
+      - run: yarn install --frozen-lockfile
       - run: yarn lint
       - run: yarn build
       - run: yarn test
@@ -39,7 +35,6 @@ jobs:
       HAPPO_API_KEY: ${{ secrets.HAPPO_API_KEY }}
       HAPPO_API_SECRET: ${{ secrets.HAPPO_API_SECRET }}
       HAPPO_PROJECT: storybook7
-      YARN_IGNORE_PATH: 1
 
     steps:
       - uses: actions/checkout@v4
@@ -49,10 +44,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: corepack enable
-      - run: yarn set version 4.1.1
-      - run: yarn install --immutable
-      - run: yarn add --dev @storybook/addon-actions@7 @storybook/addon-interactions@7 @storybook/api@7 @storybook/manager-api@7 @storybook/preview-api@7 @storybook/react@7 @storybook/react-webpack5@7 storybook@7
+      - run: yarn install --frozen-lockfile
+      - run: yarn add --dev @storybook/addon-actions@7 @storybook/addon-interactions@7 @storybook/api@7 @storybook/manager-api@7 @storybook/preview-api@7 @storybook/react@7 @storybook/react-webpack5@7 storybook@7 @storybook/test@7
       - run: yarn build && npx -p happo.io happo-ci-github-actions
 
   storybook6:
@@ -64,7 +57,6 @@ jobs:
       DISABLE_ADDONS: true
       HAPPO_DEBUG: true
       HAPPO_PROJECT: storybook6
-      YARN_IGNORE_PATH: 1
 
     steps:
       - uses: actions/checkout@v4
@@ -74,12 +66,28 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: corepack enable
-      - run: yarn set version 4.1.1
-      - run: yarn install --immutable
+      - run: yarn install --frozen-lockfile
       - run: rm .storybook/Interactive.stories.js
       - run: mv .storybook/preview-storybook-6.js .storybook/preview.js
       - run: yarn add --dev storybook@6 @storybook/addon-actions@6 @storybook/addon-interactions@6 @storybook/api@6 @storybook/react@6 global @storybook/channels@6 @storybook/channel-websocket@6
       - run: yarn build
       - run: yarn storybook build --version
       - run: npx -p happo.io happo-ci-github-actions
+
+  playwright:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
+      - name: Install Playwright Browsers
+        run: yarn playwright install --with-deps
+      - name: Start dev server and run tests
+        run: |
+          yarn dev & # Start dev server in background
+          sleep 5 # Wait for server to be ready
+          yarn playwright test

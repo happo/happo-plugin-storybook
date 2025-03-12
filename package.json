@@ -9,7 +9,7 @@
     "happo": "happo",
     "build": "babel ./src --out-dir ./",
     "prepublishOnly": "yarn build",
-    "dev": "storybook dev -p 9001 -c .storybook",
+    "dev": "storybook dev -p 9900 -c .storybook",
     "build-local-storybook": "storybook build -c .storybook -o .happo-out"
   },
   "jest": {
@@ -51,6 +51,7 @@
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@mui/material": "^5.8.0",
+    "@playwright/test": "^1.51.0",
     "@storybook/addon-actions": "^8.0.0",
     "@storybook/addon-interactions": "^8.0.0",
     "@storybook/addon-webpack5-compiler-babel": "^3.0.3",
@@ -74,6 +75,5 @@
     "storybook": "^8.0.0",
     "styled-components": "^4.1.3",
     "webpack": "^4.0.0"
-  },
-  "packageManager": "yarn@4.1.1"
+  }
 }
