@@ -2,8 +2,6 @@ const { spawn, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const { rimrafSync } = require('rimraf');
-
 const getStorybook7BuildCommandParts = require('./getStorybook7BuildCommandParts');
 const getStorybookVersionFromPackageJson = require('./getStorybookVersionFromPackageJson');
 
@@ -76,7 +74,7 @@ function resolveBuildCommandParts() {
 
 function buildStorybook({ configDir, staticDir, outputDir }) {
   return new Promise((resolve, reject) => {
-    rimrafSync(outputDir);
+    fs.rmSync(outputDir, { recursive: true, force: true });
     const buildCommandParts = resolveBuildCommandParts();
     const params = [
       ...buildCommandParts,
