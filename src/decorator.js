@@ -1,23 +1,41 @@
-import { makeDecorator, addons } from '@storybook/preview-api';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { addons, makeDecorator } from '@storybook/preview-api';
 
 const { SB_ROOT_ELEMENT_SELECTOR } = require('./constants');
 
-const withHappo = makeDecorator({
+function HappoDecorator({ params, children }) {
+  useEffect(() => {
+    if (!params) return;
+
+    const channel = addons.getChannel();
+    function listen({ funcName }) {
+      const rootElement = document.querySelector(SB_ROOT_ELEMENT_SELECTOR);
+      if (params[funcName] && typeof params[funcName] === 'function') {
+        params[funcName]({ rootElement });
+      } else {
+        console.warn(`Happo function ${funcName} not found.`);
+      }
+    }
+
+    channel.on('happo-event', listen);
+    return () => {
+      channel.off('happo-event', listen);
+    };
+  }, [params]);
+
+  return children;
+}
+
+export const withHappo = makeDecorator({
   name: 'withHappo',
   parameterName: 'happo',
-  wrapper: (storyFn, context, { parameters }) => {
-    useEffect(() => {
-      const channel = addons.getChannel();
-      function listen({ funcName }) {
-        const rootElement = document.querySelector(SB_ROOT_ELEMENT_SELECTOR);
-        parameters[funcName]({ rootElement });
-      }
-      channel.on('happo-event', listen);
-      return () => channel.off('happo-event', listen);
-    }, []);
-    return storyFn(context);
+  wrapper: (Story, context) => {
+    return (
+      <HappoDecorator params={context.parameters.happo}>
+        <Story />
+      </HappoDecorator>
+    );
   },
 });
 
-export const decorators = [withHappo];
+export default withHappo;

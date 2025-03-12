@@ -1,6 +1,11 @@
 const result = {
   stories: ['./**/*.stories.js'],
   staticDirs: ['../public'],
+  core: {
+    channelOptions: {
+      allowFunction: true,
+    },
+  },
 
   addons: process.env.DISABLE_ADDONS
     ? []
