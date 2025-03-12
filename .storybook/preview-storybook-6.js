@@ -1,5 +1,4 @@
 import { setThemeSwitcher, setRenderTimeoutMs } from '../register';
-import happoDecorator from '../src/decorator';
 
 setThemeSwitcher(async (theme, channel) => {
   // Make sure that it can be async
@@ -17,5 +16,3 @@ export default {
     },
   },
 };
-
-export const decorators = [happoDecorator];
