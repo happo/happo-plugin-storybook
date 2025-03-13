@@ -2477,6 +2477,11 @@ agent-base@6:
   dependencies:
     debug "4"
 
+agent-base@^7.1.2:
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/agent-base/-/agent-base-7.1.3.tgz#29435eb821bc4194633a5b89e5bc4703bafc25a1"
+  integrity sha512-jRR5wdylq8CkOe6hei19GGZnxM6rBGwFl3Bg0YItGDimvjGtAvdZk4Pu6Cl4u4Igsws4a1fd1Vq3ezrhn4KmFw==
+
 ajv-errors@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/ajv-errors/-/ajv-errors-1.0.1.tgz#f35986aceb91afadec4102fbd85014950cefa64d"
@@ -4985,7 +4990,7 @@ glob@^10.0.0:
     package-json-from-dist "^1.0.0"
     path-scurry "^1.11.1"
 
-glob@^7.1.2, glob@^7.1.3, glob@^7.1.4, glob@^7.2.0:
+glob@^7.1.3, glob@^7.1.4, glob@^7.2.0:
   version "7.2.3"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.2.3.tgz#b8df0fb802bbfa8e89bd1d938b4e16578ed44f2b"
   integrity sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==
@@ -5044,30 +5049,27 @@ graphemer@^1.4.0:
   resolved "https://registry.yarnpkg.com/graphemer/-/graphemer-1.4.0.tgz#fb2f1d55e0e3a1849aeffc90c4fa0dd53a0e66c6"
   integrity sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==
 
-happo.io@^10.1.2:
-  version "10.1.3"
-  resolved "https://registry.yarnpkg.com/happo.io/-/happo.io-10.1.3.tgz#2a908d76f4d3bf839ef5ff9a4ace708cb42f1d4b"
-  integrity sha512-ZYfzGIEhhvSoK06pKF3Sg4HmXdUS9Jhb7nlS+lCXsHikMVgNFcCRRxavHYUkNYlbbB/phnw+Rh0bD5PI77nyOQ==
+happo.io@^12.0.1:
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/happo.io/-/happo.io-12.0.1.tgz#6991c70305c101884d0b2ac3b858f1d69779ae69"
+  integrity sha512-p5jQX91i+AUgm5VlOSpigzVzpzmx0SJrtJYAHIcsVBxqkBdThPWZiZ4IgPQT0mmvS0YKF4J+VVtqKKGH4DOKuA==
   dependencies:
     "@babel/preset-react" "^7.12.1"
-    abort-controller "^3.0.0"
     archiver "^7.0.1"
     async-retry "^1.3.1"
     babel-plugin-dynamic-import-node "^2.1.0"
     commander "^2.15.1"
     form-data "^4.0.0"
-    glob "^7.1.2"
-    https-proxy-agent "^5.0.0"
+    glob "^10.0.0"
+    https-proxy-agent "^7.0.6"
     jose "^5.4.1"
     jsdom "^16.4.0"
-    lcs-image-diff "^2.0.0"
+    lcs-image-diff "^3.0.0"
     node-fetch "^2.6.6"
     parse-srcset "^1.0.2"
-    pngjs "^3.4.0"
+    pngjs "^7.0.0"
     require-relative "^0.8.7"
-    rimraf "^3.0.0"
     source-map-support "^0.5.9"
-    string.prototype.matchall "^4.0.0"
     supports-color "^7.1.0"
 
 has-bigints@^1.0.2:
@@ -5266,6 +5268,14 @@ https-proxy-agent@^5.0.0:
   integrity sha512-dFcAjpTQFgoLMzC2VwU+C/CbS7uRL0lWmxDITmqm7C+7F0Odmj6s9l6alZc6AELXhrnggM2CeWSXHGOdX2YtwA==
   dependencies:
     agent-base "6"
+    debug "4"
+
+https-proxy-agent@^7.0.6:
+  version "7.0.6"
+  resolved "https://registry.yarnpkg.com/https-proxy-agent/-/https-proxy-agent-7.0.6.tgz#da8dfeac7da130b05c2ba4b59c9b6cd66611a6b9"
+  integrity sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==
+  dependencies:
+    agent-base "^7.1.2"
     debug "4"
 
 human-signals@^2.1.0:
@@ -6327,10 +6337,10 @@ lazystream@^1.0.0:
   dependencies:
     readable-stream "^2.0.5"
 
-lcs-image-diff@^2.0.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/lcs-image-diff/-/lcs-image-diff-2.4.0.tgz#0e45a8d85e6e3ddbfac9d36b8d2e0a4990b29dd9"
-  integrity sha512-zjf8IaGOzKsosnvzbsi/PRbN8nER7EcuHE+3Hrt473FCH1el5MS4OOd/TDjAVf20Ett7lJ8qeQXqA1wEVMLRAw==
+lcs-image-diff@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/lcs-image-diff/-/lcs-image-diff-3.0.0.tgz#9f924f534d68b3d923a02215e6a61afc75c26ee7"
+  integrity sha512-ZzaqR8dVbA5ISLpKBnn3gV1M8TELWg81cFuQsTutf5IRCt93vV5yRuK2ZrIgOucOQhYeB6ml6o9+pefs1QD6mw==
   dependencies:
     imagetracerjs "^1.2.5"
 
@@ -7240,10 +7250,10 @@ playwright@1.51.0:
   optionalDependencies:
     fsevents "2.3.2"
 
-pngjs@^3.4.0:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-3.4.0.tgz#99ca7d725965fb655814eaf65f38f12bbdbf555f"
-  integrity sha512-NCrCHhWmnQklfH4MtJMRjZ2a8c80qXeMlQMv2uVp9ISJMTt562SbGd6n2oq0PaPgKm7Z6pL9E2UlLIhC+SHL3w==
+pngjs@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/pngjs/-/pngjs-7.0.0.tgz#a8b7446020ebbc6ac739db6c5415a65d17090e26"
+  integrity sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==
 
 polished@^4.2.2:
   version "4.3.1"
@@ -7855,7 +7865,7 @@ rimraf@^2.5.4, rimraf@^2.6.3:
   dependencies:
     glob "^7.1.3"
 
-rimraf@^3.0.0, rimraf@^3.0.2:
+rimraf@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"
   integrity sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==
@@ -8345,7 +8355,7 @@ string-width@^5.0.1, string-width@^5.1.2:
     emoji-regex "^9.2.2"
     strip-ansi "^7.0.1"
 
-string.prototype.matchall@^4.0.0, string.prototype.matchall@^4.0.12:
+string.prototype.matchall@^4.0.12:
   version "4.0.12"
   resolved "https://registry.yarnpkg.com/string.prototype.matchall/-/string.prototype.matchall-4.0.12.tgz#6c88740e49ad4956b1332a911e949583a275d4c0"
   integrity sha512-6CC9uyBL+/48dYizRf7H7VAYCMCNTBeM78x/VTUe9bFEaxBepPJDa1Ow99LqI/1yF7kuy7Q3cQsYMrcjGUcskA==

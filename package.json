@@ -65,7 +65,7 @@
     "eslint-plugin-jest": "^27.6.3",
     "eslint-plugin-react": "^7.28.0",
     "file-loader": "^3.0.1",
-    "happo.io": "^10.1.2",
+    "happo.io": "^12.0.1",
     "jest": "^29.7.0",
     "raw-loader": "^1.0.0",
     "react": "^18.2.0",
