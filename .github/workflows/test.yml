@@ -7,6 +7,17 @@ on:
     branches: [main]
 
 jobs:
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+
   storybook8:
     runs-on: ubuntu-latest
     env:
@@ -23,7 +34,6 @@ jobs:
         with:
           node-version: 18
       - run: yarn install --frozen-lockfile
-      - run: yarn lint
       - run: yarn build
       - run: yarn test
       - run: npx -p happo.io happo-ci-github-actions
