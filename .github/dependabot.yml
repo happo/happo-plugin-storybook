@@ -11,6 +11,9 @@ updates:
         patterns:
           - '@babel/*'
           - 'babel*'
+      emotion:
+        patterns:
+          - '@emotion/*'
       eslint:
         patterns:
           - 'eslint'
