@@ -6,6 +6,7 @@ const time = window.happoTime || {
 };
 
 const ASYNC_TIMEOUT = 100;
+const STORY_STORE_TIMEOUT = 10000;
 
 let renderTimeoutMs = 2000;
 let examples;
@@ -41,10 +42,33 @@ async function waitForWaitFor(waitFor, start = time.originalDateNow()) {
   }
 }
 
+async function getStoryStore(startTime = time.originalDateNow()) {
+  const duration = time.originalDateNow() - startTime;
+  if (duration >= STORY_STORE_TIMEOUT) {
+    throw new Error(
+      `Timeout: Could not find Storybook Client API after ${STORY_STORE_TIMEOUT}ms`,
+    );
+  }
+
+  const {
+    __STORYBOOK_CLIENT_API__: clientApi,
+    __STORYBOOK_PREVIEW__: preview,
+  } = window;
+
+  if (clientApi && clientApi._storyStore) {
+    return clientApi._storyStore;
+  }
+  if (preview && preview.storyStoreValue) {
+    return preview.storyStoreValue;
+  }
+
+  // Wait 100ms and try again
+  await new Promise((resolve) => time.originalSetTimeout(resolve, 100));
+  return getStoryStore(startTime);
+}
+
 async function getExamples() {
-  const storyStore = window.__STORYBOOK_CLIENT_API__
-    ? window.__STORYBOOK_CLIENT_API__._storyStore
-    : window.__STORYBOOK_PREVIEW__.storyStoreValue;
+  const storyStore = await getStoryStore();
 
   if (!storyStore.extract) {
     throw new Error('Missing Storybook Client API');
