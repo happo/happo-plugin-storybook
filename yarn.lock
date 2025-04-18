@@ -4236,9 +4236,9 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.11,
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
 happo.io@^12.0.1:
-  version "12.1.2"
-  resolved "https://registry.yarnpkg.com/happo.io/-/happo.io-12.1.2.tgz#c15529b9b54742503bf935cbe1d042d98e939475"
-  integrity sha512-Zh4G0T74EDxHpDFo7alvKZee5NrhY8o+P0HtRL3GQD3jgqYYHu5QRpITkYF2lmLRGtLVDUm59wy/fMhzxAhtOQ==
+  version "12.2.2"
+  resolved "https://registry.yarnpkg.com/happo.io/-/happo.io-12.2.2.tgz#5ef6df79c44a182a6ca77caf76b49c4175a00637"
+  integrity sha512-sYfdPVqw+u3uY5JJPKBfiAYDZUWYzElbfOdJR4+LyYEhwGry4JqJC82a6xTdxiOCdunKmPcQ+JFaH3gJ9r10bQ==
   dependencies:
     "@babel/preset-react" "^7.12.1"
     archiver "^7.0.1"
