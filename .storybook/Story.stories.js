@@ -138,7 +138,10 @@ export const Themed = () => (
   <div style={{ color: 'gray' }}>My color is gray</div>
 );
 Themed.parameters = {
-  happo: { themes: ['black', 'white'] },
+  happo: {
+    themes: ['black', 'white'],
+    axeOptions: { rules: { 'color-contrast': { enabled: false } } },
+  },
 };
 
 export const NotPartOfHappo = () => <AsyncComponent />;
