@@ -1,9 +1,9 @@
-const { spawn, execSync } = require('child_process');
+const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const getStorybook7BuildCommandParts = require('./getStorybook7BuildCommandParts');
 const getStorybookVersionFromPackageJson = require('./getStorybookVersionFromPackageJson');
+const getStorybookBuildCommandParts = require('./getStorybookBuildCommandParts');
 
 const { HAPPO_DEBUG, HAPPO_STORYBOOK_BUILD_COMMAND } = process.env;
 
@@ -22,14 +22,11 @@ function resolveBuildCommandParts() {
   if (HAPPO_STORYBOOK_BUILD_COMMAND) {
     return HAPPO_STORYBOOK_BUILD_COMMAND.split(' ');
   }
+
+  let version;
+
   try {
-    const version = getStorybookVersionFromPackageJson();
-    if (version === 6) {
-      return ['build-storybook'];
-    }
-    if (version === 7) {
-      return getStorybook7BuildCommandParts();
-    }
+    version = getStorybookVersionFromPackageJson();
   } catch (e) {
     if (HAPPO_DEBUG) {
       console.log(
@@ -38,38 +35,14 @@ function resolveBuildCommandParts() {
       );
     }
   }
-  const binary = fs.existsSync('yarn.lock') ? 'yarn' : 'npm';
-  try {
-    execSync(`${binary} list | grep 'storybook/react@[56]'`);
-    // Storybook 6 or earlier
-    return ['build-storybook'];
-  } catch (e) {
-    if (HAPPO_DEBUG) {
-      console.log('[happo] Check for Storybook v6 failed. Details:', e);
-    }
+
+  if (version < 9) {
+    throw new Error(
+      `Storybook v${version} is not supported. Please upgrade to v9 or later, or downgrade happo-plugin-storybook to an earlier version.`,
+    );
   }
-  try {
-    execSync(`${binary} storybook --version`);
-    // Storybook v7 or later
-    return getStorybook7BuildCommandParts();
-  } catch (e) {
-    if (HAPPO_DEBUG) {
-      console.log('[happo] Check for Storybook v7 failed. Details:', e);
-    }
-  }
-  try {
-    execSync(`${binary} build-storybook --version`);
-    return ['build-storybook'];
-  } catch (e) {
-    if (HAPPO_DEBUG) {
-      console.log(
-        '[happo] Check for build-storybook command failed. Details:',
-        e,
-      );
-    }
-  }
-  // Storybook 7 or later
-  return getStorybook7BuildCommandParts();
+
+  return getStorybookBuildCommandParts();
 }
 
 function buildStorybook({ configDir, staticDir, outputDir }) {

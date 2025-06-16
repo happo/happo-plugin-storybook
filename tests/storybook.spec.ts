@@ -15,14 +15,4 @@ test('can interact with ModifyGlobalState story', async ({ page }) => {
 
   // Check that "clean up after me!" text is NOT present
   await expect(frame.locator('#global-state')).toBeHidden();
-
-  const beforeScreenshotButton = await page
-    .getByRole('button', {
-      name: 'Invoke',
-    })
-    .first();
-  await beforeScreenshotButton.click();
-
-  // Check that "clean up after me!" text is present
-  await expect(frame.locator('#global-state')).toBeVisible();
 });

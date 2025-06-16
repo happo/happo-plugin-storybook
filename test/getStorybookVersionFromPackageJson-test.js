@@ -5,16 +5,16 @@ const getStorybookVersionFromPackageJson = require('../getStorybookVersionFromPa
 describe('with project package.json', () => {
   it('finds the right version', () => {
     const version = getStorybookVersionFromPackageJson();
-    expect(version).toBe(8);
+    expect(version).toBe(9);
   });
 });
 
-describe('with storybook 6', () => {
+describe('with storybook 8', () => {
   it('finds the right version', () => {
     const version = getStorybookVersionFromPackageJson(
-      path.resolve(__dirname, 'v6-package.json'),
+      path.resolve(__dirname, 'v8-package.json'),
     );
-    expect(version).toBe(6);
+    expect(version).toBe(8);
   });
 });
 

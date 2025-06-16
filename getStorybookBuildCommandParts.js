@@ -9,18 +9,21 @@ module.exports = function getStorybook7BuildCommandParts(
   try {
     const data = fs.readFileSync(packageJsonPath, 'utf8');
     const packageJson = JSON.parse(data);
+
     if (packageJson.scripts.storybook) {
       if (HAPPO_DEBUG) {
         console.log(
           '[happo] Found `storybook` script in package.json. Will attempt to use binary found at `node_modules/.bin/storybook` instead',
         );
       }
+
       const pathToStorybookCommand = path.join(
         process.cwd(),
         'node_modules',
         '.bin',
         'storybook',
       );
+
       if (fs.existsSync(pathToStorybookCommand)) {
         return [pathToStorybookCommand, 'build'];
       }
@@ -28,10 +31,11 @@ module.exports = function getStorybook7BuildCommandParts(
   } catch (e) {
     if (HAPPO_DEBUG) {
       console.log(
-        '[happo] Caught error when resolving Storybook 7 build command parts. Will use default.',
+        '[happo] Caught error when resolving Storybook build command parts. Will use default.',
         e,
       );
     }
   }
+
   return ['storybook', 'build'];
 };

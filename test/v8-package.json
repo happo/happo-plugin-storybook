@@ -1,13 +1,11 @@
 {
-  "name": "test-project-v6",
+  "name": "test-project-v8",
   "version": "0.0.0",
   "dependencies": {
     "@babel/runtime": "7.23.8"
   },
   "devDependencies": {
-    "@storybook/react": "^6.1.0",
-    "@storybook/testing-library": "0.2.2",
-    "storybook": "~6.1.0",
+    "@storybook/vue": "^8.0.0",
     "webpack-dev-server": "4.15.1"
   }
 }

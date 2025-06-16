@@ -1,7 +1,7 @@
 import { setThemeSwitcher, setRenderTimeoutMs } from '../register';
 import happoDecorator from '../src/decorator';
 
-setThemeSwitcher(async (theme, channel) => {
+setThemeSwitcher(async (theme) => {
   // Make sure that it can be async
   await new Promise((r) => setTimeout(r, 100));
 

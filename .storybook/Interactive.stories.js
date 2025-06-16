@@ -1,6 +1,5 @@
-import { within, userEvent } from '@storybook/test';
+import { within, userEvent, expect } from 'storybook/test';
 import React, { useState } from 'react';
-import { expect } from '@storybook/test';
 import { forceHappoScreenshot } from '../register';
 
 const Interactive = () => {
