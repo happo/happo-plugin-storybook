@@ -6,8 +6,6 @@ import Tooltip from '@mui/material/Tooltip';
 
 import testImage from './testImage.png';
 
-import { setDefaultDelay, isHappoRun } from '../register';
-
 import Button from './src/Button';
 
 export default {
