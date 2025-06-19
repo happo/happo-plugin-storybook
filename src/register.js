@@ -261,6 +261,13 @@ window.happo.nextExample = async () => {
     const rootElement = document.querySelector(SB_ROOT_ELEMENT_SELECTOR);
     rootElement.setAttribute('data-happo-ignore', 'true');
 
+    const highlightsRootElement = document.querySelector(
+      '#storybook-highlights-root',
+    );
+    if (highlightsRootElement) {
+      highlightsRootElement.setAttribute('data-happo-ignore', 'true');
+    }
+
     const { afterScreenshot } = examples[currentIndex - 1] || {};
     if (typeof afterScreenshot === 'function') {
       try {
