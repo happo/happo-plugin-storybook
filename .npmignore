@@ -1,3 +1,4 @@
+.ackrc
 .eslintrc.js
 .github
 .happo-out
@@ -9,5 +10,11 @@
 .yarn
 .yarnrc.yml
 dist
+eslint.config.mjs
 node_modules
+playwright.config.ts
+public/
 test
+test-results/
+test.css
+tests/
