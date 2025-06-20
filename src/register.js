@@ -258,15 +258,9 @@ window.happo.nextExample = async () => {
     if (docsRootElement) {
       docsRootElement.setAttribute('data-happo-ignore', 'true');
     }
+
     const rootElement = document.querySelector(SB_ROOT_ELEMENT_SELECTOR);
     rootElement.setAttribute('data-happo-ignore', 'true');
-
-    const highlightsRootElement = document.querySelector(
-      '#storybook-highlights-root',
-    );
-    if (highlightsRootElement) {
-      highlightsRootElement.setAttribute('data-happo-ignore', 'true');
-    }
 
     const { afterScreenshot } = examples[currentIndex - 1] || {};
     if (typeof afterScreenshot === 'function') {
@@ -276,6 +270,7 @@ window.happo.nextExample = async () => {
         console.error('Failed to invoke afterScreenshot hook', e);
       }
     }
+
     const renderResult =
       (await renderStory(
         {
@@ -285,6 +280,7 @@ window.happo.nextExample = async () => {
         },
         { force: !!forcedHappoScreenshotSteps },
       )) || {};
+
     pausedAtStep = renderResult.pausedAtStep;
     if (pausedAtStep) {
       variant = `${variant}-${pausedAtStep.stepLabel}`;
@@ -295,13 +291,16 @@ window.happo.nextExample = async () => {
     if (theme && themeSwitcher) {
       await themeSwitcher(theme, window.__STORYBOOK_ADDONS_CHANNEL__);
     }
+
     await waitForSomeContent(rootElement);
+
     if (/sb-show-errordisplay/.test(document.body.className)) {
       // It's possible that the error is from unmounting the previous story. We
       // can try re-rendering in this case.
       window.__STORYBOOK_ADDONS_CHANNEL__.emit('forceReRender');
       await waitForSomeContent(rootElement);
     }
+
     if (beforeScreenshot && typeof beforeScreenshot === 'function') {
       try {
         await beforeScreenshot({ rootElement });
@@ -309,10 +308,20 @@ window.happo.nextExample = async () => {
         console.error('Failed to invoke beforeScreenshot hook', e);
       }
     }
+
     await new Promise((resolve) => time.originalSetTimeout(resolve, delay));
+
     if (waitFor) {
       await waitForWaitFor(waitFor);
     }
+
+    const highlightsRootElement = document.querySelector(
+      '#storybook-highlights-root',
+    );
+    if (highlightsRootElement) {
+      highlightsRootElement.setAttribute('data-happo-ignore', 'true');
+    }
+
     return { component, variant, waitForContent };
   } catch (e) {
     console.warn(e);
