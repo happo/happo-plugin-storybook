@@ -88,6 +88,7 @@ async function getExamples() {
       let afterScreenshot;
       let targets;
       let themes;
+      let axeOptions;
       if (typeof parameters.happo === 'object' && parameters.happo !== null) {
         delay = parameters.happo.delay || defaultDelay;
         waitForContent = parameters.happo.waitForContent;
@@ -96,6 +97,7 @@ async function getExamples() {
         afterScreenshot = parameters.happo.afterScreenshot;
         targets = parameters.happo.targets;
         themes = parameters.happo.themes;
+        axeOptions = parameters.happo.axeOptions;
       }
       return {
         component: kind,
@@ -108,6 +110,7 @@ async function getExamples() {
         afterScreenshot,
         targets,
         themes,
+        axeOptions,
       };
     })
     .filter(Boolean)
@@ -236,7 +239,12 @@ window.happo.nextExample = async () => {
     waitFor,
     beforeScreenshot,
     theme,
+    axeOptions,
   } = examples[currentIndex];
+
+  // Set the axe configuration for the current story globally so that the
+  // Happo worker can pick it up
+  window.happoAxeOptions = axeOptions;
 
   let pausedAtStep;
   let variant = rawVariant;
