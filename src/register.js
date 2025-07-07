@@ -16,6 +16,15 @@ let themeSwitcher;
 let forcedHappoScreenshotSteps;
 let shouldWaitForCompletedEvent = true;
 
+class ForcedHappoScreenshot extends Error {
+  constructor(stepLabel) {
+    super(`Forced screenshot with label "${stepLabel}"`);
+    this.name = 'ForcedHappoScreenshot';
+    this.type = 'ForcedHappoScreenshot';
+    this.step = stepLabel;
+  }
+}
+
 async function waitForSomeContent(elem, start = time.originalDateNow()) {
   const html = elem.innerHTML.trim();
   const duration = time.originalDateNow() - start;
@@ -359,11 +368,8 @@ export function forceHappoScreenshot(stepLabel) {
   forcedHappoScreenshotSteps = forcedHappoScreenshotSteps || [];
   forcedHappoScreenshotSteps.push({ stepLabel, done: false });
 
-  const e = new Error(`Forced screenshot with label "${stepLabel}"`);
-  e.type = 'ForcedHappoScreenshot';
-  e.step = stepLabel;
   console.log('Forcing happo screenshot', stepLabel);
-  throw e;
+  throw new ForcedHappoScreenshot(stepLabel);
 }
 
 export function setDefaultDelay(delay) {
