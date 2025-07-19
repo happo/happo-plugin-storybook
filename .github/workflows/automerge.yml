@@ -7,7 +7,15 @@ on:
 jobs:
   automerge:
     if: github.actor == 'dependabot[bot]'
-    uses: happo/happo.io/.github/workflows/automerge.yml@main
+    runs-on: ubuntu-latest
+
     permissions:
       pull-requests: write
       contents: write
+
+    steps:
+      - uses: fastify/github-action-merge-dependabot@v3
+        with:
+          merge-method: 'merge'
+          target: 'minor'
+          use-github-auto-merge: true
