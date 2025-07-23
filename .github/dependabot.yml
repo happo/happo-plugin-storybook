@@ -11,6 +11,8 @@ updates:
         patterns:
           - '@babel/*'
           - 'babel*'
+        exclude-patterns:
+          - 'babel-jest'
       emotion:
         patterns:
           - '@emotion/*'
@@ -21,6 +23,8 @@ updates:
           - '@eslint/*'
       jest:
         patterns:
+          - '@jest/*'
+          - 'babel-jest'
           - 'jest'
           - 'jest-*'
       storybook:
