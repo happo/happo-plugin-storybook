@@ -190,7 +190,18 @@ AsyncWithWaitForContent.parameters = {
 };
 export const AsyncWithWaitFor = () => <AsyncContent />;
 AsyncWithWaitFor.parameters = {
-  happo: { waitFor: () => document.querySelector('.async-inner') },
+  happo: {
+    waitFor: () => {
+      return document.querySelector('.async-inner');
+    },
+    beforeScreenshot: () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 100);
+      });
+    },
+  },
 };
 
 export const AsyncWithDelay = () => <AsyncContent />;
@@ -198,7 +209,7 @@ AsyncWithDelay.parameters = {
   happo: { delay: 1200 },
 };
 
-export const AsyncWithWaitForDataSelector = () => <AsyncContent />;
+export const AsyncWithWaitForDataSelector = () => <Async2 />;
 AsyncWithWaitForDataSelector.parameters = {
   happo: { waitFor: () => document.querySelector('[data-async-ready=true]') },
 };

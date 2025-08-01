@@ -8,18 +8,47 @@ function HappoDecorator({ params, children }) {
     if (!params) return;
 
     const channel = addons.getChannel();
-    function listen({ funcName }) {
+    async function listen({ funcName }) {
       const rootElement = document.querySelector(SB_ROOT_ELEMENT_SELECTOR);
       if (params[funcName] && typeof params[funcName] === 'function') {
-        params[funcName]({ rootElement });
+        const result = params[funcName]({ rootElement });
+
+        if (result instanceof Promise) {
+          console.log(
+            `Invoked Happo function \`${funcName}\`. Awaiting result...`,
+          );
+          const finalResult = await result;
+          console.log(
+            `Async result of Happo function \`${funcName}\`:`,
+            finalResult,
+          );
+        } else {
+          console.log(
+            `Invoked Happo function \`${funcName}\`. Return value:`,
+            result,
+          );
+        }
       } else {
         console.warn(`Happo function ${funcName} not found.`);
       }
     }
 
-    channel.on('happo-event', listen);
+    channel.on('happo/functions/invoke', listen);
+    channel.emit('happo/functions/params', {
+      params: Object.keys(params)
+        .map((key) => {
+          if (typeof params[key] === 'function') {
+            return {
+              key,
+              value: params[key],
+            };
+          }
+          return null;
+        })
+        .filter(Boolean),
+    });
     return () => {
-      channel.off('happo-event', listen);
+      channel.off('happo/functions/invoke', listen);
     };
   }, [params]);
 
