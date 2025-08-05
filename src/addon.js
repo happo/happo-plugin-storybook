@@ -1,5 +1,11 @@
-import React from 'react';
-import { addons, types, useParameter } from 'storybook/manager-api';
+import React, { useState, useEffect } from 'react';
+import {
+  addons,
+  types,
+  useParameter,
+  useChannel,
+  useStorybookState,
+} from 'storybook/manager-api';
 import { AddonPanel } from 'storybook/internal/components';
 
 const ADDON_ID = 'happo';
@@ -7,6 +13,19 @@ const PANEL_ID = `${ADDON_ID}/panel`;
 
 function HappoPanel() {
   const happoParams = useParameter('happo', null);
+  const state = useStorybookState();
+  const emit = useChannel({});
+  const [functionParams, setFunctionParams] = useState([]);
+
+  useEffect(() => {
+    function listen(event) {
+      setFunctionParams(event.params);
+    }
+    addons.getChannel().on('happo/functions/params', listen);
+    return () => {
+      addons.getChannel().off('happo/functions/params', listen);
+    };
+  }, [state.storyId]);
 
   return (
     <div
@@ -28,6 +47,27 @@ function HappoPanel() {
                   </td>
                   <td>
                     <code>{JSON.stringify(val)}</code>
+                  </td>
+                </tr>
+              );
+            })}
+            {functionParams.map((param) => {
+              return (
+                <tr key={param.key}>
+                  <td>
+                    <code>{param.key}:</code>
+                  </td>
+                  <td>
+                    <button
+                      onClick={() =>
+                        emit('happo/functions/invoke', {
+                          storyId: state.storyId,
+                          funcName: param.key,
+                        })
+                      }
+                    >
+                      Invoke
+                    </button>
                   </td>
                 </tr>
               );
