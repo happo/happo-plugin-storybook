@@ -39,12 +39,20 @@ export const Demo = {
       await forceHappoScreenshot('second click');
     });
   },
+
+  beforeEach: () => {
+    // Add afterEach hook for waiting and logging between tests
+    return async () => {
+      console.log('Test completed, waiting 500ms before next test...');
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    };
+  },
 };
 
 export const InteractiveThrowsError = {
   // This story exists to test what happens when the play function throws an
   // error that isn't caused by `forceHappoScreenshot`.
-  play: async ({ args, canvasElement, step }) => {
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     await new Promise((r) => setTimeout(r, 200));
 

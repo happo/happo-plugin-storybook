@@ -185,27 +185,23 @@ function renderStory(story, { force = false } = {}) {
   return new Promise((resolve) => {
     const timeout = time.originalSetTimeout(resolve, renderTimeoutMs);
     function handleRenderPhaseChanged(ev) {
-      if (ev.newPhase === 'completed') {
-        channel.off('storyRenderPhaseChanged', handleRenderPhaseChanged);
-        clearTimeout(timeout);
-        return resolve();
+      if (ev.storyId !== story.storyId) {
+        console.log(
+          `Skipping render phase event because story IDs don't match. Current storyId: ${story.storyId}, event storyId: ${ev.storyId}`,
+        );
+        return;
       }
-      if (
-        ev.newPhase === 'errored' &&
-        isPlaying &&
-        forcedHappoScreenshotSteps
-      ) {
+      if (ev.newPhase === 'finished') {
         channel.off('storyRenderPhaseChanged', handleRenderPhaseChanged);
         clearTimeout(timeout);
-        const pausedAtStep =
-          forcedHappoScreenshotSteps[forcedHappoScreenshotSteps.length - 1];
-        if (pausedAtStep.done) {
-          // Already processed this step
-          return resolve();
+        if (isPlaying && forcedHappoScreenshotSteps) {
+          const pausedAtStep =
+            forcedHappoScreenshotSteps[forcedHappoScreenshotSteps.length - 1];
+          if (!pausedAtStep.done) {
+            return resolve({ pausedAtStep });
+          }
         }
-        return resolve({
-          pausedAtStep,
-        });
+        return resolve();
       }
       if (ev.newPhase === 'playing') {
         isPlaying = true;
