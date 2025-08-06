@@ -38,6 +38,16 @@ export const Demo = {
       await expect(canvas.getByText('I was not clicked')).toBeInTheDocument();
       await forceHappoScreenshot('second click');
     });
+
+    await step('third click', async () => {
+      await userEvent.click(canvas.getByRole('button'));
+      await forceHappoScreenshot('third click');
+    });
+
+    await step('fourth click', async () => {
+      await userEvent.click(canvas.getByRole('button'));
+      await forceHappoScreenshot('fourth click');
+    });
   },
 };
 
