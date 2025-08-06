@@ -185,6 +185,10 @@ function renderStory(story, { force = false } = {}) {
   return new Promise((resolve) => {
     const timeout = time.originalSetTimeout(resolve, renderTimeoutMs);
     function handleRenderPhaseChanged(ev) {
+      if (story.storyId !== ev.storyId) {
+        return;
+      }
+
       if (ev.newPhase === 'completed') {
         channel.off('storyRenderPhaseChanged', handleRenderPhaseChanged);
         clearTimeout(timeout);
@@ -213,14 +217,23 @@ function renderStory(story, { force = false } = {}) {
     }
 
     if (shouldWaitForCompletedEvent) {
-      channel.on('storyRenderPhaseChanged', handleRenderPhaseChanged);
+      // Find all other storyRenderPhaseChanged listeners and remove them
+      const allListeners = channel.listeners('storyRenderPhaseChanged');
+      allListeners.forEach((listener) => {
+        if (listener.isHappoListener) {
+          channel.off('storyRenderPhaseChanged', listener);
+        }
+      });
     }
     if (force) {
       channel.emit('forceRemount', story);
     } else {
       channel.emit('setCurrentStory', story);
     }
-    if (!shouldWaitForCompletedEvent) {
+    if (shouldWaitForCompletedEvent) {
+      handleRenderPhaseChanged.isHappoListener = true;
+      channel.on('storyRenderPhaseChanged', handleRenderPhaseChanged);
+    } else {
       time.originalSetTimeout(() => {
         clearTimeout(timeout);
         resolve();
