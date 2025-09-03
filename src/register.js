@@ -182,16 +182,29 @@ window.happo.init = (config) => {
 function renderStory(story, { force = false } = {}) {
   const channel = window.__STORYBOOK_ADDONS_CHANNEL__;
   let isPlaying = false;
+  let loadingCount = 0;
   return new Promise((resolve) => {
     const timeout = time.originalSetTimeout(resolve, renderTimeoutMs);
     function handleRenderPhaseChanged(ev) {
       if (ev.storyId !== story.storyId) {
         console.log(
-          `Skipping render phase event because story IDs don't match. Current storyId: ${story.storyId}, event storyId: ${ev.storyId}`,
+          `Skipping render phase event (${ev.newPhase}) because story IDs don't match. Current storyId: ${story.storyId}, event storyId: ${ev.storyId}`,
         );
         return;
       }
+      if (ev.newPhase === 'loading') {
+        loadingCount++;
+      }
+      if (ev.newPhase === 'finished' || ev.newPhase === 'aborted') {
+        loadingCount--;
+      }
       if (ev.newPhase === 'finished') {
+        if (loadingCount > 0) {
+          console.log(
+            `Skipping finished event because loadingCount is ${loadingCount} for story ${story.storyId}`,
+          );
+          return;
+        }
         channel.off('storyRenderPhaseChanged', handleRenderPhaseChanged);
         clearTimeout(timeout);
         if (isPlaying && forcedHappoScreenshotSteps) {
