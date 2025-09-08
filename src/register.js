@@ -79,12 +79,18 @@ async function getStoryStore(startTime = time.originalDateNow()) {
 async function getExamples() {
   const storyStore = await getStoryStore();
 
+  if (!storyStore) {
+    throw new Error('Could not get Storybook story store');
+  }
+
   if (!storyStore.extract) {
     throw new Error('Missing Storybook Client API');
   }
+
   if (storyStore.cacheAllCSFFiles) {
     await storyStore.cacheAllCSFFiles();
   }
+
   return Object.values(storyStore.extract())
     .map(({ id, kind, story, parameters }) => {
       if (parameters.happo === false) {
