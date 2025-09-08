@@ -63,7 +63,7 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn build
       - name: Install Playwright Browsers
-        run: yarn playwright install --with-deps
+        run: yarn playwright install chromium --with-deps
       - name: Start dev server and run tests
         run: |
           yarn dev & # Start dev server in background
