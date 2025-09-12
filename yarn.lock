@@ -4335,9 +4335,9 @@ graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.11,
   integrity sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==
 
 happo.io@^13.0.0:
-  version "13.0.0"
-  resolved "https://registry.yarnpkg.com/happo.io/-/happo.io-13.0.0.tgz#a1a823ede8281222d710a637aed71c2ad1ff4e16"
-  integrity sha512-qdSfiRRa96Q/OGquAD0kgoaiRaOQcaBhYNy9h3Fz6odFnJVSLEWNIsu7OJ4bcKTtxSrfx8cjZk+NQXeHOnaWfw==
+  version "13.0.1"
+  resolved "https://registry.yarnpkg.com/happo.io/-/happo.io-13.0.1.tgz#2d23f2a430c79ba341b76444e973afc9f8acdbee"
+  integrity sha512-4aFFO/+imkhzS8VrANSJYBftI8b/0Ck0l4SFk8oJGbUew8aMWnH2HJ2OVmIY/Q9yJ3HJj0tc0c8heXlaXhDHZw==
   dependencies:
     "@babel/preset-react" "^7.12.1"
     archiver "^7.0.1"
@@ -4355,7 +4355,7 @@ happo.io@^13.0.0:
     pngjs "^7.0.0"
     require-relative "^0.8.7"
     source-map-support "^0.5.9"
-    supports-color "^7.1.0"
+    supports-color "^8.1.1"
 
 has-bigints@^1.0.2:
   version "1.1.0"
