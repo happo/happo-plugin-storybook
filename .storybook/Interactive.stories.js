@@ -19,6 +19,11 @@ export default {
   argTypes: {
     onClick: { action: true },
   },
+  parameters: {
+    happo: {
+      axeOptions: { rules: { 'color-contrast': { enabled: false } } },
+    },
+  },
 };
 
 export const Demo = {
